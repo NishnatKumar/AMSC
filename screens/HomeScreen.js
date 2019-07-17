@@ -32,8 +32,7 @@ export default class HomeScreen extends React.Component {
           <StatusBar backgroundColor="green" barStyle="default" />
         
           
-            <Content  >
-
+           
              {/* <View > 
                 <View style={{marginTop:size.window.height/8,marginLeft: size.window.width/3+5}}>
                       <Thumbnail large source={require('../assets/images/appLogo.png')}/> 
@@ -57,10 +56,10 @@ export default class HomeScreen extends React.Component {
 
               </View>
            
-            <Image source={require('../assets/images/home.png')} style={{width:size.window.width,height:size.window.height/3.2,marginTop:5,opacity:0.5}} />
+            <Image source={require('../assets/images/home.png')} style={{width:size.window.width,height:size.window.height/3.1,marginTop:5,opacity:0.5}} />
 
               
-            </Content>
+         
             
                  
          

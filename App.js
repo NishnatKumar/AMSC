@@ -35,7 +35,7 @@ async function loadResourcesAsync() {
       require('./assets/images/robot-prod.png'),
     ]),
     Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      //'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
    
       // This is the font that we are using for our tab bar
@@ -44,12 +44,15 @@ async function loadResourcesAsync() {
       // remove this if you are not using it in your app
       'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
       'ExpoConBol': require('./assets/fonts/ExpoConBol.ttf'),
+      'Roboto':require('./assets/fonts/Roboto/Roboto-Black.ttf'),
       'AlegreyaRegularItalic': require('./assets/fonts/Alegreya-RegularItalic.ttf'),
+      'RubikMono':require('./assets/fonts/RubikMonoOne-Regular.ttf'),
+      'NotoSanskr':require('./assets/fonts/NotoSans/NotoSansKR-Bold.otf')
     }),
   ]);
 }
 
-function handleLoadingError(error: Error) {
+function handleLoadingError(error) {
   // In this case, you might want to report the error to your error reporting
   // service, for example Sentry
   console.warn(error);

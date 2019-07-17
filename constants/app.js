@@ -62,7 +62,17 @@ const app = { errorMsg:{
   textPurpal:{
     color:'#FF00DD'
   },
-  tile:{color:'#000000',fontSize:25,fontWeight:'900',fontFamily:'ExpoConBol' },
+  title:{color:'#000000',fontSize:25,fontWeight:'900',fontFamily:'ExpoConBol' },
+  pickerGroup:{
+    
+  },
+  errorBorder:{
+    borderColor:'#ed002f'
+  },
+  Form:{paddingHorizontal:11}
+
+
+  
   
   
 };

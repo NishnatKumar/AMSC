@@ -108,8 +108,8 @@ export default class EmploySignInScreen extends Component {
                         <Input textContentType="password"  />
                     </Item>  
                    
-            <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Login Press");
-                    this.props.navigation.navigate('ForgatePassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>
+            <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Forgot Press");
+                    this.props.navigation.navigate('ForgotPassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>
 
 
 
@@ -120,11 +120,11 @@ export default class EmploySignInScreen extends Component {
             </Card>
 
 
-            <Button block danger style={styles.btn} onPress={()=>{console.log("Login Press"); this.checkValidation(); }}  ><Text > Login  </Text></Button>
+            <Button block danger style={styles.btn} onPress={()=>{console.log("Login Press"); this.checkValidation(); }}  ><Text sty > Login  </Text></Button>
                    
                   
             </KeyboardAvoidingView>
-            <Button  transparent style={{alignSelf:'center',marginTop:10}} onPress={()=>{console.log("SignUp");}} ><Text style={{color:'#bfc2c7',fontSize:15,fontFamily:'AlegreyaRegularItalic',}} > Don't have an account?</Text><Text style={{color:'#FF00DD',fontSize:15,fontFamily:'AlegreyaRegularItalic',textDecorationLine:'underline',textDecorationColor:'#000000' }} > SignUp </Text></Button> 
+            <Button  transparent style={{alignSelf:'center',marginTop:10}} onPress={()=>{console.log("SignUp"); this.props.navigation.navigate('EmployeeSignUp'); }} ><Text style={{color:'#bfc2c7',fontSize:15,fontFamily:'AlegreyaRegularItalic',}} > Don't have an account?</Text><Text style={{color:'#FF00DD',fontSize:15,fontFamily:'AlegreyaRegularItalic',textDecorationLine:'underline',textDecorationColor:'#000000' }} > SignUp </Text></Button> 
            
                    
                

@@ -3,6 +3,8 @@ import {StatusBar,KeyboardAvoidingView,StyleSheet} from 'react-native';
 import { Container, Header, Content, Form, Icon,Item, Input,Picker,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
+import app from '../constants/app';
+import Logo from '../screens/Logo';
 export default class EmploySignUpScreen extends Component {
 
   constructor(props) {
@@ -118,80 +120,57 @@ export default class EmploySignUpScreen extends Component {
         
             
          <KeyboardAvoidingView  behavior="padding" enabled>
-                <Card transparent style={{marginTop:size.window.height/8,padding:20 }}>
-                <Thumbnail style={{alignSelf:'center' }} large source={{uri:"https://images7.boattrader.com/resize/1/23/81/7112381_20190614055920183_1_LARGE.jpg?t=1300421"}}/>
-      
-                 <Title style={{color:'#1367ed',fontSize:20,fontStyle:'normal',fontWeight:'bold'}}>Depixed</Title>   
+                <Card transparent style={app.Form} >
+                  <Logo></Logo>
 
-                 <Picker
-                        mode="dropdown"
-                        placeholder="Select your Company"
-                        iosIcon={<Icon name="arrow-down" />}
-                        placeholder="Select your Company"
-                        textStyle={{ color: "#5cb85c" }}
-                        itemStyle={{
-                          backgroundColor: "#d3d3d3",
-                          marginLeft: 0,
-                          paddingLeft: 10
-                        }}
-                        itemTextStyle={{ color: '#788ad2' }}
-                        style={{ width: undefined,borderColor:'#16bdf5',borderWidth:0.5 ,marginTop:10}}
-                        selectedValue={this.state.company}
-                        onValueChange={this.onValueChange.bind(this)}
-                       
-                      >
-                        <Picker.Item label="Select Your Company" value="" />
-                        <Picker.Item label="ATM Card" value="key1" />
-                        <Picker.Item label="Debit Card" value="key2" />
-                        <Picker.Item label="Credit Card" value="key3" />
-                        <Picker.Item label="Net Banking" value="key4" />
-                      </Picker>
-                   
                     
-                    <Item regular floatingLabel style={[{margin:5},this.state.isNameErorr? styles.error: styles.normalItem]} >
-                        <Label style={styles.lable}>Name</Label>
+                    <Item regular floatingLabel style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                        <Label style={app.placeholder}>Name</Label>
                         <Input textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
                     </Item> 
                     
-                    <Text style={styles.errorMsg}>
+                    <Text style={app.errorMsg}>
                       {this.state.isNameErrorMsg}
                     </Text>
 
 
-                    <Item regular floatingLabel style={[{margin:5},this.state.isUserNameError? styles.error: styles.normalItem]} >
-                        <Label style={styles.lable}>Username</Label>
+                    <Item regular floatingLabel style={[app.formGroup,this.state.userName? app.errorBorder:app.borderPurpal]} >
+                        <Label style={app.placeholder}>Username</Label>
                         <Input textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
                     </Item> 
-                    <Text style={styles.errorMsg}>
+                    <Text style={app.errorMsg}>
                       {this.state.isUserNameErrorMsg}
                     </Text>
-                    <Item regular floatingLabel style={[{margin:5},this.state.isPasswordError? styles.error: styles.normalItem]}>
-                        <Label style={styles.lable}>Password</Label>
+                    <Item regular floatingLabel style={[app.formGroup,this.state.isPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
+                        <Label style={app.placeholder}>Password</Label>
                         <Input textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
                     </Item>  
-                    <Text style={styles.errorMsg}>
+                    <Text style={app.errorMsg}>
                       {this.state.isPasswordErrorMsg}
                     </Text>
 
-                     <Item regular floatingLabel style={[{margin:5},this.state.isCPasswordError ? styles.error: styles.normalItem]}>
-                        <Label style={styles.lable}>Confirm Password</Label>
+                     <Item regular floatingLabel style={[app.formGroup,this.state.isCPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
+                        <Label style={app.placeholder}>Confirm Password</Label>
                         <Input textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
                     </Item>  
-                    <Text style={styles.errorMsg}>
+                    <Text style={app.errorMsg}>
                       {this.state.isCPasswordErrorMsg}
                     </Text> 
 
                     
                   
-                    <Button block danger onPress={()=>{console.log("Next Press");this.checkValidation();}}  ><Text > Sign UP </Text></Button>
-                   
-                    
                 
                    
                        
                     
             </Card>
+
+            <Button block danger style={styles.btn} onPress={()=>{console.log("Next Press");this.checkValidation();}}  ><Text > Sign UP </Text></Button>
+                   
+                    
             </KeyboardAvoidingView>
+            <Button  transparent style={{alignSelf:'center',marginTop:10}} onPress={()=>{console.log("SignUp"); this.props.navigation.navigate('EmployeeSignIn'); }} ><Text style={{color:'#bfc2c7',fontSize:15,fontFamily:'AlegreyaRegularItalic',}} > Already Have An Account ?</Text><Text style={{color:'#FF00DD',fontSize:15,fontFamily:'AlegreyaRegularItalic',textDecorationLine:'underline',textDecorationColor:'#000000' }} > Login </Text></Button> 
+           
                    
                    
                
@@ -201,21 +180,28 @@ export default class EmploySignUpScreen extends Component {
   }
 }
 
-const styles= StyleSheet.create({
-  lable:{ marginLeft:10},
-  item:{
-    marginTop:5
-  },
-  errorMsg:{
-    color:'red',
-    fontSize:10,
-    fontStyle:'italic',
-  },
-  error:{
-    borderColor:'#fa0a3a',
+// const styles= StyleSheet.create({
+//   lable:{ marginLeft:10},
+//   item:{
+//     marginTop:5
+//   },
+//   errorMsg:{
+//     color:'red',
+//     fontSize:10,
+//     fontStyle:'italic',
+//   },
+//   error:{
+//     borderColor:'#fa0a3a',
     
-  },
-  normalItem:{
-    borderColor:'#16bdf5',
-  }
-})
+//   },
+//   normalItem:{
+//     borderColor:'#16bdf5',
+//   }
+// })
+
+const styles = {
+  btn :[app.btn,app.btnPurpal]
+}
+
+// TODO : 
+/**style={{marginTop:size.window.height/8,padding:20 }} */

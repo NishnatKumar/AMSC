@@ -14,7 +14,7 @@ const AuthStack = createStackNavigator({
                                         ResetPassword:ResetPasswordScreen,
                                         EmployeeSignUp:EmploySignUpScreen,
  },{
-     initialRouteName:'ResetPassword'
+     initialRouteName:'HomePage'
  });
 
 

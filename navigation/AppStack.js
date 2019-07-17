@@ -1,8 +1,9 @@
 import HomeScreen from "../screens/HomeScreen";
 import { createStackNavigator } from "react-navigation";
+import WelcomeScreen from "../screens/Employee/WelcomeScreen";
 
 
-const AppStack = createStackNavigator({ Home:HomeScreen,navigationOptions: () => ({
+const AppStack = createStackNavigator({ Home:WelcomeScreen,navigationOptions: () => ({
     headerVisible: false,
     header:null,
     title: `A`,

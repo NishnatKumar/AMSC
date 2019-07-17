@@ -19,7 +19,7 @@ export default class ForgotScreen extends Component {
                   OTP:'',
                   isOTPerror:false,
                   // TODO: make it false
-                  isOTPsend:true,
+                  isOTPsend:false,
                 }
   }
 
@@ -81,7 +81,7 @@ export default class ForgotScreen extends Component {
             
          <KeyboardAvoidingView  behavior="padding" enabled>
                 <Logo></Logo>
-                <Card transparent style={{marginTop:size.window.height/10 }}>
+                <Card transparent style={[,app.Form]}>
               
                 
                   <Title style={app.tile} >Forgot Password ? </Title>
@@ -89,23 +89,26 @@ export default class ForgotScreen extends Component {
                   Enter Your Registered Phone No. for OTP.
                   </Subtitle>
                     <Item  regular floatingLabel style={[app.formGroup,{marginHorizontal:10},this.state.isphoneerror?app.errorMsg:app.borderPurpal]}>
-                          <Label style={app.placeholder}>Phone</Label>
-                          <Input  keyboardType="phone-pad" returnKeyType="go" onChangeText={(text)=>{console.log(this.state.phone);this.setState({phone:text});}} textContentType="telephoneNumber" onSubmitEditing={()=>{console.log('Go Press')}}/>
+                          {/* <Label style={app.placeholder}>Phone</Label> */}
+                          <Input  keyboardType="phone-pad" returnKeyType="go" placeholder="PHONE" placeholderTextColor="#dcdcde" onChangeText={(text)=>{console.log(this.state.phone);this.setState({phone:text});}} textContentType="telephoneNumber" onSubmitEditing={()=>{console.log('Go Press')}}/>
 
                     </Item>
                     <Text  style={{fontSize:12,color:'red',fontStyle:'italic' }}>{this.state.errorMsgPhone}</Text>  
+                </Card>
                     <Button style={styles.btn} block full primary onPress={()=>{console.log("Send OTP");this.checkValidation();}} disabled={this.state.isOTPsend} ><Text>Send OTP</Text></Button>
+                
                   { this.state.isOTPsend?
                     <View style={{marginTop:10}}>
-
+                    <Card transparent style={app.Form}>
                     <Text style={{color:'#bdbfbe', fontSize:18,fontStyle:'normal' }}>OTP Sent on {this.state.phone} Check for OTP </Text>
 
                     <Item  regular floatingLabel style={[app.formGroup,{marginHorizontal:10},this.state.isphoneerror?app.errorMsg:app.borderPurpal]}>
-                          <Label style={app.placeholder}>OTP</Label>
-                          <Input  keyboardType="phone-pad" returnKeyType="go" onChangeText={(text)=>{console.log(this.state.OTP);this.setState({OTP:text});}} textContentType="telephoneNumber" onSubmitEditing={()=>{console.log('Go Press')}}/>
+                          {/* <Label style={app.placeholder}>OTP</Label> */}
+                          <Input  keyboardType="phone-pad" placeholder="OTP" placeholderTextColor="#dcdcde" returnKeyType="go" onChangeText={(text)=>{console.log(this.state.OTP);this.setState({OTP:text});}} textContentType="telephoneNumber" onSubmitEditing={()=>{console.log('Go Press')}}/>
 
                     </Item>
                     <Text style={{fontSize:12,color:'red',fontStyle:'italic' }}>{this.state.errorMsgOTP}</Text>  
+                    </Card>
                   
                     <Button block full style={styles.btn} success onPress={()=>{console.log("Submit Otp");this.sendOTP(); }} ><Text>Submit</Text></Button>
 
@@ -119,7 +122,7 @@ export default class ForgotScreen extends Component {
                   
                        
                     
-            </Card>
+            
             </KeyboardAvoidingView>
                    
                    

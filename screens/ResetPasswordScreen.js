@@ -3,6 +3,7 @@ import {StatusBar,KeyboardAvoidingView,StyleSheet} from 'react-native';
 import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Subtitle } from 'native-base';
 import size from '../constants/Layout';
 import Logo from './Logo';
+import app from '../constants/app';
 
 export default class ResetPasswordScreen extends Component {
 
@@ -71,10 +72,10 @@ export default class ResetPasswordScreen extends Component {
                 <Card transparent>
                   <Logo></Logo>
               
-                    <Title style={styles.tile} >Reset your password ?</Title>
+                    <Title style={[styles.title,{marginTop:20}]} >Reset your password ?</Title>
                   
-                    <Item  regular floatingLabel style={{margin:5,borderColor:this.state.ispassworderror?'#f51616':'#16bdf5'}}>
-                          <Label style={{margin:5}}>New Password</Label>
+                    <Item  regular floatingLabel style={[app.formGroup,this.state.ispassworderror?app.errorMsg : app.borderPurpal]}>
+                          <Label style={app.placeholder}>New Password</Label>
                           <Input  secureTextEntry={true} returnKeyType="go" onChangeText={(text)=>{console.log(this.state.password);this.setState({password:text});}} textContentType="newPassword" onSubmitEditing={()=>{console.log('Go Press')}}/>
 
                     </Item>
@@ -83,14 +84,14 @@ export default class ResetPasswordScreen extends Component {
                
 
                    
-                    <Item  regular floatingLabel style={{marginTop:10,borderColor:this.state.iscpassworderror?'#f51616':'#16bdf5' }}>
-                          <Label style={{margin:5}}>Confirm Password</Label>
+                    <Item  regular floatingLabel style={[app.formGroup,this.state.ispassworderror?app.errorMsg : app.borderPurpal]}>
+                          <Label style={app.placeholder}>Confirm Password</Label>
                           <Input  secureTextEntry={true} returnKeyType="go" onChangeText={(text)=>{console.log(this.state.cpassword);this.setState({cpassword:text});}} textContentType="password" onSubmitEditing={()=>{console.log('Go Press')}}/>
 
                     </Item>
                     <Text style={{fontSize:12,color:'red',fontStyle:'italic' }}>{this.state.errorMsgcpassword}</Text>  
                   
-                    <Button block full style={{alignSelf:'center',marginTop:5}} success onPress={()=>{console.log("Submit cpassword");this.checkValidation(); }} ><Text>Submit</Text></Button>
+                    <Button block full style={styles.btn} success onPress={()=>{console.log("Submit cpassword");this.checkValidation(); }} ><Text>Submit</Text></Button>
 
 
                     
@@ -107,7 +108,8 @@ export default class ResetPasswordScreen extends Component {
 }
 
 
-const styles = StyleSheet.create({
-    tile:{color:'#000000',fontSize:25,fontWeight:'900',fontFamily:'ExpoConBol' },
-    subtitle:{color:'#a1a1a1',fontSize:15}
-  })
+
+const styles = {FormItem:[app.formGroup],
+btn:[app.btn, app.btnPurpal]}
+
+// TODO :,{margin:5,borderColor:this.state.ispassworderror?'#f51616':'#16bdf5'}
