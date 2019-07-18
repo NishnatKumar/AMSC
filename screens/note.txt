@@ -66,3 +66,12 @@
 
             /** Navigation function */
             this.props.navigation.navigate('EmployeeSignIn');
+
+            /** for button*/
+
+
+   <Button block full style={styles.btn} success onPress={()=>{console.log("Submit Otp");this.sendOTP(); }} ><Text>Submit</Text></Button>
+
+
+   need Route mapping in the system
+

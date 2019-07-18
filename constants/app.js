@@ -50,8 +50,20 @@ const app = { errorMsg:{
     // for Android
     elevation: 5,
   },
-  btnTitle:{
-    color:'#ffffff',
+  btnPink:{
+    backgroundColor: '#FF00DD',
+    shadowColor: '#FF00DD',
+    shadowOffset: {
+      width: 1,
+      height: 3
+    },
+    shadowRadius: 5,
+    shadowOpacity: 1.0,
+    // for Android
+    elevation: 5,
+  },
+  btnGray:{
+    color:'#c9c9c9',
     fontSize:20,
     fontWeight:'bold',
 
@@ -69,7 +81,8 @@ const app = { errorMsg:{
   errorBorder:{
     borderColor:'#ed002f'
   },
-  Form:{paddingHorizontal:11}
+  Form:{paddingHorizontal:11},
+
 
 
   
