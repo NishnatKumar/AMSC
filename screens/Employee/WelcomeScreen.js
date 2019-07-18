@@ -45,23 +45,29 @@ export default class WelcomeScreen extends React.Component {
 
     _officeIn()
     {
-     
-      let formatted_date = "IN : "+Time();
+          this.props.navigation.navigate('QRCode');
+          if(this.state.isIN)
+          {
+            
+              let formatted_date = "IN : "+Time();
 
-        console.log("In Office in ",formatted_date);
-        this.setState({inTime:formatted_date,isIn:true});
+                console.log("In Office in ",formatted_date);
+                this.setState({inTime:formatted_date,isIn:true});
 
-
+          }
 
     }
 
     _officeOut()
     {
-        let formatted_date = "Out : "+Time();
+        this.props.navigation.navigate('QRCode');
+        if(this.state.isOut)
+        {
+          let formatted_date = "Out : "+Time();
 
-        console.log("Out Office : ",formatted_date);
-        this.setState({outTime:formatted_date,isOut:true});
-
+          console.log("Out Office : ",formatted_date);
+          this.setState({outTime:formatted_date,isOut:true});
+        }
     }
 
     _profile()

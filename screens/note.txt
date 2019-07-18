@@ -44,7 +44,7 @@
                             placeholder="Select your Company"
                             iosIcon={<Icon name="arrow-down" color='#ffffff' />}
                             placeholder="Select your Company"
-                            textStyle={{ color: "#ffffff" }}
+                            textStyle={{ color: "#ffffff" }} 
                             itemStyle={{
                               backgroundColor: "#d3d3d3",
                               marginLeft: 0,
