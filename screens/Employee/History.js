@@ -9,7 +9,8 @@ import {
   View,
   StatusBar,
   ImageBackground,
-  TouchableHighlight
+  TouchableHighlight,
+  FlatList
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -35,8 +36,10 @@ export default class HistoryScreen extends React.Component {
                       isOut:false,
 
                       header:['Date','In','Out'],
-                      data:[['12/04/2019','12:30','13:08'],['13/04/2019','09:30','13:08'],['14/04/2019','09:30','14:08'],],
-                      borderColor:''
+                      data:[{date:'12/04/2019',in:'12:30',out:'13:08'},{'date':'13/04/2019',in:'09:30',out:'13:08'},{'date':'14/04/2019',in:'09:30',out:'14:08'}],
+                      borderColor:'',
+
+
                         
                     }
     }
@@ -49,6 +52,39 @@ filter()
 {
 
 }
+
+        _keyExtractor = (item, index) => item.date;
+
+        _onPressItem = (id) => {
+          // updater functions are preferred for transactional updates
+          this.setState((state) => {
+            // copy the map rather than modifying state.
+            const selected = new Map(state.selected);
+            selected.set(id, !selected.get(id)); // toggle
+            return {selected};
+          });
+        };
+
+        _renderItem = ({item}) => {
+          console.log("ITem ",item)
+          return(  <View style={styles1.row}>
+
+            <View style={styles1.cell} >
+              <Text style={styles1.td} >{item.date}</Text> 
+            </View>
+            <View style={styles1.cell} >
+              <Text style={styles1.td}>{item.in}</Text> 
+            </View>
+            <View style={styles1.cell} >
+              <Text style={styles1.td}>{item.out}</Text> 
+            </View>
+          </View>)
+        };
+          
+           
+         
+       
+
 
    
     render(){
@@ -65,13 +101,33 @@ filter()
 
                 <Content>
 
-                  <View style={{height:100}} >
-                    <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+                  <View style={styles1.table} >
+                    {/* <View style={{flexDirection:'row',justifyContent:'space-around'}}>
                         <View><Text>Hello</Text></View>
                         {this.state.header.forEach(element => {
                           <View><Text>element {element}</Text></View>
                         })}
-                    </View>
+                    </View> */}
+
+                      <View style={styles1.row}>
+
+                        <View style={styles1.cell} >
+                          <Text style={styles1.th} >Date</Text> 
+                        </View>
+                        <View style={styles1.cell} >
+                          <Text style={styles1.th}>In</Text> 
+                        </View>
+                        <View style={styles1.cell} >
+                          <Text style={styles1.th}>Out</Text> 
+                        </View>
+                      </View>
+
+                      <FlatList
+                              data={this.state.data}
+                              extraData={this.state}
+                              keyExtractor={this._keyExtractor}
+                              renderItem={this._renderItem}
+                            />
 
 
                   </View> 
@@ -87,5 +143,7 @@ filter()
 
 const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,justifyContent:'space-between',paddingHorizontal:10,}]}
 
-const styles1=StyleSheet.create({table:{flex:1,borderColor:'#FF00DD'}});
+const styles1=StyleSheet.create({table:{margin:10,width:size.window.width-20,borderColor:'#FF00DD',borderWidth:1,borderRadius:5 },
+row:{flexDirection:'row' },cell:{width:(size.window.width-20)/3,borderWidth:1,borderColor:'#FF00DD',justifyContent:'center',padding:5 },
+th:{alignSelf:'center',fontWeight:'900',fontSize:20}, td:{alignSelf:'center',} });
 

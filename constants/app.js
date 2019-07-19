@@ -10,7 +10,10 @@ const app = { errorMsg:{
     
   },
   borderPurpal:{
-    borderColor:'#6a37ff',
+    borderColor:'#FF00DD', 
+  },
+  borderPink:{
+    borderColor:'#6a37ff', 
   },
 
   btn:{
@@ -82,6 +85,7 @@ const app = { errorMsg:{
     borderColor:'#ed002f'
   },
   Form:{paddingHorizontal:11},
+  btnTitle:{color:'#ffffff',fontSize:20,fontWeight:'900',fontFamily:'ExpoConBol'}
 
 
 

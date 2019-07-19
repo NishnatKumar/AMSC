@@ -19,8 +19,6 @@ import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Fo
 import size, {window} from '../../constants/Layout'
 import { SizeClassIOS } from 'expo/build/ScreenOrientation/ScreenOrientation';
 import app from '../../constants/app';
-import Logo from '../Logo';
-import Timer from './Timer';
 import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -28,7 +26,7 @@ import * as DocumentPicker from 'expo-document-picker';
 
 
 
-export default class ProfileScreen extends React.Component {
+export default class CompanyProfileScreen extends React.Component {
 
     constructor(props)
     {
@@ -51,33 +49,6 @@ export default class ProfileScreen extends React.Component {
   static navigationOptions = {
     header: null
 }
-
-    _officeIn()
-    {
-          this.props.navigation.navigate('QRCode');
-          if(this.state.isIN)
-          {
-            
-              let formatted_date = "IN : "+Time();
-
-                console.log("In Office in ",formatted_date);
-                this.setState({inTime:formatted_date,isIn:true});
-
-          }
-
-    }
-
-    _officeOut()
-    {
-        this.props.navigation.navigate('QRCode');
-        if(this.state.isOut)
-        {
-          let formatted_date = "Out : "+Time();
-
-          console.log("Out Office : ",formatted_date);
-          this.setState({outTime:formatted_date,isOut:true});
-        }
-    }
 
     onValueChange()
     {
@@ -110,10 +81,7 @@ export default class ProfileScreen extends React.Component {
         }
         
     }
-// Use `new Date()` for current date.
-          // May 25 2020. Month 0 is January.
-          // Selected year, month (0-11), day
-          //const {action, year, month, day} 
+
    async cylender()
     {
         try {
@@ -159,7 +127,7 @@ export default class ProfileScreen extends React.Component {
             <StatusBar backgroundColor="green" barStyle="default" />
               <View style={{marginTop:15}}></View>
               <Content>
-              <Title style={app.title}>Profile </Title>
+              <Title style={app.title}>Details </Title>
                   <Card style={app.Form} transparent >
                  
                     <View>
@@ -169,10 +137,10 @@ export default class ProfileScreen extends React.Component {
                        
                  
 
-                    <View style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]}>
+                    <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
                           <Picker
                             mode="dialog"
-                            placeholder="Select Gender"
+                            placeholder="Select Company Type"
                             iosIcon={<Icon name="arrow-down" color='#ffffff' />}
                             placeholder="Select Gender"
                             textStyle={{ color: "#ffffff" }}
@@ -187,23 +155,37 @@ export default class ProfileScreen extends React.Component {
                             onValueChange={this.onValueChange.bind(this)}
                           
                           >
-                            <Picker.Item label="Select Gender" value="" />
-                            <Picker.Item label="Female" value="F" />
+                            <Picker.Item label="Select Company Type" value="" />
+                            {/* <Picker.Item label="Female" value="F" />
                             <Picker.Item label="Male" value="M" />
-                            <Picker.Item label="Other" value="O" />
+                            <Picker.Item label="Other" value="O" /> */}
                             
                           </Picker> 
                     </View>
-
+{/* 
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button>
-                    <Item regular style={[{height:110,marginBottom:15},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Textarea placeholder="Address" >
-
-                      </Textarea>
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button> */}
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input placeholder="Title" style={{}} />
                     </Item>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Document    + </Title></Button>
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();console.log("Next Click")}}><Title>Next</Title></Button>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input placeholder="Reg. No." style={{}} />
+                    </Item>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input placeholder="Owner Name" style={{}} />
+                    </Item>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input placeholder="Website" style={{}} />
+                    </Item>
+
+
+                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Location    + </Title></Button>
+                    
+                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();console.log("Next Click")}}><Title>Save</Title></Button>
                  
                   </Card>
                   

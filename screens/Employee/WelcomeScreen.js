@@ -72,12 +72,13 @@ export default class WelcomeScreen extends React.Component {
 
     _profile()
     {
-
+      this.props.navigation.navigate('Profile');
     }
 
     _history()
     {
         
+        this.props.navigation.navigate('History');
     }
 
     
