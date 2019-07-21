@@ -10,17 +10,19 @@ import {
   View,
   StatusBar,
   ImageBackground,
-  TouchableHighlight
+  TouchableHighlight,
+  ActivityIndicator
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
-import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Footer, Content, Card } from 'native-base';
+import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Footer, Content, Card, Item } from 'native-base';
 import size, {window} from '../../constants/Layout'
 import { SizeClassIOS } from 'expo/build/ScreenOrientation/ScreenOrientation';
 import app from '../../constants/app';
 import Logo from '../Logo';
 
 import Time from '../../constants/Time';
+import Processing from '../Processing';
 
 
 
@@ -34,7 +36,8 @@ export default class AdminWelcomeScreen extends React.Component {
                       isIn:false,
                       inTime:'Office In',
                       outTime:'Office Out',
-                      isOut:false
+                      isOut:false,
+                      isLoding:false,
                         
                     }
     }
@@ -45,7 +48,7 @@ export default class AdminWelcomeScreen extends React.Component {
 
     _employeeList()
     {
-      this.props.navigation.navigate('History');
+      this.props.navigation.navigate('EmpList');
 
     }
 
@@ -79,6 +82,8 @@ export default class AdminWelcomeScreen extends React.Component {
 
     
     render(){
+      const {isLoding} = this.state;
+      if(!isLoding)
         return (
           
           <Container>
@@ -104,6 +109,8 @@ export default class AdminWelcomeScreen extends React.Component {
           </Container>
 
         );
+      else
+          return <Processing/>
     }
 }
 

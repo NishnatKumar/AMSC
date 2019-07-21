@@ -32,9 +32,18 @@ export default class CompanyListScreen extends React.Component {
         super(props)
         this.state={
                      companyList:[{id:1,name:'Depixed Media',pic:'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3034007-inline-i-applelogo.jpg','category':'IT'}],
-                     categoryList:[]
-                        
+                     categoryList:[],
+                      loginType:null
                     }
+    }
+
+    componentWillMount()
+    {
+      const { navigation } = this.props;
+      const value = navigation.getParam('loginType', 'NO-ID');
+      console.log("Login Type : ",value);
+      this.setState({loginType:value});
+
     }
 
   static navigationOptions = {
@@ -43,19 +52,27 @@ export default class CompanyListScreen extends React.Component {
 
 _keyExtractor = (item, index) => item.id+'';
 
-_onPressItem = (id) => {
+_onPressItem = (value) => {
   // updater functions are preferred for transactional updates
-  this.setState((state) => {
-    // copy the map rather than modifying state.
+
+  const {loginType} = this.state;
+
+  this.props.navigation.navigate('EmployeeSignUp',{loginType:'cmp',cmpID:value.id})
+
+ // this.setState((state) => {
+  /**   // copy the map rather than modifying state.
     const selected = new Map(state.selected);
     selected.set(id, !selected.get(id)); // toggle
-    return {selected};
-  });
+    return {selected};*/
+
+ // });
 };
 
 _rendercompanyListItem = ({item}) => {
   console.log("ITem ",item)
-  return( <Card style={{elevation :20}}> 
+  return(
+    <TouchableHighlight onPress={()=>{this._onPressItem(item)}}>
+         <Card style={{elevation :20}}> 
             <CardItem>
             <Left>
               <Thumbnail small source={{uri:item.pic}}/>     
@@ -65,7 +82,8 @@ _rendercompanyListItem = ({item}) => {
                <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.category} </Title>
             </Body>
             </CardItem>
-        </Card>)
+        </Card>
+        </TouchableHighlight>)
 };
   
 
