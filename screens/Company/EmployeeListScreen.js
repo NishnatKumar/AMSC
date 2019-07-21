@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import {
   Image,
@@ -16,8 +15,8 @@ import {
 } from 'react-native';
 
 import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Footer, Content, Card, Item, Label, Input, Picker, Textarea, CardItem } from 'native-base';
-import app from '../constants/app';
-import size from '../constants/Layout';
+import app from '../../constants/app.js';
+import size from '../../constants/Layout';
 
 
 
@@ -25,13 +24,13 @@ import size from '../constants/Layout';
 
 
 
-export default class CompanyListScreen extends React.Component {
+export default class EmpListScreen extends React.Component {
 
     constructor(props)
     {
         super(props)
         this.state={
-                     companyList:[{id:1,name:'Depixed Media',pic:'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3034007-inline-i-applelogo.jpg','category':'IT'}],
+                     companyList:[{in:'12:30',out:'',role:'Manager',name:'Depixed Media',pic:'https://images.fastcompany.net/image/upload/w_596,c_limit,q_auto:best,f_auto/fc/3034007-inline-i-applelogo.jpg','category':'IT'}],
                      categoryList:[]
                         
                     }
@@ -55,18 +54,32 @@ _onPressItem = (id) => {
 
 _rendercompanyListItem = ({item}) => {
   console.log("ITem ",item)
-  return( <Card style={{elevation :20}}> 
+  return( 
+    <TouchableHighlight onPress={(item)=>{this._onPress(item);}}> 
+        <Card style={{elevation :20}}> 
             <CardItem>
             <Left>
               <Thumbnail small source={{uri:item.pic}}/>     
             </Left>
             <Body>
                <Title style={{fontSize:20,fontWeight:'900',color:'#000000'}} >{item.name}</Title>
-               <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.category} </Title>
+               <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.role} </Title>
             </Body>
             </CardItem>
-        </Card>)
-};
+        </Card>
+    </TouchableHighlight>
+    )
+  };
+
+
+  _onPress = (item)=>{
+      
+      let data = item;
+      if(data != null)
+      {
+        this.props.navigation.navigate('History');
+      }
+  }
   
 
     
@@ -77,7 +90,7 @@ _rendercompanyListItem = ({item}) => {
             <StatusBar backgroundColor="green" barStyle="default" />
               <View style={{marginTop:15}}></View>
               <Content>
-                <Title style={app.title}>Company Lsit </Title>
+                <Title style={app.title}>Employee List </Title>
 
                       <FlatList
                           data={this.state.companyList}

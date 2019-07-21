@@ -41,7 +41,8 @@ export default class CompanyProfileScreen extends React.Component {
                       Address:'',
                       MobileNumber:'',
                       EmailAddress:'',
-                      Resume:''
+                      Resume:'',
+                      photo: null,
                         
                     }
     }
@@ -70,10 +71,11 @@ export default class CompanyProfileScreen extends React.Component {
               console.log("File selected ",size);
               console.log("File selected ",uri);
               console.log("File selected ",name);
+              this.setState({photo:{ type, uri, name, size }});
 
             }
             else
-            console.log("File Note Selected");
+              console.log("File Note Selected");
 
           } catch (e) {
             console.log(e.message)
@@ -81,6 +83,24 @@ export default class CompanyProfileScreen extends React.Component {
         }
         
     }
+
+
+  createFormData = (photo, body) => {
+  letdata = new FormData();
+
+  data.append("pic", {
+    name: photo.fileName,
+    type: photo.type,
+    uri:
+      Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+  });
+
+  Object.keys(body).forEach(key => {
+    data.append(key, body[key]);
+  });
+
+  return data;
+};
 
    async cylender()
     {
@@ -114,10 +134,9 @@ export default class CompanyProfileScreen extends React.Component {
      console.log("Join Date : ",date);
     }
 
-    _onNext()
+    _onSave()
     {
-      console.log("Next Press");
-      this.props.navigation.navigate('Bank');
+        let data = {}
     }
     
     render(){
@@ -185,7 +204,7 @@ export default class CompanyProfileScreen extends React.Component {
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Location    + </Title></Button>
                     
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._save();console.log("Next Click")}}><Title>Save</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onSave();console.log("Next Click")}}><Title>Save</Title></Button>
                  
                   </Card>
                   

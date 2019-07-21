@@ -49,9 +49,15 @@ export default class HomeScreen extends React.Component {
               <View style={{ alignSelf:'center',marginTop:size.window.height/9+20,  }}>
 
               
-                  <Button style={styles.btn1} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn');}}  ><Text style={app.btnTitle}> Employee Login </Text></Button>
+                  <Button style={styles.btn1} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn',{
+              loginType:'emp',
+             
+            });}}  ><Text style={app.btnTitle}> Employee Login </Text></Button>
                  
-                  <Button style={styles.btn2} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn');console.log("Login Press")}}  ><Text style={app.btnTitle}> Login As Admin </Text></Button>
+                  <Button style={styles.btn2} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn',{
+              loginType: 'cmp',
+             
+            });console.log("Login Press")}}  ><Text style={app.btnTitle}> Login As Admin </Text></Button>
                 
 
               </View>

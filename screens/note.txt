@@ -1,4 +1,5 @@
-
+/**
+USer Token Key = 'userToken'
 
 {/* 
                  <Item  style={[app.formGroup,this.state.isNameErorr? app.errorMsg:app.borderPurpal,{borderWidth:1,borderColor:'#000000' }]} >
@@ -96,3 +97,11 @@ fetch(Url,{ method: 'POST',headers:{
 
   
 
+// <<<<<<< HEAD
+//   "expoServerPort": 19000,
+//   "packagerPort": 19001,
+//   "packagerPid": 2774,
+//   "expoServerNgrokUrl": "https://5a-2ci.anonymous.amsc.exp.direct",
+//   "packagerNgrokUrl": "https://packager.5a-2ci.anonymous.amsc.exp.direct",
+//   "ngrokPid": 2797
+// =======

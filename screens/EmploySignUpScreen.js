@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import {StatusBar,KeyboardAvoidingView,StyleSheet} from 'react-native';
+import {StatusBar,KeyboardAvoidingView,StyleSheet,ToastAndroid,NetInfo} from 'react-native';
 import { Container, Header, Content, Form, Icon,Item, Input,Picker,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
 import app from '../constants/app';
 import Logo from '../screens/Logo';
+import Global from '../constants/Global';
+import Processing from './Processing';
 export default class EmploySignUpScreen extends Component {
 
   constructor(props) {
@@ -14,23 +16,107 @@ export default class EmploySignUpScreen extends Component {
       isCompanyError:false,
       isCompanyErrorMsg:'',
 
-      name:'',
+      name:'Nishant Kumar',
       isNameErorr:false,
       isNameErrorMsg:'',
 
-      userName:'',
+      userName:'nishantraj656@gmial.com',
       isUserNameError:false,
       isUserNameErrorMsg:'',
 
-      password:'',
+      password:'9939224274',
       isPasswordError:false,
       isPasswordErrorMsg:'',
 
-      cpassword:'',
+      cpassword:'9939224274',
       isCPasswordError:false,
-      isCPasswordErrorMsg:''
+      isCPasswordErrorMsg:'',
+
+      loginType:null,
+      cmpID:null,
+
+      isLoding:false
     };
   }
+
+ 
+  _httpSignUp = async (data) => {
+    console.log("Data to send : "+Global.API_URL+'register');
+    var connectionInfoLocal = '';
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+      // connectionInfo.type = 'none';//force local loding
+      if(connectionInfo.type == 'none'){
+        console.log('no internet ');
+        ToastAndroid.showWithGravityAndOffset(
+          'Oops! No Internet Connection',
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return;
+      }else{
+        console.log('yes internet '); 
+        this.setState({
+          isLoding:true,
+        });
+        fetch(Global.API_URL+'register', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',   
+              'Content-Type':'application/json'   
+            },
+            body: JSON.stringify(data)
+          }).then((response) =>response.json() )
+          .then((responseJson) => {
+            // var itemsToSet = responseJson.data;
+             console.log('resp:',responseJson);
+             if(responseJson.received == 'yes'){
+             this.setState({
+               isLoding:false,
+             });
+             }else{
+               ToastAndroid.showWithGravityAndOffset(
+                 'Internal Server Error',
+                 ToastAndroid.LONG,
+                 ToastAndroid.BOTTOM,
+                 25,
+                 50,
+               );
+               this.setState({
+                 isLoding:false,
+               });
+ 
+               console.log("Error in signUP :",)
+             }
+         })
+         .catch((error) => {
+          ToastAndroid.showWithGravityAndOffset(
+            'Network Failed!!! Retrying...',
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50,
+          );
+          console.log('on error fetching:'+error);
+           this._httpSignUp(data);
+        });
+      }
+    });
+    console.log(connectionInfoLocal);
+  }
+
+  componentWillMount()
+  {
+    const { navigation } = this.props;
+    const loginType = navigation.getParam('loginType', 'NO-ID');
+    const cmpID = navigation.getParam('cmpID',null)
+    
+    this.setState({loginType:loginType,
+                    cmpID:cmpID});
+  }
+
   onValueChange(value) {
     this.setState({
       company: value
@@ -78,7 +164,12 @@ export default class EmploySignUpScreen extends Component {
     }
     else
     {
-      console.log("Data Save .....")
+      if(this.state.loginType == 'cmp' )
+      {
+          let data = {email: userName,name:name,c_password:cpassword,password:password,type:this.state.loginType,}
+          this._httpSignUp(data);
+          console.log("Data Save .....")
+      }
     }
 
     
@@ -111,6 +202,7 @@ export default class EmploySignUpScreen extends Component {
                   });
   }
   render() {
+    if(!this.state.isLoding)
     return (
       <Container>
       <StatusBar backgroundColor="green" barStyle="default" />
@@ -126,7 +218,7 @@ export default class EmploySignUpScreen extends Component {
                     
                     <Item regular floatingLabel style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                         <Label style={app.placeholder}>Name</Label>
-                        <Input textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
+                        <Input value={this.state.name} textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
                     </Item> 
                     
                     <Text style={app.errorMsg}>
@@ -136,14 +228,14 @@ export default class EmploySignUpScreen extends Component {
 
                     <Item regular floatingLabel style={[app.formGroup,this.state.userName? app.errorBorder:app.borderPurpal]} >
                         <Label style={app.placeholder}>Username</Label>
-                        <Input textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
+                        <Input  value={this.state.userName} textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
                     </Item> 
                     <Text style={app.errorMsg}>
                       {this.state.isUserNameErrorMsg}
                     </Text>
                     <Item regular floatingLabel style={[app.formGroup,this.state.isPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
                         <Label style={app.placeholder}>Password</Label>
-                        <Input textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
+                        <Input  value={this.state.password} textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
                     </Item>  
                     <Text style={app.errorMsg}>
                       {this.state.isPasswordErrorMsg}
@@ -151,7 +243,7 @@ export default class EmploySignUpScreen extends Component {
 
                      <Item regular floatingLabel style={[app.formGroup,this.state.isCPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
                         <Label style={app.placeholder}>Confirm Password</Label>
-                        <Input textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
+                        <Input  value={this.state.cpassword} textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
                     </Item>  
                     <Text style={app.errorMsg}>
                       {this.state.isCPasswordErrorMsg}
@@ -177,6 +269,8 @@ export default class EmploySignUpScreen extends Component {
         </Content>
       </Container>
     );
+    else 
+      return <Processing/>
   }
 }
 
