@@ -185,7 +185,7 @@ export default class CompanyProfileScreen extends React.Component {
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Location    + </Title></Button>
                     
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();console.log("Next Click")}}><Title>Save</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._save();console.log("Next Click")}}><Title>Save</Title></Button>
                  
                   </Card>
                   
