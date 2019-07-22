@@ -25,6 +25,9 @@ import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
 import Global from '../../constants/Global';
 
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 
 
@@ -46,6 +49,9 @@ export default class CompanyProfileScreen extends React.Component {
                       // EmailAddress:'',
                       // Resume:'',
                       // photo: null,
+
+                      companyList:[],
+
                       type:'1',
                         istypeError:false,
                           typeErrorMsg:'',
@@ -61,6 +67,10 @@ export default class CompanyProfileScreen extends React.Component {
                       owner:'Mox',
                         isownerError:false,
                           ownerErrorMsg:'',
+
+                      company:'',
+                        iscompanyError:false,
+                          companyErrorMsg:'',
 
                       address:{
                                     address:' B-103,  Samudra,',
@@ -82,6 +92,10 @@ export default class CompanyProfileScreen extends React.Component {
                       isuserIDError:false,
                         userIDErrorMsg:'',
 
+                    location:null,
+                      islocationError:false,
+                        locationErrorMsg:'',
+
                 
                         
                     }
@@ -90,6 +104,49 @@ export default class CompanyProfileScreen extends React.Component {
   static navigationOptions = {
     header: null
 }
+
+
+  checkPermission()
+  {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        locationErrorMsg: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+    
+    let address =Location.reverseGeocodeAsync(location);
+    console.log("Location : ",location);
+
+
+    
+  };
+
+  //WARNING! To be deprecated in React v17. Use componentDidMount instead.
+  componentWillMount() {
+    let data =[{name:'nishant',key:1},{name:'hello',key:2},{name:'herror',key:67},{name:'ieywu',key:34}];
+    let picker = [];
+    data.forEach(element=>{
+        picker.push(<Picker.Item label={element.name} value={element.key} /> );
+    });
+    this.setState({
+      companyList:picker
+    });
+  }
 
     onValueChange()
     {
@@ -146,6 +203,8 @@ export default class CompanyProfileScreen extends React.Component {
   return data;
 };
 
+
+
    async cylender()
     {
         try {
@@ -185,6 +244,12 @@ export default class CompanyProfileScreen extends React.Component {
        await this._httpSignUp(await this.createFormData(photo));
 
        
+    }
+
+
+    onValueChange()
+    {
+      
     }
 
 
@@ -293,10 +358,14 @@ export default class CompanyProfileScreen extends React.Component {
                             itemTextStyle={{ color: '#788ad2' }}
                             style={{ width: undefined,borderColor:'#16bdf5',color:'#ffffff',borderWidth:0.5 ,marginTop:10}}
                             selectedValue={this.state.company}
-                            onValueChange={this.onValueChange.bind(this)}
-                          
+                            onValueChange={(itemValue, itemIndex)=>{
+                              console.log("Item Value :",itemValue);
+                              this.setState({company: itemValue})}}                          
                           >
-                            <Picker.Item label="Select Company Type" value="" />
+                          {
+                           this.state.companyList
+                          }
+                            
                             {/* <Picker.Item label="Female" value="F" />
                             <Picker.Item label="Male" value="M" />
                             <Picker.Item label="Other" value="O" /> */}
@@ -323,7 +392,7 @@ export default class CompanyProfileScreen extends React.Component {
                     </Item>
 
 
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Location    + </Title></Button>
+                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
 
                     {photo && (
                     <Image source={{uri: photo.uri}} style={{width:100, height:100 }}/>)}

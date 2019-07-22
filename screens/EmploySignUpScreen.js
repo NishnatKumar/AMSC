@@ -72,24 +72,24 @@ export default class EmploySignUpScreen extends Component {
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
              console.log('resp:',responseJson);
-             if(responseJson.received == 'yes'){
-             this.setState({
-               isLoding:false,
-             });
-             }else{
-               ToastAndroid.showWithGravityAndOffset(
-                 'Internal Server Error',
-                 ToastAndroid.LONG,
-                 ToastAndroid.BOTTOM,
-                 25,
-                 50,
-               );
-               this.setState({
-                 isLoding:false,
-               });
+            //  if(responseJson.received == 'yes'){
+            //  this.setState({
+            //    isLoding:false,
+            //  });
+            //  }else{
+            //    ToastAndroid.showWithGravityAndOffset(
+            //      'Internal Server Error',
+            //      ToastAndroid.LONG,
+            //      ToastAndroid.BOTTOM,
+            //      25,
+            //      50,
+            //    );
+            //    this.setState({
+            //      isLoding:false,
+            //    });
  
-               console.log("Error in signUP :",)
-             }
+            //    console.log("Error in signUP :")
+            //  }
          })
          .catch((error) => {
           ToastAndroid.showWithGravityAndOffset(
@@ -166,7 +166,7 @@ export default class EmploySignUpScreen extends Component {
     {
       if(this.state.loginType == 'cmp' )
       {
-          let data = {email: userName,name:name,c_password:cpassword,password:password,type:this.state.loginType,}
+          let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,}
           this._httpSignUp(data);
           console.log("Data Save .....")
       }

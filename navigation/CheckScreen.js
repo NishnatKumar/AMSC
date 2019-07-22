@@ -18,12 +18,20 @@ export default class CheckScreen extends React.Component {
     async componentWillMount() {
     /** TODO : WE have to remove comment */    
       const userToken = await AsyncStorage.getItem('userToken');
-      const loginType = 'cmp';
+      const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
 
-      if(loginType == 'cmp')
+      if(userData.user_type == 'cmp'){
         this.props.navigation.navigate('AdminWelcome');
-     else if(loginType == 'emp')
+
+      }
+     else if(userData.user_type == 'emp'){
         this.props.navigation.navigate('Home');
+      }
+      else
+      {
+        this.props.navigation.navigate('Auth');
+        console.log("In error me hu",userData)
+      }
 
     //   if(userToken != null)
     //   {
