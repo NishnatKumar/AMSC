@@ -11,7 +11,9 @@ import {
   StatusBar,
   ImageBackground,
   TouchableHighlight,
-  DatePickerAndroid
+  DatePickerAndroid,
+  NetInfo,
+  ToastAndroid,
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -21,6 +23,7 @@ import { SizeClassIOS } from 'expo/build/ScreenOrientation/ScreenOrientation';
 import app from '../../constants/app';
 import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
+import Global from '../../constants/Global';
 
 
 
@@ -32,17 +35,54 @@ export default class CompanyProfileScreen extends React.Component {
     {
         super(props)
         this.state={
-                      name:'Nishant Kumar',
-                      post:'',
-                      image:'',
-                      gender:'',
-                      StartDate:'Select Join Date',
-                      DateOfBirth:'Select DOB', 
-                      Address:'',
-                      MobileNumber:'',
-                      EmailAddress:'',
-                      Resume:'',
-                      photo: null,
+                      
+                      // post:'',
+                      // image:'',
+                      // gender:'',
+                      // StartDate:'Select Join Date',
+                      // DateOfBirth:'Select DOB', 
+                      // Address:'',
+                      // MobileNumber:'',
+                      // EmailAddress:'',
+                      // Resume:'',
+                      // photo: null,
+                      type:'1',
+                        istypeError:false,
+                          typeErrorMsg:'',
+
+                      companyname:'Depixed',
+                        iscompanynameError:false,
+                          companynameErrorMsg:'',
+
+                      regNo:'wert543yui',
+                        isregNoError:false,
+                          regNoErrorMsg:'',
+
+                      owner:'Mox',
+                        isownerError:false,
+                          ownerErrorMsg:'',
+
+                      address:{
+                                    address:' B-103,  Samudra,',
+                                    street:' Navrangpura',
+                                    city:'Ahmedabad',
+                                    state:'Gujarat',
+                                    pincode:'380009',
+                                    contact:'+91 9724016900',
+                                    email:'info@depixed.com'
+                              },
+                        isaddressError:false,
+                          addressErrorMsg:'',
+
+                      photo:null,
+                        isphotoError:false,
+                          photoErrorMsg:'',
+
+                    userID:1,
+                      isuserIDError:false,
+                        userIDErrorMsg:'',
+
+                
                         
                     }
     }
@@ -58,6 +98,7 @@ export default class CompanyProfileScreen extends React.Component {
 
   async _onDocument()
     {
+      const body = this.state;
 
       try {
 
@@ -71,7 +112,7 @@ export default class CompanyProfileScreen extends React.Component {
               console.log("File selected ",size);
               console.log("File selected ",uri);
               console.log("File selected ",name);
-              this.setState({photo:{ type, uri, name, size }});
+              this.setState({photo:{ type:'image/png', uri, name, size }});
 
             }
             else
@@ -85,19 +126,22 @@ export default class CompanyProfileScreen extends React.Component {
     }
 
 
-  createFormData = (photo, body) => {
-  letdata = new FormData();
+  createFormData = (photo) => {
+    let body = this.state;
+  let data = new FormData();
+    console.log(photo);
+  data.append("pic",photo );
 
-  data.append("pic", {
-    name: photo.fileName,
-    type: photo.type,
-    uri:
-      Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-  });
+  // Object.keys(body).forEach(key => {
+  //   data.append(key, body[key]);
+  // });
 
-  Object.keys(body).forEach(key => {
-    data.append(key, body[key]);
-  });
+  data.append('company_name',body.companyname+"")
+  data.append('type',body.type+"")
+  data.append('address',body.address+"")
+  data.append('owner',body.owner+"")
+  data.append('user_id',body.userID+"")
+  data.append('reg_no',body.regNo+"")
 
   return data;
 };
@@ -134,12 +178,90 @@ export default class CompanyProfileScreen extends React.Component {
      console.log("Join Date : ",date);
     }
 
-    _onSave()
+   async _onSave()
     {
-        let data = {}
+        const {type,companyname,regNo,address, owner,photo}=this.state;
+      //  let data = await {type,companyname,regNo,address,owner};
+       await this._httpSignUp(await this.createFormData(photo));
+
+       
     }
+
+
+  _httpSignUp = async (data) => {
+    console.log("DAta to save : ",data);
+    console.log("Data to send : "+Global.API_URL+'comapny-store');   
+  
+    var connectionInfoLocal = '';
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+      // connectionInfo.type = 'none';//force local loding
+      if(connectionInfo.type == 'none'){
+        console.log('no internet ');
+        ToastAndroid.showWithGravityAndOffset(
+          'Oops! No Internet Connection',
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return;
+      }else{
+        console.log('yes internet '); 
+        this.setState({
+          isLoding:true,
+        });
+        fetch(Global.API_URL+'comapny-store', {
+          "async": true,
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',   
+              "Content-Type": "multipart/form-data",
+              "Cache-Control": "no-cache",
+            },
+            body: data 
+          }).then((response) =>response.json() )
+          .then((responseJson) => {
+            // var itemsToSet = responseJson.data;
+             console.log('resp:',responseJson);
+            //  if(responseJson.received == 'yes'){
+            //  this.setState({
+            //    isLoding:false,
+            //  });
+            //  }else{
+            //    ToastAndroid.showWithGravityAndOffset(
+            //      'Internal Server Error',
+            //      ToastAndroid.LONG,
+            //      ToastAndroid.BOTTOM,
+            //      25,
+            //      50,
+            //    );
+            //    this.setState({
+            //      isLoding:false,
+            //    });
+ 
+            //    console.log("Error in signUP :",)
+            //  }
+         })
+         .catch((error) => {
+          ToastAndroid.showWithGravityAndOffset(
+            'Network Failed!!! Retrying...',
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50,
+          );
+          console.log('on error fetching:'+error);
+          //  this._httpSignUp(data);
+        });
+      }
+    });
+    console.log(connectionInfoLocal);
+  }
+
     
     render(){
+      const {photo} = this.state;
         return (
           
           <Container>
@@ -202,6 +324,9 @@ export default class CompanyProfileScreen extends React.Component {
 
 
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Location    + </Title></Button>
+
+                    {photo && (
+                    <Image source={{uri: photo.uri}} style={{width:100, height:100 }}/>)}
                     
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onSave();console.log("Next Click")}}><Title>Save</Title></Button>

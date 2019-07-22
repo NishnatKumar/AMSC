@@ -206,6 +206,11 @@ export default class EmploySignInScreen extends Component {
                         <Label style={app.placeholder} >Username</Label>
                         <Input onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
                     </Item> 
+
+                    			{ errorValue.length !=0 ?
+                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
+                    <Text style={{fontSize:20,color:'red'}}>{errorValue}</Text>
+                    </View>:<Text></Text>}
                     
                     <Item regular floatingLabel style={[app.formGroup,this.state.usernameErrorMsg? app.errorMsg:app.borderPurpal,{marginTop:size.window.height/10}]}>
                         <Label style={app.placeholder}>Password</Label>
