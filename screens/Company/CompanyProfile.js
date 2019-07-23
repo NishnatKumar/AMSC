@@ -81,7 +81,7 @@ export default class CompanyProfileScreen extends React.Component {
                         isphotoError:false,
                           photoErrorMsg:'',
 
-                    userID:null,
+                    userID:1,
                       isuserIDError:false,
                         userIDErrorMsg:'',
 
@@ -108,7 +108,7 @@ export default class CompanyProfileScreen extends React.Component {
             
           }
            
-          this.setState({userID:userID.id});
+         this.setState({userID:userID.id});
             console.log(userID)
 
         } catch (error) {
@@ -207,7 +207,7 @@ export default class CompanyProfileScreen extends React.Component {
   // Object.keys(body).forEach(key => {
   //   data.append(key, body[key]);
   // });
-   console.log(body.address);
+   console.log(body);
   data.append('company_name',body.companyname+"")
   data.append('type',body.type+"")
   data.append('address',JSON.stringify(body.address))
@@ -324,9 +324,7 @@ export default class CompanyProfileScreen extends React.Component {
 
 
   _httpSignUp = async (data) => {
-    console.log("DAta to save : ",data);
-    console.log("Data to send : "+Global.API_URL+'comapny-store');   
-  
+   
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
       console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
@@ -360,7 +358,7 @@ export default class CompanyProfileScreen extends React.Component {
             // var itemsToSet = responseJson.data;
              console.log('resp:',responseJson);
              if(responseJson.success){
-                this.setProfile(responseJson.company)
+                this.setProfile(responseJson.data)
              }else{
                ToastAndroid.showWithGravityAndOffset(
                  'Internal Server Error',
@@ -394,18 +392,21 @@ export default class CompanyProfileScreen extends React.Component {
 
  async setProfile(data)
   {
+
+    data['address']= JSON.parse(data.address);
+
     this.setState({
       isLoding:false
     });
-    console.log("Profile Data ",data);
-
-   await AsyncStorage.setItem('profile',data);
+    console.log("Profile Data y ",data);
+    await AsyncStorage.setItem('profile',JSON.stringify(data));
+    this.props.navigation.navigate('Check');
 
   }
 
     
     render(){
-      const {photo,isLoding} = this.state;
+      const {photo,isLoding,userID,companyname, address,company,regNo,owner} = this.state;
 
       if(!isLoding)
         return (
@@ -421,18 +422,18 @@ export default class CompanyProfileScreen extends React.Component {
 
                   <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
                           <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                            <Input placeholder="Office" onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
+                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
                           </Item>
                           <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                            <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
+                            <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
                           </Item>
                   </View>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
+                      <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
                     </Item>
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
+                      <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
                     </Item>
 
                     {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
@@ -474,19 +475,19 @@ export default class CompanyProfileScreen extends React.Component {
                     </View>
                   
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
+                      <Input value={companyname} onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
+                      <Input value={regNo } onChangeText={(text)=>{this.onValueChnageAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}} />
+                      <Input value={owner} onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
+                      <Input value={address.url} onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
                     </Item>
 
 

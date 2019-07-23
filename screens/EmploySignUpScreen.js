@@ -41,7 +41,7 @@ export default class EmploySignUpScreen extends Component {
 
  
   _httpSignUp = async (data) => {
-    console.log("Data to send : "+Global.API_URL+'register');
+    console.log("Data to send : "+Global.API_URL+'register',data);
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
       console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
@@ -72,6 +72,8 @@ export default class EmploySignUpScreen extends Component {
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
              console.log('resp:',responseJson);
+             this.setState({isLoding:false});
+             this.props.navigation.navigate('EmployeeSignIn');
             //  if(responseJson.received == 'yes'){
             //  this.setState({
             //    isLoding:false,
@@ -99,8 +101,9 @@ export default class EmploySignUpScreen extends Component {
             25,
             50,
           );
+          this.setState({isLoding:false});
           console.log('on error fetching:'+error);
-           this._httpSignUp(data);
+          //  this._httpSignUp(data);
         });
       }
     });
@@ -111,10 +114,12 @@ export default class EmploySignUpScreen extends Component {
   {
     const { navigation } = this.props;
     const loginType = navigation.getParam('loginType', 'NO-ID');
+
     const cmpID = navigation.getParam('cmpID',null)
     
     this.setState({loginType:loginType,
                     cmpID:cmpID});
+      console.log(" Login : "+loginType+" : "+cmpID);
   }
 
   onValueChange(value) {
@@ -130,6 +135,9 @@ export default class EmploySignUpScreen extends Component {
   // This function will check all the validation rule
   checkValidation()
   {
+    try {
+      
+  
     console.log("On check validation");
     let userName = this.state.userName;
     let cpassword = this.state.cpassword;
@@ -141,26 +149,31 @@ export default class EmploySignUpScreen extends Component {
     {
       this.setState({ isNameErorr:true,
         isNameErrorMsg:'Enter the Correct Name ',});
+        console.log("Error in name")
     }
     else if(userName.length < 3)
     {
       this.setState({ isUserNameError:true,
         isUserNameErrorMsg:'Enter the Correct Name ',});
+        console.log("Error in user ")
     }
     else if(company != '')
     {
       this.setState({ isCompanyError:true,
         isCompanyErrorMsg:'Enter the Correct Name ',});
+        console.log("Error in company")
     }
     else if(password.length < 3)
     {
       this.setState({ isPasswordError:true,
         isPasswordErrorMsg:'Enter the Correct Name ',});
+        console.log("Error in passs")
     }
     else if(password != cpassword)
     {
       this.setState({ isCPasswordError:true,
         isCPasswordErrorMsg:'Password Not Match',});
+        console.log("Error in cpass")
     }
     else
     {
@@ -170,8 +183,17 @@ export default class EmploySignUpScreen extends Component {
           this._httpSignUp(data);
           console.log("Data Save .....")
       }
+      if(this.state.loginType == 'emp' && this.state.cmpID !=null )
+      {
+          let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,company_id:this.state.cmpID}
+          this._httpSignUp(data);
+          console.log("Data Save .....",data)
+      }
+      else{console.log("Error in login ");}
     }
-
+  } catch (error) {
+      console.log("Error in Em0ploy Signup ",error);
+  }
     
   }
 

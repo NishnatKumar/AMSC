@@ -6,6 +6,7 @@ import { processFontFamily } from 'expo-font';
 import app from '../constants/app';
 import Logo from './Logo';
 import Global from '../constants/Global';
+import Processing from './Processing';
 export default class EmploySignInScreen extends Component {
 
     constructor(props)
@@ -64,11 +65,18 @@ export default class EmploySignInScreen extends Component {
             body: JSON.stringify(data)
           }).then((response) =>response.json() )
           .then((responseJson) => {
-           
+            
+            console.log("Response : ",responseJson);
              if(responseJson.success){
                console.log(responseJson);
               this.setValues(responseJson)
-             }else{
+             }
+             if(responseJson.error)
+             {
+                this.setState({errorMsg:'Login Or Username Not found',isLoding:flase});
+
+             }
+             else{
                ToastAndroid.showWithGravityAndOffset(
                  'Internal Server Error',
                  ToastAndroid.LONG,
@@ -104,11 +112,14 @@ export default class EmploySignInScreen extends Component {
  async setValues(data)
   {
     console.log(data);
+    this.setState({isLoding:false});
 
     try {
 
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
+    
+      
      this.props.navigation.navigate('AuthLoading');
 
     } catch (error) {
@@ -134,6 +145,7 @@ export default class EmploySignInScreen extends Component {
       const {loginType} = this.state;
       if(loginType != null )
       {
+       
         if(loginType == 'emp')
           this.props.navigation.navigate('CompanyList',{loginType:loginType});
         else if(loginType == 'cmp')
@@ -205,7 +217,8 @@ export default class EmploySignInScreen extends Component {
 
   render() {
 
-    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password} =this.state;
+    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password,isLoding} =this.state;
+    if(!isLoding)
     return (
 
 
@@ -271,6 +284,8 @@ export default class EmploySignInScreen extends Component {
         </Content>
         </Container>
     );
+    else
+      return <Processing></Processing>
   }
 }
 
