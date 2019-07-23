@@ -14,6 +14,7 @@ import {
   DatePickerAndroid,
   NetInfo,
   ToastAndroid,
+  AsyncStorage
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -28,6 +29,7 @@ import Global from '../../constants/Global';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import Processing from '../Processing';
 
 
 
@@ -37,22 +39,12 @@ export default class CompanyProfileScreen extends React.Component {
     constructor(props)
     {
         super(props)
-        this.state={
+        this.state={                      
                       
-                      // post:'',
-                      // image:'',
-                      // gender:'',
-                      // StartDate:'Select Join Date',
-                      // DateOfBirth:'Select DOB', 
-                      // Address:'',
-                      // MobileNumber:'',
-                      // EmailAddress:'',
-                      // Resume:'',
-                      // photo: null,
 
                       companyList:[],
 
-                      type:'1',
+                      type:1,
                         istypeError:false,
                           typeErrorMsg:'',
 
@@ -79,7 +71,8 @@ export default class CompanyProfileScreen extends React.Component {
                                     state:'Gujarat',
                                     pincode:'380009',
                                     contact:'+91 9724016900',
-                                    email:'info@depixed.com'
+                                    email:'info@depixed.com',
+                                    url:'http://www.depixed.in/'
                               },
                         isaddressError:false,
                           addressErrorMsg:'',
@@ -88,7 +81,7 @@ export default class CompanyProfileScreen extends React.Component {
                         isphotoError:false,
                           photoErrorMsg:'',
 
-                    userID:1,
+                    userID:null,
                       isuserIDError:false,
                         userIDErrorMsg:'',
 
@@ -96,7 +89,7 @@ export default class CompanyProfileScreen extends React.Component {
                       islocationError:false,
                         locationErrorMsg:'',
 
-                
+                    isLoding:false
                         
                     }
     }
@@ -104,6 +97,25 @@ export default class CompanyProfileScreen extends React.Component {
   static navigationOptions = {
     header: null
 }
+
+  
+  async componentDidMount() {
+    try {
+          let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
+          if(!userID)
+          {
+            this.props.navigation.navigate('EmployeeSignIn');  
+            
+          }
+           
+          this.setState({userID:userID.id});
+            console.log(userID)
+
+        } catch (error) {
+          console.log("Error in CompnayProfile : ",error);
+        }
+  }
+  
 
 
   checkPermission()
@@ -187,21 +199,79 @@ export default class CompanyProfileScreen extends React.Component {
     let body = this.state;
   let data = new FormData();
     console.log(photo);
+
+    if(photo == null)
+      return;
   data.append("pic",photo );
 
   // Object.keys(body).forEach(key => {
   //   data.append(key, body[key]);
   // });
-
+   console.log(body.address);
   data.append('company_name',body.companyname+"")
   data.append('type',body.type+"")
-  data.append('address',body.address+"")
+  data.append('address',JSON.stringify(body.address))
   data.append('owner',body.owner+"")
   data.append('user_id',body.userID+"")
   data.append('reg_no',body.regNo+"")
 
   return data;
 };
+
+  onValueChnageAddress(text,key){
+      console.log("Text : ",text);
+      console.log("Key ",key);
+     let tempAddress = this.state.address;
+
+      if(key == 'Office')
+      {
+
+        tempAddress.address = text;
+        this.setState({address:tempAddress});
+       
+      }
+      else if(key == 'Street')
+      {
+
+        tempAddress.street = text;
+        this.setState({address:tempAddress});
+       
+      }
+      else if(key == 'City')
+      {
+
+        tempAddress.city = text;
+        this.setState({address:tempAddress});
+       
+      }
+      else if(key == 'State')
+      {
+
+        tempAddress.state = text;
+        this.setState({address:tempAddress});
+       
+      }
+      else if(key == 'Url')
+      {
+        tempAddress.state = text;
+        this.setState({url:tempAddress});
+      }
+      
+      else if(key == 'Title')
+      {
+        this.setState({companyname:text})
+      }
+      else if(key == 'Reg')
+      {
+        this.setState({regNo:text})
+      }
+      else if(key == 'Owner')
+      {
+        this.setState({owner:text})
+      }
+      
+      
+  }
 
 
 
@@ -289,24 +359,22 @@ export default class CompanyProfileScreen extends React.Component {
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
              console.log('resp:',responseJson);
-            //  if(responseJson.received == 'yes'){
-            //  this.setState({
-            //    isLoding:false,
-            //  });
-            //  }else{
-            //    ToastAndroid.showWithGravityAndOffset(
-            //      'Internal Server Error',
-            //      ToastAndroid.LONG,
-            //      ToastAndroid.BOTTOM,
-            //      25,
-            //      50,
-            //    );
-            //    this.setState({
-            //      isLoding:false,
-            //    });
+             if(responseJson.success){
+                this.setProfile(responseJson.company)
+             }else{
+               ToastAndroid.showWithGravityAndOffset(
+                 'Internal Server Error',
+                 ToastAndroid.LONG,
+                 ToastAndroid.BOTTOM,
+                 25,
+                 50,
+               );
+               this.setState({
+                 isLoding:false,
+               });
  
-            //    console.log("Error in signUP :",)
-            //  }
+               console.log("Error in signUP :",)
+             }
          })
          .catch((error) => {
           ToastAndroid.showWithGravityAndOffset(
@@ -324,9 +392,22 @@ export default class CompanyProfileScreen extends React.Component {
     console.log(connectionInfoLocal);
   }
 
+ async setProfile(data)
+  {
+    this.setState({
+      isLoding:false
+    });
+    console.log("Profile Data ",data);
+
+   await AsyncStorage.setItem('profile',data);
+
+  }
+
     
     render(){
-      const {photo} = this.state;
+      const {photo,isLoding} = this.state;
+
+      if(!isLoding)
         return (
           
           <Container>
@@ -335,7 +416,29 @@ export default class CompanyProfileScreen extends React.Component {
               <Content>
               <Title style={app.title}>Details </Title>
                   <Card style={app.Form} transparent >
-                 
+
+
+
+                  <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                            <Input placeholder="Office" onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
+                          </Item>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                            <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
+                          </Item>
+                  </View>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
+                    </Item>
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
+                    </Item>
+
+                    {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
+                   */}
+
+
                     <View>
                       <Title style={[app.placeholder,{color:'#000000',fontWeight:'900'}]}>{this.state.name} </Title>
                     </View>
@@ -365,34 +468,31 @@ export default class CompanyProfileScreen extends React.Component {
                           {
                            this.state.companyList
                           }
-                            
-                            {/* <Picker.Item label="Female" value="F" />
-                            <Picker.Item label="Male" value="M" />
-                            <Picker.Item label="Other" value="O" /> */}
+                         
                             
                           </Picker> 
                     </View>
-{/* 
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button> */}
+                  
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input placeholder="Title" style={{}} />
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input placeholder="Reg. No." style={{}} />
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input placeholder="Owner Name" style={{}} />
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input placeholder="Website" style={{}} />
+                      <Input onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
                     </Item>
 
 
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
+                   
+
+                    
 
                     {photo && (
                     <Image source={{uri: photo.uri}} style={{width:100, height:100 }}/>)}
@@ -409,6 +509,8 @@ export default class CompanyProfileScreen extends React.Component {
           </Container>
 
         );
+        else
+          return <Processing></Processing>
     }
 }
 

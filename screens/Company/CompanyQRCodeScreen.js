@@ -21,7 +21,7 @@ export default class QRCodeScreen extends React.Component
         setInterval(() => {
            
 
-            this.timeUpdate();
+          this.timeUpdate();
            }, 10000);
      
     }
@@ -89,14 +89,14 @@ export default class QRCodeScreen extends React.Component
     {
         let valueForQRCode = JSON.stringify(this.state.data);
         return(
-            <Container style={{alignContent:'center',backgroundColor:'#000000' }} >
+            <Container style={{alignContent:'center',backgroundColor:'#ffffff' }} >
                <StatusBar hidden/>
-                <View style={{padding:20,alignContent:'center',backgroundColor:'#000000',marginTop:size.window.height/4}}>
+                <View style={{padding:20,alignContent:'center',backgroundColor:'#ffffff',marginTop:size.window.height/4}}>
                 <QRCode
                     value={valueForQRCode}
                     size={size.window.width-40}
-                    bgColor='#ffffff'
-                    fgColor='#000000'/>
+                    bgColor='#000000'
+                    fgColor='#ffffff'/>
                 </View>
 
                    

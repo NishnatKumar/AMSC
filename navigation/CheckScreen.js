@@ -19,13 +19,21 @@ export default class CheckScreen extends React.Component {
     /** TODO : WE have to remove comment */    
       const userToken = await AsyncStorage.getItem('userToken');
       const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
+      const profile = JSON.parse(await AsyncStorage.getItem('profile'));
 
       if(userData.user_type == 'cmp'){
-        this.props.navigation.navigate('AdminWelcome');
+        console.log("User DAta : ",profile);
+        if(!profile)
+          this.props.navigation.navigate('CompanyProfile');
+        else
+          this.props.navigation.navigate('AdminWelcome');
 
       }
      else if(userData.user_type == 'emp'){
-        this.props.navigation.navigate('Home');
+          if(!profile)
+            this.props.navigation.navigate('Profile');
+          else
+            this.props.navigation.navigate('Home');
       }
       else
       {

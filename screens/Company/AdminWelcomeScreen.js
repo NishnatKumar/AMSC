@@ -69,10 +69,15 @@ export default class AdminWelcomeScreen extends React.Component {
     //     }
     // }
 
-    // _profile()
-    // {
-    //   this.props.navigation.navigate('Profile');
-    // }
+    _profile()
+    {
+      /**Profile of company */
+      this.props.navigation.navigate('CompanyProfile');
+
+
+
+
+    }
 
     // _history()
     // {
@@ -94,11 +99,11 @@ export default class AdminWelcomeScreen extends React.Component {
                 <Logo></Logo>
              
 
-                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} disabled={this.state.isIn}><Title>Employee List</Title></Button>
+                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
 
-                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} disabled={this.state.isOut}><Title>Today Key</Title></Button>
+                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} ><Title>Today Key</Title></Button>
 
-                {/* <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button> */}
+                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._profile()}}><Title>Profile</Title></Button>
 
             <Image source={require('../../assets/images/12.png')} style={{width:size.window.width,height:size.window.height/2,marginTop:5,opacity:0.5}} />
 
