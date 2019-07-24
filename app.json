@@ -24,7 +24,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.depixed.aws"
+    },
+    "android": {
+      "package": "com.depixed.aws"
     }
   }
 }
