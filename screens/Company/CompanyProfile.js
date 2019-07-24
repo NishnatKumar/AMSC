@@ -43,6 +43,8 @@ export default class CompanyProfileScreen extends React.Component {
                       EmailAddress:'',
                       Resume:'',
                       photo: null,
+
+
                         
                     }
     }
@@ -71,6 +73,7 @@ export default class CompanyProfileScreen extends React.Component {
               console.log("File selected ",size);
               console.log("File selected ",uri);
               console.log("File selected ",name);
+              console.log("File selected ",type);
               this.setState({photo:{ type, uri, name, size }});
 
             }
@@ -104,9 +107,10 @@ export default class CompanyProfileScreen extends React.Component {
 
    async cylender()
     {
-        try {
+      try 
+        {
           const {action, year, month, day} = await DatePickerAndroid.open({           
-            date: new Date()
+          date: new Date()
         });
 
         if (action !== DatePickerAndroid.dismissedAction) {
@@ -136,6 +140,7 @@ export default class CompanyProfileScreen extends React.Component {
 
     _onSave()
     {
+     
         let data = {}
     }
     
