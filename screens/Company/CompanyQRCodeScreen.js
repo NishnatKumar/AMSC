@@ -1,5 +1,5 @@
  import React from 'react';
- import {StatusBar} from 'react-native';
+ import {StatusBar,AsyncStorage} from 'react-native';
 import { Container, View } from 'native-base';
 import QRCode from 'react-native-qrcode';
 import size from '../../constants/Layout';
@@ -15,14 +15,20 @@ export default class QRCodeScreen extends React.Component
             data : {
                 time:'23:56',
                 date:'12/23/1995'
-              }
+              },
+            userData:{
+                
+            }
         }
+        this.logo();
 
         setInterval(() => {
            
 
           this.timeUpdate();
            }, 10000);
+
+           
      
     }
 
@@ -30,13 +36,20 @@ export default class QRCodeScreen extends React.Component
    
 
 
- componentDidMount() {
+ async componentDidMount() {
+    const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
+    this.setState({userData:userData});
+   
      this.timeUpdate();
+
    }
 
 
    timeUpdate()
    {
+    try {
+        
+    
      var that = this;
      var date = new Date().getDate(); //Current Date
      var month = new Date().getMonth() + 1; //Current Month
@@ -67,15 +80,25 @@ export default class QRCodeScreen extends React.Component
          date = '0'+date;
      }
     
-    let key =  date+"/"+month+"/"+year+" "+hours+":"+min+":"+sec; 
+    let key = this.state.userData.id+" "+ date+"/"+month+"/"+year+" "+hours+":"+min+":"+sec; 
+    console.log('Key : ',key);
     
      that.setState({data:key});
 
-
+    } catch (error) {
+        console.log("Error : ",error);
+    }
    }
 
 
-  
+   async logo()
+   {
+       let profile =JSON.parse(await AsyncStorage.getItem('Profile'));
+
+       console.log('Profile : ',profile);
+
+
+   }
    
 
     static navigationOptions = {

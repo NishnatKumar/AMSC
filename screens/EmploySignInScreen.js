@@ -73,7 +73,7 @@ export default class EmploySignInScreen extends Component {
              }
              if(responseJson.error)
              {
-                this.setState({errorMsg:'Login Or Username Not found',isLoding:flase});
+                this.setState({errorMsg:'Login Or Username Not found',isLoding:false});
 
              }
              else{
@@ -116,6 +116,7 @@ export default class EmploySignInScreen extends Component {
 
     try {
 
+      
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
     

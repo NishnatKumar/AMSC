@@ -394,6 +394,9 @@ export default class CompanyProfileScreen extends React.Component {
  async setProfile(data)
   {
 
+    try {
+      
+    
     data['address']= JSON.parse(data.address);
 
     this.setState({
@@ -402,6 +405,11 @@ export default class CompanyProfileScreen extends React.Component {
     console.log("Profile Data y ",data);
     await AsyncStorage.setItem('profile',JSON.stringify(data));
     this.props.navigation.navigate('Check');
+  } catch (error) {
+
+    console.log("Error In Conpony Prfile",error);
+      
+  }
 
   }
 

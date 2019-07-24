@@ -37,18 +37,22 @@ export default class ProfileScreen extends React.Component {
         super(props)
         this.state={
                       
-                      post:'',
-                      image:'',
+                      // post:'',
+                      // image:'',
+                     
                       gender:'',
+                        isgenderError:false,
+                          genderErrorMsg:'',
+
                       StartDate:'Select Join Date',
                       DateOfBirth:'Select DOB', 
-                      Address:'',
+                    
                       MobileNumber:'',
                       EmailAddress:'',
-                      Resume:'',
+                     
 
-                      DOB:null,
-                      join:null,
+                      
+                
 
                       name:'Nishant Kumar',
                         isnameError:false,
@@ -62,11 +66,11 @@ export default class ProfileScreen extends React.Component {
                         isDOBError:false,
                           DOBErrorMsg:'',
 
-                      resume:'',
+                      resume:null,
                         isresumeError:false,
                           resumeErrorMsg:'',
 
-                      pic:'',
+                      pic:null,
                         ispicError:false,
                           picErrorMsg:'',
 
@@ -82,7 +86,7 @@ export default class ProfileScreen extends React.Component {
                         state:'Gujarat',
                         pincode:'380009',
                         email:'info@depixed.com',
-                        url:'http://www.depixed.in/'
+                       
                   },
                 isaddressError:false,
                   addressErrorMsg:'',
@@ -108,8 +112,8 @@ export default class ProfileScreen extends React.Component {
     }
 
   static navigationOptions = {
-    header: null
-}
+        header: null
+    }
 
     
   onValueChnageAddress(text,key){
@@ -182,6 +186,7 @@ export default class ProfileScreen extends React.Component {
               console.log("File selected ",size);
               console.log("File selected ",uri);
               console.log("File selected ",name);
+              this.setState({resume:{ type:'image/*', uri, name, size }});
 
             }
             else
@@ -210,6 +215,7 @@ export default class ProfileScreen extends React.Component {
           console.log("File selected ",size);
           console.log("File selected ",uri);
           console.log("File selected ",name);
+          this.setState({pic:{ type:'image/*', uri, name, size }});
 
         }
         else
@@ -257,10 +263,46 @@ export default class ProfileScreen extends React.Component {
      console.log("Join Date : ",date);
     }
 
-    _onNext()
+    checkVAlidation()
     {
-      console.log("Next Press");
-      this.props.navigation.navigate('Bank');
+      console.log("In Check validation");
+      const {gender,join,DOB,resume,pic,phone,address} = this.state;
+      let data = null;
+      if(gender =='')
+      {
+        console.log("Gender Not selected");
+      }
+      else if(resume == null)
+      {
+        console.log("Document Selected");
+      }
+      else if(pic == null)
+      {
+        console.log("Pic not selected");
+      }
+      else
+      {
+        console.log("VAlidation PAss");
+       data = {gender:gender,join:join,DOB:DOB,resume:resume,pic:pic,address:address}
+      }
+      return data;
+    }
+
+  async  _onNext()
+    {
+      console.log("Ein next");
+     let data = await this.checkVAlidation();
+      if(data!=null)
+      {
+        console.log("Next Press");
+       this.props.navigation.navigate('Bank',{data:data });
+      }
+      else
+      {
+          console.log("Error in ");
+      }
+
+     
     }
   
     render(){
@@ -333,7 +375,7 @@ export default class ProfileScreen extends React.Component {
                   
                    
                    
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();console.log("Next Click")}}><Title>Next</Title></Button>
+                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();}}><Title>Next</Title></Button>
                  
                   </Card>
                   

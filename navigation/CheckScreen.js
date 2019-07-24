@@ -15,7 +15,7 @@ export default class CheckScreen extends React.Component {
     }
   
     // Fetch the token from storage then navigate to our appropriate place
-    async componentWillMount() {
+    async componentDidMount() {
 
       try {
         
@@ -40,7 +40,8 @@ export default class CheckScreen extends React.Component {
      else if(userData.user_type == 'emp'){
           if(!profile){
             console.log("In profile")
-            this.props.navigation.navigate('Profile',{userData:userData});
+            // this.props.navigation.navigate('Profile',{userData:userData});
+            this.props.navigation.navigate('Home');
           }
           else
             this.props.navigation.navigate('Home');
@@ -67,7 +68,7 @@ export default class CheckScreen extends React.Component {
     render() {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <ActivityIndicator color={'#000000'} />
           <StatusBar barStyle="default" />
         </View>
       );

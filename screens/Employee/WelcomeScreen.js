@@ -10,7 +10,8 @@ import {
   View,
   StatusBar,
   ImageBackground,
-  TouchableHighlight
+  TouchableHighlight,
+  AsyncStorage
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -82,6 +83,21 @@ export default class WelcomeScreen extends React.Component {
     }
 
     
+    async _logOut()
+    {
+      try {
+        await AsyncStorage.removeItem('userToken');
+        await AsyncStorage.removeItem('profile');
+        await AsyncStorage.removeItem('userDetails');
+        this.props.navigation.navigate('AuthLoading');
+        console.log("Log Out ")
+      } catch (error) {
+        console.log("Error he : ",error);
+      }
+     
+    }
+
+    
     render(){
         return (
           
@@ -96,6 +112,7 @@ export default class WelcomeScreen extends React.Component {
 
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
+                <Button block full style={styles.btn} onPress={()=>{this._logOut()}} ><Title>Log Out</Title></Button>
 
           </Container>
 
