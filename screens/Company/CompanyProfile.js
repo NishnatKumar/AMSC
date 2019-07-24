@@ -277,9 +277,10 @@ export default class CompanyProfileScreen extends React.Component {
 
    async cylender()
     {
-        try {
+      try 
+        {
           const {action, year, month, day} = await DatePickerAndroid.open({           
-            date: new Date()
+          date: new Date()
         });
 
         if (action !== DatePickerAndroid.dismissedAction) {

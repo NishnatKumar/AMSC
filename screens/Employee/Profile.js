@@ -11,6 +11,8 @@ import {
   StatusBar,
   ImageBackground,
   TouchableHighlight,
+  NetInfo,
+  ToastAndroid,
   DatePickerAndroid
 } from 'react-native';
 
@@ -44,6 +46,9 @@ export default class ProfileScreen extends React.Component {
                       MobileNumber:'',
                       EmailAddress:'',
                       Resume:'',
+
+                      DOB:null,
+                      join:null,
 
                       name:'Nishant Kumar',
                         isnameError:false,
@@ -105,33 +110,6 @@ export default class ProfileScreen extends React.Component {
   static navigationOptions = {
     header: null
 }
-
-    _officeIn()
-    {
-          this.props.navigation.navigate('QRCode');
-          if(this.state.isIN)
-          {
-            
-              let formatted_date = "IN : "+Time();
-
-                console.log("In Office in ",formatted_date);
-                this.setState({inTime:formatted_date,isIn:true});
-
-          }
-
-    }
-
-    _officeOut()
-    {
-        this.props.navigation.navigate('QRCode');
-        if(this.state.isOut)
-        {
-          let formatted_date = "Out : "+Time();
-
-          console.log("Out Office : ",formatted_date);
-          this.setState({outTime:formatted_date,isOut:true});
-        }
-    }
 
     
   onValueChnageAddress(text,key){
@@ -224,7 +202,7 @@ export default class ProfileScreen extends React.Component {
 
       const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'image/*',copyToCacheDirectory:true});
 
-
+        console.log("File Type ",type)
 
         if(type == 'success')
         {
@@ -268,14 +246,14 @@ export default class ProfileScreen extends React.Component {
     async onDOBDate()
     {
       let date = await this.cylender();
-     await this.setState({DateOfBirth :'DOB : '+date});
+     await this.setState({DateOfBirth :'DOB : '+date, DOB:date });
      console.log("DOB Date : ",date);
     }
 
    async onJoinDate()
     {
       let date = await this.cylender();
-     await this.setState({StartDate:'Join Date : '+date});
+     await this.setState({StartDate:'Join Date : '+date, join:date });
      console.log("Join Date : ",date);
     }
 
@@ -284,10 +262,7 @@ export default class ProfileScreen extends React.Component {
       console.log("Next Press");
       this.props.navigation.navigate('Bank');
     }
-    onValueChange()
-    {
-
-    }
+  
     render(){
 
       const {address} = this.state
@@ -321,8 +296,10 @@ export default class ProfileScreen extends React.Component {
                             }}
                             itemTextStyle={{ color: '#788ad2' }}
                             style={{ width: undefined,borderColor:'#16bdf5',color:'#ffffff',borderWidth:0.5 ,marginTop:10}}
-                            selectedValue={this.state.company}
-                            onValueChange={this.onValueChange.bind(this)}
+                            selectedValue={this.state.gender}
+                            onValueChange={(itemValue, itemIndex)=>{
+                              console.log("Item Value :",itemValue);
+                              this.setState({gender: itemValue})}}
                           
                           >
                             <Picker.Item label="Select Gender" value="" />
