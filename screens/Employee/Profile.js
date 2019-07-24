@@ -34,7 +34,7 @@ export default class ProfileScreen extends React.Component {
     {
         super(props)
         this.state={
-                      name:'Nishant Kumar',
+                      
                       post:'',
                       image:'',
                       gender:'',
@@ -43,9 +43,63 @@ export default class ProfileScreen extends React.Component {
                       Address:'',
                       MobileNumber:'',
                       EmailAddress:'',
-                      Resume:''
+                      Resume:'',
+
+                      name:'Nishant Kumar',
+                        isnameError:false,
+                          nameErrorMsg:'',
+                      
+                      join:'',
+                        isjoinError:false,
+                          joinErrorMsg:'',
+                      
+                      DOB:'',
+                        isDOBError:false,
+                          DOBErrorMsg:'',
+
+                      resume:'',
+                        isresumeError:false,
+                          resumeErrorMsg:'',
+
+                      pic:'',
+                        ispicError:false,
+                          picErrorMsg:'',
+
+                      phone:'',
+                        isphoneError:false,
+                          phoneErrorMsg:'',
+                      
+                      
+                      address:{
+                        address:' B-103,  Samudra,',
+                        street:' Navrangpura',
+                        city:'Ahmedabad',
+                        state:'Gujarat',
+                        pincode:'380009',
+                        email:'info@depixed.com',
+                        url:'http://www.depixed.in/'
+                  },
+                isaddressError:false,
+                  addressErrorMsg:'',
+
+                      
                         
                     }
+              console.log("In profile")
+    }
+
+
+    componentDidMount()
+    {
+      const { navigation } = this.props;
+      const value =navigation.getParam('userData', 'NO-ID');
+      if(value!= null)
+      {
+        this.setState({name:value.name,userID:value.id}); 
+      }
+      console.log("USer Data : ",value);
+
+
     }
 
   static navigationOptions = {
@@ -79,10 +133,61 @@ export default class ProfileScreen extends React.Component {
         }
     }
 
-    onValueChange()
+    
+  onValueChnageAddress(text,key){
+    console.log("Text : ",text);
+    console.log("Key ",key);
+   let tempAddress = this.state.address;
+
+    if(key == 'Office')
     {
 
+      tempAddress.address = text;
+      this.setState({address:tempAddress});
+     
     }
+    else if(key == 'Street')
+    {
+
+      tempAddress.street = text;
+      this.setState({address:tempAddress});
+     
+    }
+    else if(key == 'City')
+    {
+
+      tempAddress.city = text;
+      this.setState({address:tempAddress});
+     
+    }
+    else if(key == 'State')
+    {
+
+      tempAddress.state = text;
+      this.setState({address:tempAddress});
+     
+    }
+    else if(key == 'Url')
+    {
+      tempAddress.state = text;
+      this.setState({url:tempAddress});
+    }
+    
+    else if(key == 'Title')
+    {
+      this.setState({companyname:text})
+    }
+    else if(key == 'Reg')
+    {
+      this.setState({regNo:text})
+    }
+    else if(key == 'Owner')
+    {
+      this.setState({owner:text})
+    }
+    
+    
+}
 
   async _onDocument()
     {
@@ -110,6 +215,34 @@ export default class ProfileScreen extends React.Component {
         }
         
     }
+
+
+  async  _profilePic()
+  {
+
+    try {
+
+      const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'image/*',copyToCacheDirectory:true});
+
+
+
+        if(type == 'success')
+        {
+
+          console.log("File selected ",size);
+          console.log("File selected ",uri);
+          console.log("File selected ",name);
+
+        }
+        else
+        console.log("File Note Selected");
+
+      } catch (e) {
+        console.log(e.message)
+        console.log(e.stack)
+    }
+
+  }
 // Use `new Date()` for current date.
           // May 25 2020. Month 0 is January.
           // Selected year, month (0-11), day
@@ -151,8 +284,13 @@ export default class ProfileScreen extends React.Component {
       console.log("Next Press");
       this.props.navigation.navigate('Bank');
     }
-    
+    onValueChange()
+    {
+
+    }
     render(){
+
+      const {address} = this.state
         return (
           
           <Container>
@@ -197,12 +335,27 @@ export default class ProfileScreen extends React.Component {
 
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button>
-                    <Item regular style={[{height:110,marginBottom:15},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Textarea placeholder="Address" >
+                    <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
+                          </Item>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                            <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
+                          </Item>
+                  </View>
 
-                      </Textarea>
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
+                    </Item>
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
                     </Item>
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Document    + </Title></Button>
+                            
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._profilePic();console.log("Cylender Click")}}><Title>Select Pic    + </Title></Button>
+                  
+                   
+                   
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onNext();console.log("Next Click")}}><Title>Next</Title></Button>
                  
                   </Card>

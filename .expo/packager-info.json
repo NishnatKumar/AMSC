@@ -3,8 +3,7 @@
   "expoServerPort": 19000,
   "packagerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": "https://5a-2ci.nishantrah656.amsc.exp.direct",
-  "packagerNgrokUrl": "https://packager.5a-2ci.nishantrah656.amsc.exp.direct",
-  "ngrokPid": 4464,
-  "webpackServerPort": null
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null
 }

@@ -14,8 +14,9 @@ import EmpListScreen from "../screens/Company/EmployeeListScreen";
 
 
 const AppStack = createStackNavigator({
+  Check:{screen: CheckScreen },
                                         CompanyProfile:{screen:CompanyProfileScreen},
-                                        Check:{screen: CheckScreen },
+                                       
                                         Home:{screen:WelcomeScreen},
                                         QRCodeScreen:{screen:QRCodeScreen},
                                        

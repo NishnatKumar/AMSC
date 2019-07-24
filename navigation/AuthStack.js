@@ -8,17 +8,13 @@ import HomeScreen from "../screens/HomeScreen";
 import CompanyListScreen from "../screens/CompanyListScreen";
 
 
-const AuthStack = createStackNavigator({ 
-
-                                            
+const AuthStack = createStackNavigator({      
                                         CompanyList:CompanyListScreen,
                                         HomePage: HomeScreen ,
                                         EmployeeSignIn: EmploySignInScreen,
                                         ForgotPassword: ForgotScreen,
                                         ResetPassword:ResetPasswordScreen,
                                         EmployeeSignUp:EmploySignUpScreen,
-
-
  },{
      initialRouteName:'HomePage'
  });

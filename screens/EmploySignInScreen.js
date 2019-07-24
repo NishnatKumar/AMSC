@@ -1,27 +1,31 @@
 import React, { Component } from 'react';
-import {StatusBar,KeyboardAvoidingView,AsyncStorage} from 'react-native';
+import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo} from 'react-native';
 import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
 import app from '../constants/app';
 import Logo from './Logo';
+import Global from '../constants/Global';
+import Processing from './Processing';
 export default class EmploySignInScreen extends Component {
 
     constructor(props)
     {
       super(props)
       this.state={
-                    username:'',
+                    username:'nishantraj656@gmial.com',
                     isUsernameError:false,
                     usernameErrorMsg:'',
 
-                    password:'',
+                    password:'9939224274',
                     isPasswordError:false,
                     passwordErrorMsg:'',
 
                     errorMsg:'',
 
-                    loginType:null
+                    loginType:null,
+
+                    isLoding:false,
                 }
     }
 
@@ -31,7 +35,8 @@ export default class EmploySignInScreen extends Component {
 
     
     _httpLogin = async (data) => {
-    console.log("Data to send : "+Global.API_URL+'register');
+    console.log("Data to send : "+Global.API_URL+'login');
+    console.log("Data : ",data);
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
       console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
@@ -51,7 +56,7 @@ export default class EmploySignInScreen extends Component {
         this.setState({
           isLoding:true,
         });
-        fetch(Global.API_URL+'register', {
+        fetch(Global.API_URL+'login', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',   
@@ -60,13 +65,18 @@ export default class EmploySignInScreen extends Component {
             body: JSON.stringify(data)
           }).then((response) =>response.json() )
           .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
-             console.log('resp:',responseJson);
-             if(responseJson.received == 'yes'){
-             this.setState({
-               isLoding:false,
-             });
-             }else{
+            
+            console.log("Response : ",responseJson);
+             if(responseJson.success){
+               console.log(responseJson);
+              this.setValues(responseJson)
+             }
+             if(responseJson.error)
+             {
+                this.setState({errorMsg:'Login Or Username Not found',isLoding:flase});
+
+             }
+             else{
                ToastAndroid.showWithGravityAndOffset(
                  'Internal Server Error',
                  ToastAndroid.LONG,
@@ -78,7 +88,7 @@ export default class EmploySignInScreen extends Component {
                  isLoding:false,
                });
  
-               console.log("Error in signUP :",)
+               console.log("Error in signUP :",responseJson)
              }
          })
          .catch((error) => {
@@ -98,6 +108,30 @@ export default class EmploySignInScreen extends Component {
   }
 
 
+  //To set user data in localhost
+ async setValues(data)
+  {
+    console.log(data);
+    this.setState({isLoding:false});
+
+    try {
+
+     await AsyncStorage.setItem('userToken',data.token+"");
+    await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
+    
+      
+     this.props.navigation.navigate('AuthLoading');
+
+    } catch (error) {
+      console.log("Eroor is signup ",error);
+    }
+    
+
+
+
+  }
+
+
     componentWillMount()
     {
       const { navigation } = this.props;
@@ -111,6 +145,7 @@ export default class EmploySignInScreen extends Component {
       const {loginType} = this.state;
       if(loginType != null )
       {
+       
         if(loginType == 'emp')
           this.props.navigation.navigate('CompanyList',{loginType:loginType});
         else if(loginType == 'cmp')
@@ -150,28 +185,28 @@ export default class EmploySignInScreen extends Component {
       else
       {
         console.log("Username");
-          let data={username:username,password:password};
+          let data={email:username,password:password};
           this._httpLogin(data);
       }   
 
 
     }
 
-    _htttpLogin(data)
-    {
-      console.log("Data value : ",data);
-        if(data.username == 'admin' && data.password == 'admin2' )
-        {
-          console.log("Login");
-         let data = {userType:'cmp'}
-          this._setValue(JSON.stringify(data))
-        }
-        else{
-          this.setState({
-            isPasswordError:true,
-            errorMsg :'Enter The Correct username and  password',})
-        }
-    }
+    // _htttpLogin(data)
+    // {
+    //   console.log("Data value : ",data);
+    //     if(data.username == 'admin' && data.password == 'admin2' )
+    //     {
+    //       console.log("Login");
+    //      let data = {userType:'cmp'}
+    //       this._setValue(JSON.stringify(data))
+    //     }
+    //     else{
+    //       this.setState({
+    //         isPasswordError:true,
+    //         errorMsg :'Enter The Correct username and  password',})
+    //     }
+    // }
 
     async _setValue(data)
     {
@@ -181,7 +216,12 @@ export default class EmploySignInScreen extends Component {
     }
 
   render() {
+
+    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password,isLoding} =this.state;
+    if(!isLoding)
     return (
+
+
       <Container>
       <StatusBar backgroundColor="green" barStyle="default" />
          
@@ -202,15 +242,24 @@ export default class EmploySignInScreen extends Component {
                     :
                     <Text></Text>
                   }                  
-                    <Item regular floatingLabel style={[app.formGroup,this.state.usernameErrorMsg? app.errorMsg:app.borderPurpal]} >
-                        <Label style={app.placeholder} >Username</Label>
-                        <Input onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
+                    <Item regular  style={[app.formGroup,this.state.isUsernameError? app.errorMsg:app.borderPurpal]} >
+                         <Input value={username} placeholder="Username" onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
                     </Item> 
+
+                    			{ usernameErrorMsg.length !=0 ?
+                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
+                    <Text style={{fontSize:20,color:'red'}}>{usernameErrorMsg}</Text>
+                    </View>:<Text></Text>}
                     
-                    <Item regular floatingLabel style={[app.formGroup,this.state.usernameErrorMsg? app.errorMsg:app.borderPurpal,{marginTop:size.window.height/10}]}>
-                        <Label style={app.placeholder}>Password</Label>
-                        <Input onChangeText={(text)=>{this.setState({password:text});}} secureTextEntry={true} textContentType="password"  />
+                    <Item regular  style={[app.formGroup,isPasswordError? app.errorMsg:app.borderPurpal,{marginTop:size.window.height/10}]}>
+                         <Input value={password} onChangeText={(text)=>{this.setState({password:text});}} placeholder="Password" secureTextEntry={true} textContentType="password"  />
                     </Item>  
+
+
+                    { passwordErrorMsg.length !=0 ?
+                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
+                    <Text style={{fontSize:20,color:'red'}}>{passwordErrorMsg}</Text>
+                    </View>:<Text></Text>}
                    
             <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Forgot Press");
                     this.props.navigation.navigate('ForgotPassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>
@@ -235,6 +284,8 @@ export default class EmploySignInScreen extends Component {
         </Content>
         </Container>
     );
+    else
+      return <Processing></Processing>
   }
 }
 

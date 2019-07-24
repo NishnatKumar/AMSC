@@ -41,7 +41,7 @@ export default class Timer extends React.Component {
            
 
            this.timeUpdate();
-          }, 3000);
+          }, 1000);
     
     }
 

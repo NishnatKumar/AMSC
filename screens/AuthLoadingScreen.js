@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import {
     ActivityIndicator,
     AsyncStorage,
@@ -16,8 +16,15 @@ export default class AuthLoadScreen extends React.Component {
   
     // Fetch the token from storage then navigate to our appropriate place
     _bootstrapAsync = async () => {
-      await AsyncStorage.removeItem('userToken');
+    //  await AsyncStorage.removeItem('userToken');
+    //  await AsyncStorage.removeItem('profile');
+    //  await AsyncStorage.removeItem('userDetails');
       const userToken = await AsyncStorage.getItem('userToken');
+
+
+     
+
+    
   
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.

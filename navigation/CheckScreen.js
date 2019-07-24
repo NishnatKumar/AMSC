@@ -16,14 +16,43 @@ export default class CheckScreen extends React.Component {
   
     // Fetch the token from storage then navigate to our appropriate place
     async componentWillMount() {
+
+      try {
+        
+      
     /** TODO : WE have to remove comment */    
       const userToken = await AsyncStorage.getItem('userToken');
-      const loginType = 'cmp';
+      const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
+      const profile = JSON.parse(await AsyncStorage.getItem('profile'));
 
-      if(loginType == 'cmp')
-        this.props.navigation.navigate('AdminWelcome');
-     else if(loginType == 'emp')
-        this.props.navigation.navigate('Home');
+      console.log("Profile : ",profile);
+      console.log("User Data  : ",userData);
+      console.log("UserToken : ",userToken);
+
+      if(userData.user_type == 'cmp'){
+        console.log("User DAta : ",profile);
+        if(!profile)
+          this.props.navigation.navigate('CompanyProfile');
+        else
+          this.props.navigation.navigate('AdminWelcome');
+
+      }
+     else if(userData.user_type == 'emp'){
+          if(!profile){
+            console.log("In profile")
+            this.props.navigation.navigate('Profile',{userData:userData});
+          }
+          else
+            this.props.navigation.navigate('Home');
+      }
+      else
+      {
+        this.props.navigation.navigate('Auth');
+        console.log("In error me hu",userData)
+      }
+    } catch (error) {
+        console.log("Error ",error);
+    }
 
     //   if(userToken != null)
     //   {
