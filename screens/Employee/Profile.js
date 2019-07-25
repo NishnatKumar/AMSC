@@ -13,7 +13,8 @@ import {
   TouchableHighlight,
   NetInfo,
   ToastAndroid,
-  DatePickerAndroid
+  DatePickerAndroid,
+  AsyncStorage,
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -54,7 +55,7 @@ export default class ProfileScreen extends React.Component {
                       
                 
 
-                      name:'Nishant Kumar',
+                      name:'',
                         isnameError:false,
                           nameErrorMsg:'',
                       
@@ -80,12 +81,12 @@ export default class ProfileScreen extends React.Component {
                       
                       
                       address:{
-                        address:' B-103,  Samudra,',
-                        street:' Navrangpura',
-                        city:'Ahmedabad',
-                        state:'Gujarat',
-                        pincode:'380009',
-                        email:'info@depixed.com',
+                        address:'',
+                        street:'',
+                        city:'',
+                        state:'',
+                        pincode:'',
+                        email:'',
                        
                   },
                 isaddressError:false,
@@ -98,14 +99,18 @@ export default class ProfileScreen extends React.Component {
     }
 
 
-    componentDidMount()
+   async componentDidMount()
     {
       const { navigation } = this.props;
       const value =navigation.getParam('userData', 'NO-ID');
+
       if(value!= null)
       {
         this.setState({name:value.name,userID:value.id}); 
       }
+
+      
+      
       console.log("USer Data : ",value);
 
 
@@ -240,7 +245,7 @@ export default class ProfileScreen extends React.Component {
 
         if (action !== DatePickerAndroid.dismissedAction) {
             // console.log(day+' - '+month+' - '+year)
-           return day+'-'+month+'-'+year
+           return  year+'-'+month+'-'+day
             
         }
       } catch ({code, message}) {

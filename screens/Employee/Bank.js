@@ -40,21 +40,21 @@ export default class BankScreen extends React.Component {
     {
         super(props)
         this.state={
-                      AC:'1234567890',
+                      AC:'',
                     isACError:false,
                     errorACMsg:'',
 
 
 
-                      IFSCCODE:'234534',
+                      IFSCCODE:'',
                       isIFCError:false,
                         errorIFSCMsg:'',
 
-                    Name:'Nishant Kumar',
+                    Name:'',
                     isNameError:false,
                         errorNameCMsg:'',
 
-                    Bank:'SBI',
+                    Bank:'',
                     isBankError:false,
                         errorBankCMsg:'',
 

@@ -25,12 +25,12 @@ export default class CheckScreen extends React.Component {
       const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
       const profile = JSON.parse(await AsyncStorage.getItem('profile'));
 
-      console.log("Profile : ",profile);
-      console.log("User Data  : ",userData);
-      console.log("UserToken : ",userToken);
+      // console.log("Profile : ",profile);
+      // console.log("User Data  : ",userData);
+      // console.log("UserToken : ",userToken);
 
       if(userData.user_type == 'cmp'){
-        console.log("User DAta : ",profile);
+        // console.log("User DAta : ",profile);
         if(!profile)
           this.props.navigation.navigate('CompanyProfile');
         else
@@ -49,7 +49,7 @@ export default class CheckScreen extends React.Component {
       else
       {
         this.props.navigation.navigate('Auth');
-        console.log("In error me hu",userData)
+        // console.log("In error me hu",userData)
       }
     } catch (error) {
         console.log("Error ",error);

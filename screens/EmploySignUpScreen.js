@@ -16,19 +16,19 @@ export default class EmploySignUpScreen extends Component {
       isCompanyError:false,
       isCompanyErrorMsg:'',
 
-      name:'Nishant Kumar',
+      name:'',
       isNameErorr:false,
       isNameErrorMsg:'',
 
-      userName:'nishantraj656@gmial.com',
+      userName:'',
       isUserNameError:false,
       isUserNameErrorMsg:'',
 
-      password:'9939224274',
+      password:'',
       isPasswordError:false,
       isPasswordErrorMsg:'',
 
-      cpassword:'9939224274',
+      cpassword:'',
       isCPasswordError:false,
       isCPasswordErrorMsg:'',
 

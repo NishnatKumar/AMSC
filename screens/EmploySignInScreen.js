@@ -13,11 +13,11 @@ export default class EmploySignInScreen extends Component {
     {
       super(props)
       this.state={
-                    username:'nishantraj656@gmial.com',
+                    username:'',
                     isUsernameError:false,
                     usernameErrorMsg:'',
 
-                    password:'9939224274',
+                    password:'',
                     isPasswordError:false,
                     passwordErrorMsg:'',
 
@@ -68,7 +68,7 @@ export default class EmploySignInScreen extends Component {
             
             console.log("Response : ",responseJson);
              if(responseJson.success){
-               console.log(responseJson);
+             //  console.log("Login dtfddtdta ",responseJson);
               this.setValues(responseJson)
              }
              if(responseJson.error)
@@ -119,6 +119,11 @@ export default class EmploySignInScreen extends Component {
       
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
+
+    if(data.user.user_type == 'emp')
+    {
+      await AsyncStorage.setItem('profile',JSON.stringify(data.data));
+    }
     
       
      this.props.navigation.navigate('AuthLoading');

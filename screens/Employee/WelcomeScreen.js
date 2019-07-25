@@ -22,6 +22,7 @@ import app from '../../constants/app';
 import Logo from '../Logo';
 import Timer from './Timer';
 import Time from '../../constants/Time';
+import { checkForUpdateAsync } from 'expo/build/Updates/Updates';
 
 
 
@@ -38,37 +39,81 @@ export default class WelcomeScreen extends React.Component {
                       isOut:false
                         
                     }
+
+        setInterval(function(){
+          
+        });
+
+     
     }
 
+   async entryCheck()
+    {
+      try {
+        let inTime = JSON.parse(AsyncStorage.getItem('in'));
+        let outTime = JSON.parse(AsyncStorage.getItem('out'));
+
+      
+          if(inTime)
+          {
+            console.log("Date in : ",inTime);
+            let formatted_date = "IN : "+inTime;
+
+            console.log("In Office in ",formatted_date);
+            this.setState({inTime:formatted_date,isIn:true});
+            
+          }
+           if(outTime)
+          {
+            console.log("Date out : ",outTime);
+            if(this.state.isOut)
+            {
+              let formatted_date = "Out : "+outTime;
+    
+              console.log("Out Office : ",formatted_date);
+              this.setState({outTime:formatted_date,isOut:true});
+            }
+          }
+
+       
+
+      } catch (error) {
+        console.log("Error",error);
+      }
+      
+    }
+    
   static navigationOptions = {
     header: null
 }
 
     _officeIn()
     {
-          this.props.navigation.navigate('QRCode');
-          if(this.state.isIN)
-          {
+          this.props.navigation.navigate('QRCode',{'types':'in'});
+          // if(this.state.isIN)
+          // {
             
-              let formatted_date = "IN : "+Time();
+          //     let formatted_date = "IN : "+Time();
 
-                console.log("In Office in ",formatted_date);
-                this.setState({inTime:formatted_date,isIn:true});
+          //       console.log("In Office in ",formatted_date);
+          //       this.setState({inTime:formatted_date,isIn:true});
 
-          }
+          // }
 
     }
 
+    
+
     _officeOut()
     {
-        this.props.navigation.navigate('QRCode');
-        if(this.state.isOut)
-        {
-          let formatted_date = "Out : "+Time();
+        this.props.navigation.navigate('QRCode',{'types':'out'});
+        // if(this.state.isOut)
+        // {
+        //   let formatted_date = "Out : "+Time();
 
-          console.log("Out Office : ",formatted_date);
-          this.setState({outTime:formatted_date,isOut:true});
-        }
+        //   console.log("Out Office : ",formatted_date);
+        //   this.setState({outTime:formatted_date,isOut:true});
+        // }
     }
 
     _profile()
@@ -102,8 +147,9 @@ export default class WelcomeScreen extends React.Component {
         return (
           
           <Container>
+           
             <StatusBar backgroundColor="green" barStyle="default" />
-                <View style={{marginTop:10}}></View> 
+                
                 <Timer></Timer>
 
                 <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
@@ -113,7 +159,7 @@ export default class WelcomeScreen extends React.Component {
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._logOut()}} ><Title>Log Out</Title></Button>
-
+              
           </Container>
 
         );

@@ -1,5 +1,21 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import {
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  StatusBar,
+  ImageBackground,
+  TouchableHighlight,
+  DatePickerAndroid,
+  KeyboardAvoidingView,
+  AsyncStorage,
+  NetInfo,
+  ToastAndroid,
+} from 'react-native';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 
@@ -15,6 +31,78 @@ export default class BarcodeScannerExample extends React.Component {
   async componentDidMount() {
     this.getPermissionsAsync();
   }
+
+
+  
+  _http = async (data) => {
+    console.log("In http");
+     var connectionInfoLocal = '';
+     NetInfo.getConnectionInfo().then((connectionInfo) => {
+       console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+       // connectionInfo.type = 'none';//force local loding
+       if(connectionInfo.type == 'none'){
+         console.log('no internet ');
+         ToastAndroid.showWithGravityAndOffset(
+           'Oops! No Internet Connection',
+           ToastAndroid.LONG,
+           ToastAndroid.BOTTOM,
+           25,
+           50,
+         );
+         return;
+       }else{
+         console.log('yes internet '); 
+         this.setState({
+           isLoding:true,
+         });
+         fetch(Global.API_URL+'attendance-store', {
+           "async": true,
+           method: 'POST',
+           headers: {
+               'Accept': 'application/json',   
+               "Content-Type": "multipart/form-data",
+               "Cache-Control": "no-cache",
+             },
+             body: data 
+           }).then((response) =>response.json() )
+           .then((responseJson) => {
+             // var itemsToSet = responseJson.data;
+              console.log('resp:',responseJson);
+             //  if(responseJson.success){
+             //     this.setProfile(responseJson.data)
+             //  }else{
+             //    ToastAndroid.showWithGravityAndOffset(
+             //      'Internal Server Error',
+             //      ToastAndroid.LONG,
+             //      ToastAndroid.BOTTOM,
+             //      25,
+             //      50,
+             //    );
+             //    this.setState({
+             //      isLoding:false,
+             //    });
+  
+             //    console.log("Error in signUP :",)
+             //  }
+          })
+          .catch((error) => {
+           ToastAndroid.showWithGravityAndOffset(
+             'Network Failed!!! Retrying...',
+             ToastAndroid.LONG,
+             ToastAndroid.BOTTOM,
+             25,
+             50,
+           );
+           console.log('on error fetching:'+error);
+           //  this._httpSignUp(data);
+         });
+       }
+     });
+     console.log(connectionInfoLocal);
+   }
+ 
+
+  
 
   getPermissionsAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -49,11 +137,43 @@ export default class BarcodeScannerExample extends React.Component {
     );
   }
 
-  handleBarCodeScanned = ({ type, data }) => {
+  handleBarCodeScanned =async ({ type, data }) => {
     this.setState({ scanned: true });
    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
    console.log("QRCode data is : ",data);
-    this.props.navigation.navigate('Home');
+
+   try {
+
+        let user =   await AsyncStorage.getItem('userDetails');
+
+          console.log("USER DETAILS : ",user);  
+            const { navigation } = this.props;
+            const value = navigation.getParam('types', null);
+
+           
+
+            if(value != null )
+            {
+                  if(value == 'in')
+                  {
+                    let dataToSave = {'id':user.id,'in':data};
+                    this._http(dataToSave);
+                    await AsyncStorage.setItem('in',data)
+                  }
+                  if(value == 'out')
+                  {
+                  await AsyncStorage.setItem('out',data)
+                  }
+                  this.props.navigation.navigate('Home');
+            }
+    
+     
+   } catch (error) {
+     console.log("Error : ",error);
+   }
+
+
+   
   };
 }
 // import React from 'react';

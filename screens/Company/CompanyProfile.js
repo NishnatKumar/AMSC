@@ -14,6 +14,7 @@ import {
   DatePickerAndroid,
   NetInfo,
   ToastAndroid,
+  KeyboardAvoidingView,
   AsyncStorage
 } from 'react-native';
 
@@ -48,15 +49,15 @@ export default class CompanyProfileScreen extends React.Component {
                         istypeError:false,
                           typeErrorMsg:'',
 
-                      companyname:'Depixed',
+                      companyname:'',
                         iscompanynameError:false,
                           companynameErrorMsg:'',
 
-                      regNo:'wert543yui',
+                      regNo:'  ',
                         isregNoError:false,
                           regNoErrorMsg:'',
 
-                      owner:'Mox',
+                      owner:'',
                         isownerError:false,
                           ownerErrorMsg:'',
 
@@ -65,14 +66,14 @@ export default class CompanyProfileScreen extends React.Component {
                           companyErrorMsg:'',
 
                       address:{
-                                    address:' B-103,  Samudra,',
-                                    street:' Navrangpura',
-                                    city:'Ahmedabad',
-                                    state:'Gujarat',
-                                    pincode:'380009',
-                                    contact:'+91 9724016900',
-                                    email:'info@depixed.com',
-                                    url:'http://www.depixed.in/'
+                                    address:'',
+                                    street:'',
+                                    city:'',
+                                    state:'',
+                                    pincode:'',
+                                    contact:'',
+                                    email:'',
+                                    url:''
                               },
                         isaddressError:false,
                           addressErrorMsg:'',
@@ -404,7 +405,7 @@ export default class CompanyProfileScreen extends React.Component {
     });
     console.log("Profile Data y ",data);
     await AsyncStorage.setItem('profile',JSON.stringify(data));
-    this.props.navigation.navigate('Check');
+    this.props.navigation.navigate('AdminWelcome');
   } catch (error) {
 
     console.log("Error In Conpony Prfile",error);
@@ -423,7 +424,10 @@ export default class CompanyProfileScreen extends React.Component {
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
               <View style={{marginTop:15}}></View>
+             
               <Content>
+              <KeyboardAvoidingView behavior="padding" enabled>
+             
               <Title style={app.title}>Details </Title>
                   <Card style={app.Form} transparent >
 
@@ -455,7 +459,7 @@ export default class CompanyProfileScreen extends React.Component {
                         
                        
                  
-
+{/* 
                     <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
                           <Picker
                             mode="dialog"
@@ -481,7 +485,7 @@ export default class CompanyProfileScreen extends React.Component {
                          
                             
                           </Picker> 
-                    </View>
+                    </View> */}
                   
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
                       <Input value={companyname} onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
@@ -511,9 +515,9 @@ export default class CompanyProfileScreen extends React.Component {
                     <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onSave();console.log("Next Click")}}><Title>Save</Title></Button>
                  
                   </Card>
-                  
+                  </KeyboardAvoidingView>
               </Content>
-
+             
               
 
           </Container>

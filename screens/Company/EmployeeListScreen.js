@@ -146,22 +146,21 @@ _onPressItem = (value) => {
 
   console.log("Login Type  : ",loginType);
 
-  this.props.navigation.navigate('EmployeeSignUp',{loginType:'emp',cmpID:value.id});
-
+ 
 };
 
 _rendercompanyListItem = ({item}) => {
- console.log("ITem ",Global.API_PIC+item.pic)
+ console.log("ITem "+Global.API_PIC,item.image)
   return(
     <TouchableHighlight onPress={()=>{this._onPressItem(item)}}>
          <Card style={{elevation :20}}> 
             <CardItem>
             <Left>
-              <Thumbnail small source={{uri:Global.API_URL+item.image}}/>     
+              <Thumbnail small source={{uri:Global.API_PIC+item.image}}/>     
             </Left>
             <Body>
                <Title style={{fontSize:20,fontWeight:'900',color:'#000000'}} >{item.name}</Title>
-               <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.type} </Title>
+               <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.designation} </Title>
             </Body>
             </CardItem>
         </Card>
