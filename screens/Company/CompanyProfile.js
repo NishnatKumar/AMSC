@@ -53,6 +53,10 @@ export default class CompanyProfileScreen extends React.Component {
                         iscompanynameError:false,
                           companynameErrorMsg:'',
 
+                          user:'',
+                          isuserError:false,
+                            userErrorMsg:'',
+
                       regNo:'  ',
                         isregNoError:false,
                           regNoErrorMsg:'',
@@ -99,9 +103,20 @@ export default class CompanyProfileScreen extends React.Component {
     header: null
 }
 
+
+
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
   
   async componentDidMount() {
     try {
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+        this.goBack(); // works best when the goBack is async
+       // this.props.navigation.navigate('')
+        return true;
+      });
           let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
           if(!userID)
           {
@@ -111,12 +126,81 @@ export default class CompanyProfileScreen extends React.Component {
            
          this.setState({userID:userID.id});
             console.log(userID)
+       // this._httpGetUserProfile(userID.id)
 
         } catch (error) {
           console.log("Error in CompnayProfile : ",error);
         }
   }
   
+  //get user DAta 
+  
+  _httpGetUserProfile = async (data) => {
+   
+    console.log(Global.API_URL+'company-show/'+data)
+    var connectionInfoLocal = '';
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+      // connectionInfo.type = 'none';//force local loding
+      if(connectionInfo.type == 'none'){
+        console.log('no internet ');
+        ToastAndroid.showWithGravityAndOffset(
+          'Oops! No Internet Connection',
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        return;
+      }else{
+        console.log('yes internet '); 
+        this.setState({
+          isLoding:true,
+        });
+        fetch(Global.API_URL+'company-show/'+data, {
+          
+          headers: {
+              'Accept': 'application/json',   
+              "Content-Type": "application/json",
+              
+            }
+          }).then((response) =>response.json() )
+          .then((responseJson) => {
+            // var itemsToSet = responseJson.data;
+             console.log('resp:',responseJson);
+            //  if(responseJson.success){
+            //     this.setProfile(responseJson.data)
+            //  }else{
+            //    ToastAndroid.showWithGravityAndOffset(
+            //      'Internal Server Error',
+            //      ToastAndroid.LONG,
+            //      ToastAndroid.BOTTOM,
+            //      25,
+            //      50,
+            //    );
+            //    this.setState({
+            //      isLoding:false,
+            //    });
+ 
+            //    console.log("Error in get user data :",)
+            //  }
+         })
+         .catch((error) => {
+          ToastAndroid.showWithGravityAndOffset(
+            'Network Failed!!! Retrying...',
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50,
+          );
+          console.log('on error fetching:'+error);
+          //  this._httpSignUp(data);
+        });
+      }
+    });
+    console.log(connectionInfoLocal);
+  }
+
 
 
   checkPermission()
@@ -159,6 +243,10 @@ export default class CompanyProfileScreen extends React.Component {
     this.setState({
       companyList:picker
     });
+
+
+
+
   }
 
     onValueChange()
@@ -423,7 +511,7 @@ export default class CompanyProfileScreen extends React.Component {
           
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
-              <View style={{marginTop:15}}></View>
+              <View style={{marginTop:25}}></View>
              
               <Content>
               <KeyboardAvoidingView behavior="padding" enabled>

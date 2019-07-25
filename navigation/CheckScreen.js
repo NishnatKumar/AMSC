@@ -13,6 +13,9 @@ export default class CheckScreen extends React.Component {
       super();
      
     }
+
+
+    
   
     // Fetch the token from storage then navigate to our appropriate place
     async componentDidMount() {

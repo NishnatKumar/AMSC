@@ -40,37 +40,42 @@ export default class WelcomeScreen extends React.Component {
                         
                     }
 
-        setInterval(function(){
-          
-        });
+                    
+        setInterval(() => {
+           
 
+          this.entryCheck();
+         }, 1000);
      
     }
 
    async entryCheck()
     {
       try {
-        let inTime = JSON.parse(AsyncStorage.getItem('in'));
-        let outTime = JSON.parse(AsyncStorage.getItem('out'));
+
+        await AsyncStorage.removeItem('in');
+        let inTime = JSON.parse(await AsyncStorage.getItem('in'));
+        let outTime = JSON.parse(await AsyncStorage.getItem('out'));
+      //  console.log(inTime);
 
       
           if(inTime)
           {
-            console.log("Date in : ",inTime);
+           // console.log("Date in : ",inTime);
             let formatted_date = "IN : "+inTime;
 
-            console.log("In Office in ",formatted_date);
+           // console.log("In Office in ",formatted_date);
             this.setState({inTime:formatted_date,isIn:true});
             
           }
            if(outTime)
           {
-            console.log("Date out : ",outTime);
+          //  console.log("Date out : ",outTime);
             if(this.state.isOut)
             {
               let formatted_date = "Out : "+outTime;
     
-              console.log("Out Office : ",formatted_date);
+            //  console.log("Out Office : ",formatted_date);
               this.setState({outTime:formatted_date,isOut:true});
             }
           }
@@ -154,7 +159,7 @@ export default class WelcomeScreen extends React.Component {
 
                 <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
 
-                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut}><Title>{this.state.outTime}</Title></Button>
+                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut }><Title>{this.state.outTime}</Title></Button>
 
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>

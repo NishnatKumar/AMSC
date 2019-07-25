@@ -21,6 +21,7 @@ import * as Permissions from 'expo-permissions';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Button, Title } from 'native-base';
+import Global from '../../constants/Global';
 
 export default class BarcodeScannerExample extends React.Component {
   state = {
@@ -30,6 +31,7 @@ export default class BarcodeScannerExample extends React.Component {
 
   async componentDidMount() {
     this.getPermissionsAsync();
+    
   }
 
 
@@ -55,35 +57,35 @@ export default class BarcodeScannerExample extends React.Component {
          this.setState({
            isLoding:true,
          });
-         fetch(Global.API_URL+'attendance-store', {
+         fetch( Global.API_URL+'attendance-store', {
            "async": true,
            method: 'POST',
            headers: {
                'Accept': 'application/json',   
-               "Content-Type": "multipart/form-data",
-               "Cache-Control": "no-cache",
+               "Content-Type": "application/json",
+              
              },
-             body: data 
+             body:JSON.stringify(data) 
            }).then((response) =>response.json() )
            .then((responseJson) => {
              // var itemsToSet = responseJson.data;
               console.log('resp:',responseJson);
-             //  if(responseJson.success){
-             //     this.setProfile(responseJson.data)
-             //  }else{
-             //    ToastAndroid.showWithGravityAndOffset(
-             //      'Internal Server Error',
-             //      ToastAndroid.LONG,
-             //      ToastAndroid.BOTTOM,
-             //      25,
-             //      50,
-             //    );
-             //    this.setState({
-             //      isLoding:false,
-             //    });
+              if(responseJson.success){
+                 this.setData(responseJson.data);
+              }else{
+                ToastAndroid.showWithGravityAndOffset(
+                  'Internal Server Error',
+                  ToastAndroid.LONG,
+                  ToastAndroid.BOTTOM,
+                  25,
+                  50,
+                );
+                this.setState({
+                  isLoding:false,
+                });
   
-             //    console.log("Error in signUP :",)
-             //  }
+                console.log("Error in signUP :",)
+              }
           })
           .catch((error) => {
            ToastAndroid.showWithGravityAndOffset(
@@ -100,6 +102,25 @@ export default class BarcodeScannerExample extends React.Component {
      });
      console.log(connectionInfoLocal);
    }
+
+
+  async setData(data)
+  {
+    
+
+    try {
+      if(data.in)
+        await AsyncStorage.setItem('in',JSON.stringify({'in':JSON.parse(data.in),id:data.id}));
+      
+      if(data.out)
+        await AsyncStorage.setItem('in',JSON.stringify({'out':JSON.parse(data.in),id:data.id}));
+      
+
+    } catch (error) {
+      console.log("Eroor ",error)
+    }
+    
+  }
  
 
   
@@ -137,6 +158,18 @@ export default class BarcodeScannerExample extends React.Component {
     );
   }
 
+
+  QurCodeChecker(data)
+  {
+   
+    let emp =  data.emp_reg_id.split(".")[3].replace('"','');
+    let time = data.in.split(" ")[0].replace('"','');
+  
+
+   return emp===time
+
+  }
+
   handleBarCodeScanned =async ({ type, data }) => {
     this.setState({ scanned: true });
    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
@@ -144,7 +177,7 @@ export default class BarcodeScannerExample extends React.Component {
 
    try {
 
-        let user =   await AsyncStorage.getItem('userDetails');
+        let user =JSON.parse(await AsyncStorage.getItem('profile'));
 
           console.log("USER DETAILS : ",user);  
             const { navigation } = this.props;
@@ -152,17 +185,31 @@ export default class BarcodeScannerExample extends React.Component {
 
            
 
-            if(value != null )
+            if(value != null  && user != null  )
             {
                   if(value == 'in')
                   {
-                    let dataToSave = {'id':user.id,'in':data};
-                    this._http(dataToSave);
-                    await AsyncStorage.setItem('in',data)
+                    console.log("Emp REg ID : ",user.emp_reg_id);
+                    let dataToSave = {'emp_reg_id':user.emp_reg_id,'in':data};
+                   if(this.QurCodeChecker(dataToSave))
+                   {
+                      this._http(dataToSave);
+                   }                    
+                   else
+                   {
+                      ToastAndroid.showWithGravityAndOffset(
+                        'This is Not Your Company Code Scan Correct Code ',
+                        ToastAndroid.LONG,
+                        ToastAndroid.BOTTOM,
+                        25,
+                        50,
+                      );
+                    }
+                   // await AsyncStorage.setItem('in',data)
                   }
                   if(value == 'out')
                   {
-                  await AsyncStorage.setItem('out',data)
+                 //await AsyncStorage.setItem('out',data)
                   }
                   this.props.navigation.navigate('Home');
             }

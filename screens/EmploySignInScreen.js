@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo} from 'react-native';
-import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View } from 'native-base';
+import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Toast } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
 import app from '../constants/app';
@@ -35,24 +35,23 @@ export default class EmploySignInScreen extends Component {
 
     
     _httpLogin = async (data) => {
-    console.log("Data to send : "+Global.API_URL+'login');
-    console.log("Data : ",data);
+  
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-      // connectionInfo.type = 'none';//force local loding
+    
       if(connectionInfo.type == 'none'){
         console.log('no internet ');
-        ToastAndroid.showWithGravityAndOffset(
-          'Oops! No Internet Connection',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
+        // ToastAndroid.showWithGravityAndOffset(
+        //   'Oops! No Internet Connection',
+        //   ToastAndroid.LONG,
+        //   ToastAndroid.BOTTOM,
+        //   25,
+        //   50,
+        // );
+        Toast.show({text:"Oops! No Internet"})
         return;
       }else{
-        console.log('yes internet '); 
+       
         this.setState({
           isLoding:true,
         });
@@ -66,9 +65,9 @@ export default class EmploySignInScreen extends Component {
           }).then((response) =>response.json() )
           .then((responseJson) => {
             
-            console.log("Response : ",responseJson);
+          
              if(responseJson.success){
-             //  console.log("Login dtfddtdta ",responseJson);
+            
               this.setValues(responseJson)
              }
              if(responseJson.error)
@@ -77,21 +76,17 @@ export default class EmploySignInScreen extends Component {
 
              }
              else{
-               ToastAndroid.showWithGravityAndOffset(
-                 'Internal Server Error',
-                 ToastAndroid.LONG,
-                 ToastAndroid.BOTTOM,
-                 25,
-                 50,
-               );
+              Toast.show("There Are Somthing Wrong");
                this.setState({
                  isLoding:false,
                });
  
-               console.log("Error in signUP :",responseJson)
+              
              }
          })
          .catch((error) => {
+
+
           ToastAndroid.showWithGravityAndOffset(
             'Network Failed!!! Retrying...',
             ToastAndroid.LONG,
@@ -100,18 +95,18 @@ export default class EmploySignInScreen extends Component {
             50,
           );
           console.log('on error fetching:'+error);
-           this._httpSignUp(data);
+          
         });
       }
     });
-    console.log(connectionInfoLocal);
+   
   }
 
 
   //To set user data in localhost
  async setValues(data)
   {
-    console.log(data);
+  
     this.setState({isLoding:false});
 
     try {
@@ -142,7 +137,7 @@ export default class EmploySignInScreen extends Component {
     {
       const { navigation } = this.props;
       const value = navigation.getParam('loginType', 'NO-ID');
-      console.log("Login Type : ",value);
+      
       this.setState({loginType:value});
     }
 
@@ -162,7 +157,7 @@ export default class EmploySignInScreen extends Component {
     
     checkValidation()
     {
-      console.log("In check validation ");
+    
       this.setState({
        
         isUsernameError:false,
@@ -172,17 +167,18 @@ export default class EmploySignInScreen extends Component {
         isPasswordError:false,
         passwordErrorMsg:''
     })
+
       let username = this.state.username;
       let password = this.state.password;
 
       if(username.length <3 )
       {
-        console.log("jsagdjg",username);
+       
         this.setState({errorMsg :'Enter The Correct Username',
                         isUsernameError:true});
       }
       else if(password.length <3)
-      {console.log("password");
+      {
         this.setState({
           isPasswordError:true,
           errorMsg :'Enter The Correct password',})
@@ -190,7 +186,7 @@ export default class EmploySignInScreen extends Component {
       }
       else
       {
-        console.log("Username");
+      
           let data={email:username,password:password};
           this._httpLogin(data);
       }   
@@ -198,21 +194,6 @@ export default class EmploySignInScreen extends Component {
 
     }
 
-    // _htttpLogin(data)
-    // {
-    //   console.log("Data value : ",data);
-    //     if(data.username == 'admin' && data.password == 'admin2' )
-    //     {
-    //       console.log("Login");
-    //      let data = {userType:'cmp'}
-    //       this._setValue(JSON.stringify(data))
-    //     }
-    //     else{
-    //       this.setState({
-    //         isPasswordError:true,
-    //         errorMsg :'Enter The Correct username and  password',})
-    //     }
-    // }
 
     async _setValue(data)
     {

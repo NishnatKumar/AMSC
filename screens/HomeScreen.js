@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import {Logs } from 'expo';
 import React from 'react';
 import {
   Image,
@@ -16,7 +17,6 @@ import {
 import { MonoText } from '../components/StyledText';
 import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Footer, Content } from 'native-base';
 import size, {window} from '../constants/Layout'
-import { SizeClassIOS } from 'expo/build/ScreenOrientation/ScreenOrientation';
 import app from '../constants/app';
 import Logo from './Logo';
 

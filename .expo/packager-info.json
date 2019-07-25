@@ -2,9 +2,8 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 5500,
-  "expoServerNgrokUrl": "https://97-dn9.nishantrah656.amsc.exp.direct",
-  "packagerNgrokUrl": "https://packager.97-dn9.nishantrah656.amsc.exp.direct",
-  "ngrokPid": 7856,
-  "webpackServerPort": null
+  "packagerPid": 9036,
+  "expoServerNgrokUrl": "https://dm-dj5.nishantrah656.amsc.exp.direct",
+  "packagerNgrokUrl": "https://packager.dm-dj5.nishantrah656.amsc.exp.direct",
+  "ngrokPid": 12020
 }

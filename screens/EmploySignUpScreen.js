@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import {StatusBar,KeyboardAvoidingView,StyleSheet,ToastAndroid,NetInfo} from 'react-native';
-import { Container, Header, Content, Form, Icon,Item, Input,Picker,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View } from 'native-base';
+import { Container, Header, Content, Form, Icon,Item, Input,Picker,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Toast } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
 import app from '../constants/app';
 import Logo from '../screens/Logo';
 import Global from '../constants/Global';
 import Processing from './Processing';
+import Message from '../constants/Tost';
 export default class EmploySignUpScreen extends Component {
 
   constructor(props) {
@@ -39,13 +40,13 @@ export default class EmploySignUpScreen extends Component {
     };
   }
 
- 
+
+
+
   _httpSignUp = async (data) => {
-    console.log("Data to send : "+Global.API_URL+'register',data);
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-      // connectionInfo.type = 'none';//force local loding
+     
       if(connectionInfo.type == 'none'){
         console.log('no internet ');
         ToastAndroid.showWithGravityAndOffset(
@@ -70,28 +71,24 @@ export default class EmploySignUpScreen extends Component {
             body: JSON.stringify(data)
           }).then((response) =>response.json() )
           .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
-             console.log('resp:',responseJson);
+           
              this.setState({isLoding:false});
+           
+             if(responseJson.success){
+               Message('Enter Userid And Password to login');
+             
+             this.setState({
+               isLoding:false,
+             });
              this.props.navigation.navigate('EmployeeSignIn');
-            //  if(responseJson.received == 'yes'){
-            //  this.setState({
-            //    isLoding:false,
-            //  });
-            //  }else{
-            //    ToastAndroid.showWithGravityAndOffset(
-            //      'Internal Server Error',
-            //      ToastAndroid.LONG,
-            //      ToastAndroid.BOTTOM,
-            //      25,
-            //      50,
-            //    );
-            //    this.setState({
-            //      isLoding:false,
-            //    });
+             }else{
+             
+               this.setState({
+                 isLoding:false,
+               });
  
-            //    console.log("Error in signUP :")
-            //  }
+               console.log("Error in signUP :")
+             }
          })
          .catch((error) => {
           ToastAndroid.showWithGravityAndOffset(
@@ -182,7 +179,7 @@ export default class EmploySignUpScreen extends Component {
           let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,}
           this._httpSignUp(data);
           console.log("Data Save .....")
-      }
+      }else
       if(this.state.loginType == 'emp' && this.state.cmpID !=null )
       {
           let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,company_id:this.state.cmpID}

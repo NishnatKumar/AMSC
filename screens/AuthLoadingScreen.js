@@ -1,4 +1,5 @@
 import React from 'react'; 
+import {Logs} from 'expo';
 import {
     ActivityIndicator,
     AsyncStorage,
@@ -6,6 +7,7 @@ import {
     StatusBar,
     StyleSheet,
     View,
+    BackHandler
   } from 'react-native';
 
 export default class AuthLoadScreen extends React.Component {
@@ -21,16 +23,23 @@ export default class AuthLoadScreen extends React.Component {
     //  await AsyncStorage.removeItem('userDetails');
       const userToken = await AsyncStorage.getItem('userToken');
 
-
-     
-
     
-  
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
      this.props.navigation.navigate(userToken ? 'App' : 'Auth');
     };
+
+    componentDidMount() {
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    }
   
+    componentWillUnmount() {
+      this.backHandler.remove()
+    }
+  
+    handleBackPress = () => {
+      this.goBack(); // works best when the goBack is async
+      return true;
+    }  
+
     // Render any loading content that you like here
     render() {
       return (
