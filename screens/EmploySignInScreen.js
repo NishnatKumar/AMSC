@@ -41,14 +41,8 @@ export default class EmploySignInScreen extends Component {
     
       if(connectionInfo.type == 'none'){
         console.log('no internet ');
-        // ToastAndroid.showWithGravityAndOffset(
-        //   'Oops! No Internet Connection',
-        //   ToastAndroid.LONG,
-        //   ToastAndroid.BOTTOM,
-        //   25,
-        //   50,
-        // );
-        Toast.show({text:"Oops! No Internet"})
+       
+        Global.MSG("No Internet ! ");
         return;
       }else{
        
@@ -65,20 +59,21 @@ export default class EmploySignInScreen extends Component {
           }).then((response) =>response.json() )
           .then((responseJson) => {
             
-          
+            
              if(responseJson.success){
             
-              this.setValues(responseJson)
-             }
-             if(responseJson.error)
-             {
-                this.setState({errorMsg:'Login Or Username Not found',isLoding:false});
-
+              this.setValues(responseJson.data)
              }
              else{
-              Toast.show("There Are Somthing Wrong");
+               console.log(responseJson);
+              Global.MSG(responseJson.msg);
                this.setState({
                  isLoding:false,
+                 isUsernameError:true,
+                 isPasswordError:true,
+                 usernameErrorMsg:'Username May Be error',
+                passwordErrorMsg:'Password may be error'
+
                });
  
               
@@ -111,17 +106,28 @@ export default class EmploySignInScreen extends Component {
 
     try {
 
-      
+      console.log("DATA OF LOGIN : ",data.token);
+
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
 
     if(data.user.user_type == 'emp')
     {
-      await AsyncStorage.setItem('profile',JSON.stringify(data.data));
+        this.props.navigation.navigate('Profile')
+      // await AsyncStorage.setItem('profileEmp',JSON.stringify(data.data));
+    }
+    else if(data.user.user_type == 'cmp')
+    {
+        this.props.navigation.navigate('AdminWelcome')
+    }
+    else
+    {
+      Global.MSG("Somthing get wrong ");
+      this.props.navigation.navigate('HomePage');
     }
     
       
-     this.props.navigation.navigate('AuthLoading');
+    //  this.props.navigation.navigate('AuthLoading');
 
     } catch (error) {
       console.log("Eroor is signup ",error);
@@ -174,14 +180,16 @@ export default class EmploySignInScreen extends Component {
       if(username.length <3 )
       {
        
-        this.setState({errorMsg :'Enter The Correct Username',
+        this.setState({usernameErrorMsg :'Enter The Correct Email',
                         isUsernameError:true});
+
+        console.log("Erroor ins PAssword : ",this.state.usernameErrorMsg);
       }
       else if(password.length <3)
       {
         this.setState({
           isPasswordError:true,
-          errorMsg :'Enter The Correct password',})
+          passwordErrorMsg :'Enter The Correct password',})
 
       }
       else
@@ -222,31 +230,39 @@ export default class EmploySignInScreen extends Component {
                 <Logo></Logo>
                 <Card transparent style={{marginTop:5,padding:20 }}>
                
-                  { this.state.errorMsg.length !=0 ?
+                  {/* { this.state.errorMsg.length !=0 ?
                     <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
                       <Text style={{fontSize:20,color:'red'}}>{this.state.errorMsg}</Text>
                     </View>
                     :
                     <Text></Text>
-                  }                  
-                    <Item regular  style={[app.formGroup,this.state.isUsernameError? app.errorMsg:app.borderPurpal]} >
+                  }                   */}
+                    <Item regular  style={[app.formGroup,this.state.isUsernameError? app.errorBorder:app.borderPurpal]} >
                          <Input value={username} placeholder="Username" onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
-                    </Item> 
+                    </Item>
+                    <Text style={app.errorMsg}>
+                      {this.state.usernameErrorMsg}
+                    </Text>
 
-                    			{ usernameErrorMsg.length !=0 ?
+ 
+
+                    			{/* { usernameErrorMsg.length !=0 ?
                     <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
                     <Text style={{fontSize:20,color:'red'}}>{usernameErrorMsg}</Text>
-                    </View>:<Text></Text>}
+                    </View>:<Text></Text>} */}
                     
-                    <Item regular  style={[app.formGroup,isPasswordError? app.errorMsg:app.borderPurpal,{marginTop:size.window.height/10}]}>
+                    <Item regular  style={[app.formGroup,isPasswordError? app.errorBorder:app.borderPurpal,{marginTop:size.window.height/15}]}>
                          <Input value={password} onChangeText={(text)=>{this.setState({password:text});}} placeholder="Password" secureTextEntry={true} textContentType="password"  />
                     </Item>  
+                    <Text style={app.errorMsg}>
+                        {this.state.passwordErrorMsg}
+                    </Text>
 
 
-                    { passwordErrorMsg.length !=0 ?
+                    {/* { passwordErrorMsg.length !=0 ?
                     <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
                     <Text style={{fontSize:20,color:'red'}}>{passwordErrorMsg}</Text>
-                    </View>:<Text></Text>}
+                    </View>:<Text></Text>} */}
                    
             <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Forgot Press");
                     this.props.navigation.navigate('ForgotPassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>

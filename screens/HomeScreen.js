@@ -29,20 +29,9 @@ export default class HomeScreen extends React.Component {
         return (
           
           <Container>
-          <StatusBar backgroundColor="green" barStyle="default" />
-        
+            <StatusBar backgroundColor="green" barStyle="default" />       
           
-           
-             {/* <View > 
-                <View style={{marginTop:size.window.height/8,marginLeft: size.window.width/3+5}}>
-                      <Thumbnail large source={require('../assets/images/appLogo.png')}/> 
-                          
-                  </View> 
-                  <View style={{alignSelf:'center'}}>
-                        <Text style={{fontSize:30}} >Depixed Media</Text>
-                  </View>
-              </View>   */}
-
+       
               <Logo />
              
             

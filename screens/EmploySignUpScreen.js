@@ -72,6 +72,8 @@ export default class EmploySignUpScreen extends Component {
           }).then((response) =>response.json() )
           .then((responseJson) => {
            
+            
+
              this.setState({isLoding:false});
            
              if(responseJson.success){
@@ -82,9 +84,10 @@ export default class EmploySignUpScreen extends Component {
              });
              this.props.navigation.navigate('EmployeeSignIn');
              }else{
-             
+              
+              
                this.setState({
-                 isLoding:false,
+                 isLoding:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
                });
  
                console.log("Error in signUP :")
@@ -151,19 +154,19 @@ export default class EmploySignUpScreen extends Component {
     else if(userName.length < 3)
     {
       this.setState({ isUserNameError:true,
-        isUserNameErrorMsg:'Enter the Correct Name ',});
+        isUserNameErrorMsg:'Enter the Correct Email ',});
         console.log("Error in user ")
     }
     else if(company != '')
     {
       this.setState({ isCompanyError:true,
-        isCompanyErrorMsg:'Enter the Correct Name ',});
+        isCompanyErrorMsg:'Enter the Correct email ',});
         console.log("Error in company")
     }
     else if(password.length < 3)
     {
       this.setState({ isPasswordError:true,
-        isPasswordErrorMsg:'Enter the Correct Name ',});
+        isPasswordErrorMsg:'Enter the Correct More then 3 digit ',});
         console.log("Error in passs")
     }
     else if(password != cpassword)
@@ -174,17 +177,11 @@ export default class EmploySignUpScreen extends Component {
     }
     else
     {
-      if(this.state.loginType == 'cmp' )
+      if(this.state.loginType != null )
       {
-          let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,}
-          this._httpSignUp(data);
-          console.log("Data Save .....")
-      }else
-      if(this.state.loginType == 'emp' && this.state.cmpID !=null )
-      {
-          let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,company_id:this.state.cmpID}
-          this._httpSignUp(data);
-          console.log("Data Save .....",data)
+        let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,}
+        this._httpSignUp(data);
+        console.log("Data Save .....")
       }
       else{console.log("Error in login ");}
     }
@@ -235,9 +232,9 @@ export default class EmploySignUpScreen extends Component {
                   <Logo></Logo>
 
                     
-                    <Item regular floatingLabel style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                        <Label style={app.placeholder}>Name</Label>
-                        <Input value={this.state.name} textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
+                    <Item regular  style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                      
+                        <Input placeholder="Name" value={this.state.name} textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
                     </Item> 
                     
                     <Text style={app.errorMsg}>
@@ -245,24 +242,25 @@ export default class EmploySignUpScreen extends Component {
                     </Text>
 
 
-                    <Item regular floatingLabel style={[app.formGroup,this.state.userName? app.errorBorder:app.borderPurpal]} >
-                        <Label style={app.placeholder}>Username</Label>
-                        <Input  value={this.state.userName} textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
+                    <Item regular  style={[app.formGroup,this.state.isUserNameError? app.errorBorder:app.borderPurpal]} >
+                      
+                        <Input placeholder="Email"  value={this.state.userName} textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
                     </Item> 
                     <Text style={app.errorMsg}>
                       {this.state.isUserNameErrorMsg}
                     </Text>
-                    <Item regular floatingLabel style={[app.formGroup,this.state.isPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
-                        <Label style={app.placeholder}>Password</Label>
-                        <Input  value={this.state.password} textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
+
+                    <Item regular  style={[app.formGroup,this.state.isPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
+                        
+                        <Input placeholder="Password" value={this.state.password} textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
                     </Item>  
                     <Text style={app.errorMsg}>
                       {this.state.isPasswordErrorMsg}
                     </Text>
 
-                     <Item regular floatingLabel style={[app.formGroup,this.state.isCPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
-                        <Label style={app.placeholder}>Confirm Password</Label>
-                        <Input  value={this.state.cpassword} textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
+                     <Item regular  style={[app.formGroup,this.state.isCPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
+                      
+                        <Input placeholder="Confirm Password"  value={this.state.cpassword} textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
                     </Item>  
                     <Text style={app.errorMsg}>
                       {this.state.isCPasswordErrorMsg}
@@ -293,28 +291,7 @@ export default class EmploySignUpScreen extends Component {
   }
 }
 
-// const styles= StyleSheet.create({
-//   lable:{ marginLeft:10},
-//   item:{
-//     marginTop:5
-//   },
-//   errorMsg:{
-//     color:'red',
-//     fontSize:10,
-//     fontStyle:'italic',
-//   },
-//   error:{
-//     borderColor:'#fa0a3a',
-    
-//   },
-//   normalItem:{
-//     borderColor:'#16bdf5',
-//   }
-// })
 
 const styles = {
   btn :[app.btn,app.btnPurpal]
 }
-
-// TODO : 
-/**style={{marginTop:size.window.height/8,padding:20 }} */

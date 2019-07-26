@@ -15,7 +15,8 @@ import {
   NetInfo,
   ToastAndroid,
   KeyboardAvoidingView,
-  AsyncStorage
+  AsyncStorage,
+  BackHandler
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -45,7 +46,7 @@ export default class CompanyProfileScreen extends React.Component {
 
                       companyList:[],
 
-                      type:1,
+                      type:"IT",
                         istypeError:false,
                           typeErrorMsg:'',
 
@@ -57,7 +58,7 @@ export default class CompanyProfileScreen extends React.Component {
                           isuserError:false,
                             userErrorMsg:'',
 
-                      regNo:'  ',
+                      regNo:'',
                         isregNoError:false,
                           regNoErrorMsg:'',
 
@@ -94,19 +95,94 @@ export default class CompanyProfileScreen extends React.Component {
                       islocationError:false,
                         locationErrorMsg:'',
 
-                    isLoding:false
+                    isLoding:false,
+
+                   
                         
                     }
+
+                  this._httpGetUserIndustry();
+                    this._httpGetUserProfile();
     }
+
+   async checkValidation()
+    {
+      let that = this.state;
+      let address = that.address;
+
+     this.setState({                     
+       
+          iscompanynameError:false,
+            companynameErrorMsg:'',
+
+         
+
+        owner:'',
+          isownerError:false,
+            ownerErrorMsg:'',
+
+        company:'',
+          iscompanyError:false,
+            companyErrorMsg:'',
+
+    
+          isaddressError:false,
+            addressErrorMsg:'',     
+      });
+
+
+      if(that.type == "")
+      {
+        console.log("error in type")
+        this.setState({istypeError:true,
+        typeErrorMsg:'Select the company type'})
+      }
+      else if(that.companyname <3)
+      {
+        console.log("Error in compnay name")
+        this.setState({iscompanyError:true,companyErrorMsg:"Enter the correct company Name"});
+      }
+      else if(that.owner <3)
+      {
+        console.log("Error in Owner name")
+        this.setState({isownerError:true,ownerErrorMsg:"Enter the correct Owner Name"});
+      }
+      else if(that.owner <3)
+      {
+        console.log("Error in Owner name")
+        this.setState({isownerError:true,ownerErrorMsg:"Enter the correct Owner Name"});
+      }
+      else if(address.address <3)
+      {
+        console.log('Error in address')
+        this.setState({isaddressError:true,addressErrorMsg:'Plese Enter Correct Address'})
+      }
+      else
+      {
+          await this._httpSaveUp(await this.createFormData());
+      }
+    
+      
+
+    }
+
 
   static navigationOptions = {
     header: null
 }
 
+  componentWillMount()
+  {
+    // this._httpGetUserIndustry();
+  }
+
+
 
 
 
   componentWillUnmount() {
+
+    
     this.backHandler.remove();
   }
   
@@ -132,58 +208,112 @@ export default class CompanyProfileScreen extends React.Component {
           console.log("Error in CompnayProfile : ",error);
         }
   }
-  
+
+  // Get Indistry type
   //get user DAta 
   
-  _httpGetUserProfile = async (data) => {
+  _httpGetUserIndustry = async () => {
    
-    console.log(Global.API_URL+'company-show/'+data)
+    let token =await Global.TOKEN;
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-      // connectionInfo.type = 'none';//force local loding
+     
       if(connectionInfo.type == 'none'){
-        console.log('no internet ');
-        ToastAndroid.showWithGravityAndOffset(
-          'Oops! No Internet Connection',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
+       Global.MSG("No Internet ! ")
         return;
       }else{
-        console.log('yes internet '); 
+        console.log('yes internet ',Global.API_URL+'industry'); 
         this.setState({
           isLoding:true,
         });
-        fetch(Global.API_URL+'company-show/'+data, {
+       fetch(Global.API_URL+'industry', {
           
           headers: {
               'Accept': 'application/json',   
               "Content-Type": "application/json",
-              
+              "Authorization": token,              
             }
+          })
+          .then((response) =>response.json() )
+          .then((responseJson) => {
+           
+             console.log('resp:',responseJson.data);
+             if(responseJson.success)
+             {
+               this.setState({companyList:responseJson.data,isLoding:false})
+             }
+             else
+             {
+               Global.MSG("Somthing Error");
+                this.setState({isLoding:false})
+             }
+           
+         })
+         .catch((error) => {
+         Global.MSG('Server Error');
+          //  this._httpSignUp(data);
+          console.log("Error : ",error);
+        });
+      }
+    });
+    console.log(connectionInfoLocal);
+  }
+  
+
+  //get user DAta   
+  _httpGetUserProfile = async () => {
+   
+    let token = await Global.TOKEN;
+    let user = await Global.USER;
+    if(user != null)
+    {
+      user = user.id;
+      this.setState({userID:user.id});
+      console.log('yes internet '+Global.API_URL+'company-details/'+user); 
+    }
+    else{
+      console.log("Error ");
+      Global.MSG('Not Login');
+      this.prop.navigation.navigate('HomePage');
+    }
+
+    var connectionInfoLocal = '';
+    NetInfo.getConnectionInfo().then((connectionInfo) => {
+     
+      if(connectionInfo.type == 'none'){
+        console.log('no internet ');
+      Global.MSG("No Internet !");
+        return;
+      }else{
+        console.log('yes internet '+Global.API_URL+'company-details/'+user); 
+        this.setState({
+          isLoding:true,
+        });
+        fetch(Global.API_URL+'company-details/'+user, {
+          method:'GET',
+          headers: {
+              'Accept': 'application/json',   
+              "Content-Type": "application/json",
+              "Authorization": token,              
+            }
+
+
           }).then((response) =>response.json() )
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
-             console.log('resp:',responseJson);
-            //  if(responseJson.success){
-            //     this.setProfile(responseJson.data)
-            //  }else{
-            //    ToastAndroid.showWithGravityAndOffset(
-            //      'Internal Server Error',
-            //      ToastAndroid.LONG,
-            //      ToastAndroid.BOTTOM,
-            //      25,
-            //      50,
-            //    );
-            //    this.setState({
-            //      isLoding:false,
-            //    });
- 
-            //    console.log("Error in get user data :",)
-            //  }
+             console.log('of Get PRofile resp :',responseJson);
+             if(responseJson.success)
+             {
+                console.log(responseJson.data);
+                this.setState({isLoding:false});
+                this.setProfile(responseJson.data);
+             }
+             else
+             {
+                console.log('User Not found ');
+                this.setState({isLoding:false});
+             }
+            
          })
          .catch((error) => {
           ToastAndroid.showWithGravityAndOffset(
@@ -200,6 +330,57 @@ export default class CompanyProfileScreen extends React.Component {
     });
     console.log(connectionInfoLocal);
   }
+
+
+  //Save PRofile on server  
+  _httpSetUserProfile = async (data) => {
+   
+    let token = await Global.TOKEN;
+    let user = await Global.USER;
+    console.log("USer : ",user);
+     var connectionInfoLocal = '';
+     NetInfo.getConnectionInfo().then((connectionInfo) => {
+      
+       if(connectionInfo.type == 'none'){
+         console.log('no internet ');
+       Global.MSG("No Internet !");
+         return;
+       }else{
+         console.log('yes internet '); 
+         this.setState({
+           isLoding:true,
+         });
+         fetch(Global.API_URL+'company-store', {
+           
+           headers: {
+               'Accept': 'application/json',   
+               "Content-Type": "application/json",
+               "Authorization": token,              
+             }
+ 
+ 
+           }).then((response) =>response.json() )
+           .then((responseJson) => {
+             // var itemsToSet = responseJson.data;
+              console.log('resp:',responseJson);
+             
+          })
+          .catch((error) => {
+           ToastAndroid.showWithGravityAndOffset(
+             'Network Failed!!! Retrying...',
+             ToastAndroid.LONG,
+             ToastAndroid.BOTTOM,
+             25,
+             50,
+           );
+           console.log('on error fetching:'+error);
+           //  this._httpSignUp(data);
+         });
+       }
+     });
+     console.log(connectionInfoLocal);
+   }
+ 
 
 
 
@@ -235,24 +416,17 @@ export default class CompanyProfileScreen extends React.Component {
 
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
   componentWillMount() {
-    let data =[{name:'nishant',key:1},{name:'hello',key:2},{name:'herror',key:67},{name:'ieywu',key:34}];
+   
     let picker = [];
-    data.forEach(element=>{
-        picker.push(<Picker.Item label={element.name} value={element.key} /> );
+    this.state.companyList.forEach(element=>{
+        picker.push(<Picker.Item label={element} value={element} /> );
     });
     this.setState({
       companyList:picker
     });
-
-
-
-
   }
 
-    onValueChange()
-    {
-
-    }
+   
 
   async _onDocument()
     {
@@ -284,18 +458,15 @@ export default class CompanyProfileScreen extends React.Component {
     }
 
 
-  createFormData = (photo) => {
+  createFormData = () => {
     let body = this.state;
   let data = new FormData();
-    console.log(photo);
+  
 
-    if(photo == null)
-      return;
-  data.append("pic",photo );
+    if(body.photo != null)
+      data.append("pic",photo );
 
-  // Object.keys(body).forEach(key => {
-  //   data.append(key, body[key]);
-  // });
+ 
    console.log(body);
   data.append('company_name',body.companyname+"")
   data.append('type',body.type+"")
@@ -397,14 +568,7 @@ export default class CompanyProfileScreen extends React.Component {
      console.log("Join Date : ",date);
     }
 
-   async _onSave()
-    {
-        const {type,companyname,regNo,address, owner,photo}=this.state;
-      //  let data = await {type,companyname,regNo,address,owner};
-       await this._httpSignUp(await this.createFormData(photo));
-
-       
-    }
+  
 
 
     onValueChange()
@@ -413,34 +577,43 @@ export default class CompanyProfileScreen extends React.Component {
     }
 
 
-  _httpSignUp = async (data) => {
+  _httpSaveUp = async (data) => {
    
+      let token = await Global.TOKEN;
+      let user  = await Global.USER;
+
+      if(user != null)
+      {
+         console.log(user.id);
+         data.append('user_id',user.id+"");
+      }
+      else
+      {
+
+      }
+
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
       console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
       // connectionInfo.type = 'none';//force local loding
       if(connectionInfo.type == 'none'){
         console.log('no internet ');
-        ToastAndroid.showWithGravityAndOffset(
-          'Oops! No Internet Connection',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
+       
+        Global.MSG('Oops! No Internet Connection')
         return;
       }else{
         console.log('yes internet '); 
         this.setState({
           isLoding:true,
         });
-        fetch(Global.API_URL+'comapny-store', {
+        fetch(Global.API_URL+'company-store', {
           "async": true,
           method: 'POST',
           headers: {
               'Accept': 'application/json',   
               "Content-Type": "multipart/form-data",
               "Cache-Control": "no-cache",
+              "Authorization": token, 
             },
             body: data 
           }).then((response) =>response.json() )
@@ -448,20 +621,11 @@ export default class CompanyProfileScreen extends React.Component {
             // var itemsToSet = responseJson.data;
              console.log('resp:',responseJson);
              if(responseJson.success){
-                this.setProfile(responseJson.data)
+               this.setProfile(responseJson.data)
              }else{
-               ToastAndroid.showWithGravityAndOffset(
-                 'Internal Server Error',
-                 ToastAndroid.LONG,
-                 ToastAndroid.BOTTOM,
-                 25,
-                 50,
-               );
-               this.setState({
-                 isLoding:false,
-               });
- 
-               console.log("Error in signUP :",)
+              Global.MSG(responseJson.msg)
+              this.setState({isLoding:false})
+               console.log("Error in signUP :",responseJson.msg)
              }
          })
          .catch((error) => {
@@ -473,7 +637,7 @@ export default class CompanyProfileScreen extends React.Component {
             50,
           );
           console.log('on error fetching:'+error);
-          //  this._httpSignUp(data);
+          //  this._httpSaveUp(data);
         });
       }
     });
@@ -485,18 +649,26 @@ export default class CompanyProfileScreen extends React.Component {
 
     try {
       
-    
-    data['address']= JSON.parse(data.address);
+    if( data != 1)
+    {
+      console.log(data);
+        data['address']= JSON.parse(data.address);
 
-    this.setState({
-      isLoding:false
-    });
-    console.log("Profile Data y ",data);
-    await AsyncStorage.setItem('profile',JSON.stringify(data));
-    this.props.navigation.navigate('AdminWelcome');
+        this.setState({
+          isLoding:false
+        });
+        console.log("Profile Data y ",data);
+        await AsyncStorage.setItem('profile',JSON.stringify(data));
+        this.props.navigation.navigate('AdminWelcome');
+    }
+    else
+    {
+      this._httpGetUserProfile();
+    }
   } catch (error) {
 
     console.log("Error In Conpony Prfile",error);
+    this._httpGetUserProfile();
       
   }
 
@@ -521,35 +693,11 @@ export default class CompanyProfileScreen extends React.Component {
 
 
 
-                  <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
-                          </Item>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                            <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
-                          </Item>
-                  </View>
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
-                    </Item>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
-                      <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
-                    </Item>
-
-                    {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
-                   */}
-
-
-                    <View>
-                      <Title style={[app.placeholder,{color:'#000000',fontWeight:'900'}]}>{this.state.name} </Title>
-                    </View>
-                        
                        
                  
-{/* 
+
                     <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
-                          <Picker
+                          {/* <Picker
                             mode="dialog"
                             placeholder="Select Company Type"
                             iosIcon={<Icon name="arrow-down" color='#ffffff' />}
@@ -572,20 +720,39 @@ export default class CompanyProfileScreen extends React.Component {
                           }
                          
                             
-                          </Picker> 
-                    </View> */}
+                          </Picker>  */}
+                          <Picker
+                                    selectedValue={this.state.type}
+                                    textStyle={{ color: "#ffffff" }}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})} >
+                        
+                                    { this.state.companyList.map((item, key)=>(
+                                    <Picker.Item label={item} value={item} key={key} />)
+                                    )}
+                            
+                          </Picker>
+                    </View>
                   
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPurpal]} >
                       <Input value={companyname} onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
                     </Item>
+                    <Text style={app.errorMsg}>
+                      {this.state.companyErrorMsg}
+                    </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={regNo } onChangeText={(text)=>{this.onValueChnageAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
                     </Item>
+                    <Text style={app.errorMsg}>
+                      {this.state.regNoErrorMsg}
+                    </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isownerError? app.errorBorder:app.borderPurpal]} >
                       <Input value={owner} onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
                     </Item>
+                    <Text style={app.errorMsg}>
+                      {this.state.ownerErrorMsg}
+                    </Text>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
                       <Input value={address.url} onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
@@ -600,8 +767,37 @@ export default class CompanyProfileScreen extends React.Component {
                     <Image source={{uri: photo.uri}} style={{width:100, height:100 }}/>)}
                     
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onSave();console.log("Next Click")}}><Title>Save</Title></Button>
+                   
+                    <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address? app.errorBorder:app.borderPurpal]} >
+                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
+                          </Item>
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                            <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
+                          </Item>
+                  </View>
+                  <Text style={app.errorMsg}>
+                      {this.state.addressErrorMsg}
+                    </Text>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
+                    </Item>
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
+                    </Item>
+
+                    {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
+                   */}
+
+
+                    <View>
+                      <Title style={[app.placeholder,{color:'#000000',fontWeight:'900'}]}>{this.state.name} </Title>
+                    </View>
+
+                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkValidation();console.log("Next Click")}}><Title>Save</Title></Button>
                  
+                        
                   </Card>
                   </KeyboardAvoidingView>
               </Content>

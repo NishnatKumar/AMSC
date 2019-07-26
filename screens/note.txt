@@ -2,6 +2,7 @@
 USer Token Key = 'userToken',
 User Details = 'userDetails',
 user Profile = 'profile'
+emp Profile = profileEmp
 
 {/* 
                  <Item  style={[app.formGroup,this.state.isNameErorr? app.errorMsg:app.borderPurpal,{borderWidth:1,borderColor:'#000000' }]} >

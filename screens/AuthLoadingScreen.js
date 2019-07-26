@@ -9,6 +9,7 @@ import {
     View,
     BackHandler
   } from 'react-native';
+import Global from '../constants/Global';
 
 export default class AuthLoadScreen extends React.Component {
     constructor() {
@@ -21,8 +22,8 @@ export default class AuthLoadScreen extends React.Component {
     //  await AsyncStorage.removeItem('userToken');
     //  await AsyncStorage.removeItem('profile');
     //  await AsyncStorage.removeItem('userDetails');
-      const userToken = await AsyncStorage.getItem('userToken');
-
+      const userToken =await Global.TOKEN; //await AsyncStorage.getItem('userToken');
+      console.log("USerToken :",userToken);
     
      this.props.navigation.navigate(userToken ? 'App' : 'Auth');
     };
