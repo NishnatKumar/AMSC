@@ -40,29 +40,29 @@ export default class BankScreen extends React.Component {
     {
         super(props)
         this.state={
-                      AC:'',
+                      AC:'dsf',
                     isACError:false,
                     errorACMsg:'',
 
 
 
-                      IFSCCODE:'',
+                      IFSCCODE:'dsaf',
                       isIFCError:false,
                         errorIFSCMsg:'',
 
-                    Name:'',
+                    Name:'sdaf',
                     isNameError:false,
                         errorNameCMsg:'',
 
-                    Bank:'',
+                    Bank:'dsaf',
                     isBankError:false,
                         errorBankCMsg:'',
 
                     data:null,
 
-                    BankData:{}
+                    BankData:{},
 
-
+                  isLoding:false
                         
                     }
 
@@ -97,16 +97,15 @@ export default class BankScreen extends React.Component {
 
   async  _onSubmit()
     {
-      try {
-        console.log("Submit Press");
-     if(data = this.checkValidation() != null)
-      {
+      let fv = new FormData();
+      /*  console.log("Submit Press");
+    
         let temp = this.state.data;
         console.log("TEmp : ",temp);
 
      
          
-        let data = new FormData();
+     
          
       
           if(temp.pic == null)
@@ -115,9 +114,9 @@ export default class BankScreen extends React.Component {
             return;
           }
             
-        data.append("pic",temp.pic );
+        fv.append("pic",temp.pic );
 
-        this.setState({BankData:{AC:this.state.AC,IFSC:this.state.IFSCCODE,name:this.state.Name,bank:this.state.Bank}})
+       
 
         if(temp.resume == null)
         {
@@ -125,120 +124,157 @@ export default class BankScreen extends React.Component {
             return;
         }
            
-        data.append("resume",temp.resume);
+        fv.append("resume",temp.resume);
 
 
-        let user = JSON.stringify(AsyncStorage.getItem('Details'));
+       
 
         
       
-       
+            let user = await Global.USER;
+          if(user != null)
+          {
+            user = user.id;
+            fv.append('user_id',user+"")
+            console.log('yes internet '+Global.API_URL+'company-details/'+user); 
+          }
+          else{
+            console.log("Error ");
+            Global.MSG('Not Login');
+            this.prop.navigation.navigate('HomePage');
+          }
          
        
-        data.append('joining_date',temp.join+"")
-        data.append('address',JSON.stringify(temp.address))
-        data.append('date_of_birth',temp.DOB+"")
-        data.append('designation','developer')
+        fv.append('joining_date',temp.join+"")
+        fv.append('address',JSON.stringify(temp.address))
+        fv.append('date_of_birth',temp.DOB+"")
+        fv.append('designation','developer')
+        fv.append('name',temp.name+"")
+       
+        fv.append('company_id',temp.compnay_id)*/
        
        
        
-        data.append('bank',JSON.stringify(this.state.BankData))
+        // fv.append('bank',JSON.stringify(this.state.BankData))
 
-        if(user == null){
-          console.log("user not come");
-            return;
-        }
+        // let users  = await Global.USER;
 
-      data.append('id',user.id); 
-      data.append('name',user.name)
+        // if(users != null)
+        // {
+        //    console.log(users.id);
+        //    fv.append('user_id',users.id+"");
+        // }
+        
       
       
         console.log("Http To call");
-        this._http(data);
+  
 
-      }
-      else
-      {
-          console.log("Error in submit");
-      }
-        
-      } catch (error) {
-        console.log("Eror ins save bank ",error)
-      }
+       return fv;
+
+    
+     
       
     }
 
 
+  
 
-  _http = async (data) => {
-   console.log("In http");
-    var connectionInfoLocal = '';
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-      // connectionInfo.type = 'none';//force local loding
-      if(connectionInfo.type == 'none'){
-        console.log('no internet ');
+  _httpSaveUp = async (data) => {
+   
+    let token = await Global.TOKEN;
+
+    /**Form dta  */
+      let fv = new FormData();
+      let temp = this.state.data;
+      fv.append("pic",temp.pic );
+      let user = await Global.USER;
+      if(user != null)
+      {
+        user = user.id;
+        fv.append('user_id',user+"")
+        console.log('yes internet '+Global.API_URL+'company-details/'+user); 
+      }
+      else{
+        console.log("Error ");
+        Global.MSG('Not Login');
+        this.prop.navigation.navigate('HomePage');
+      }
+
+       fv.append('joining_date',temp.join+"")
+        fv.append('address',JSON.stringify(temp.address))
+        fv.append('date_of_birth',temp.DOB+"")
+        fv.append('designation','developer')
+        fv.append('name',temp.name+"")
+        fv.append('bank',JSON.stringify(this.state.BankData))
+        fv.append('email_id',temp.email+"")     
+       fv.append('gender',temp.gender);
+      fv.append('company_id',temp.compnay_id+"");
+      fv.append('contact_no',temp.mobile);
+
+    /**End */
+
+
+    console.log("Data Type ", typeof data);
+  var connectionInfoLocal = '';
+  NetInfo.getConnectionInfo().then((connectionInfo) => {
+    console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+    // connectionInfo.type = 'none';//force local loding
+    if(connectionInfo.type == 'none'){
+      console.log('no internet ');
+     
+      Global.MSG('Oops! No Internet Connection')
+      return;
+    }else{
+      console.log('yes internet '); 
+      this.setState({
+        isLoding:true,
+      });
+      fetch(Global.API_URL+'employee-store', {
+        "async": true,
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',   
+            "Content-Type": "multipart/form-data",
+            "Cache-Control": "no-cache",
+            "Authorization": token, 
+          },
+          body: fv 
+        }).then((response) =>response.json() )
+        .then((responseJson) => {
+          // var itemsToSet = responseJson.data;
+           console.log('resp:',responseJson);
+           if(responseJson.success){
+             this.setProfile(responseJson.data)
+           }else{
+            Global.MSG(responseJson.msg)
+            this.setState({isLoding:false})
+             console.log("Error in signUP :",responseJson.msg)
+           }
+       })
+       .catch((error) => {
         ToastAndroid.showWithGravityAndOffset(
-          'Oops! No Internet Connection',
+          'Network Failed!!! Retrying...',
           ToastAndroid.LONG,
           ToastAndroid.BOTTOM,
           25,
           50,
         );
-        return;
-      }else{
-        console.log('yes internet '); 
-        this.setState({
-          isLoding:true,
-        });
-        fetch(Global.API_URL+'employee-store', {
-          "async": true,
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',   
-              "Content-Type": "multipart/form-data",
-              "Cache-Control": "no-cache",
-            },
-            body: data 
-          }).then((response) =>response.json() )
-          .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
-             console.log('resp:',responseJson);
-            //  if(responseJson.success){
-            //     this.setProfile(responseJson.data)
-            //  }else{
-            //    ToastAndroid.showWithGravityAndOffset(
-            //      'Internal Server Error',
-            //      ToastAndroid.LONG,
-            //      ToastAndroid.BOTTOM,
-            //      25,
-            //      50,
-            //    );
-            //    this.setState({
-            //      isLoding:false,
-            //    });
- 
-            //    console.log("Error in signUP :",)
-            //  }
-         })
-         .catch((error) => {
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-          console.log('on error fetching:'+error);
-          //  this._httpSignUp(data);
-        });
-      }
-    });
-    console.log(connectionInfoLocal);
+        console.log('on error fetching:'+error);
+        //  this._httpSaveUp(data);
+      });
+    }
+  });
+  console.log(connectionInfoLocal);
+}
+
+   setProfile(data)
+  {
+      console.log("Data : ",data);
   }
 
     
-    checkValidation()
+  async  checkValidation()
     {
       let data = null;
       try {
@@ -259,16 +295,17 @@ export default class BankScreen extends React.Component {
       {
         console.log("Bank not found");
       }
-      else{
-        data = {IFSCCODE:IFSCCODE,name:Name,AC:AC,Bank:Bank};
-        
+      else
+      {
+        data = {IFSCCODE:IFSCCODE,name:Name,AC:AC,Bank:Bank};  
+        this.setState({BankData:data})
+        this._httpSaveUp(this._onSubmit())
       }
       } catch (error) {
         console.log("Error : ",error);
       }
       
-      
-      return data;
+ 
     }
 
 
@@ -309,7 +346,7 @@ export default class BankScreen extends React.Component {
                     </Item>
                  
 
-                    <Button block full style={[app.btn,app.borderPurpal,{marginLeft:-2.7,marginBottom:25}]} onPress={()=>{this._onSubmit();}}><Title>Submit</Title></Button>
+                    <Button block full style={[app.btn,app.borderPurpal,{marginLeft:-2.7,marginBottom:25}]} onPress={()=>{ this.checkValidation()}}><Title>Submit</Title></Button>
                  
                  
                     <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onBack();}}><Title>Back</Title></Button>

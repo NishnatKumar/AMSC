@@ -274,7 +274,7 @@ export default class CompanyProfileScreen extends React.Component {
     else{
       console.log("Error ");
       Global.MSG('Not Login');
-      this.prop.navigation.navigate('HomePage');
+      this.props.navigation.navigate('HomePage');
     }
 
     var connectionInfoLocal = '';
@@ -464,7 +464,7 @@ export default class CompanyProfileScreen extends React.Component {
   
 
     if(body.photo != null)
-      data.append("pic",photo );
+      data.append("pic",body.photo );
 
  
    console.log(body);
@@ -513,7 +513,7 @@ export default class CompanyProfileScreen extends React.Component {
       }
       else if(key == 'Url')
       {
-        tempAddress.state = text;
+        tempAddress.url = text;
         this.setState({url:tempAddress});
       }
       
@@ -697,30 +697,7 @@ export default class CompanyProfileScreen extends React.Component {
                  
 
                     <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
-                          {/* <Picker
-                            mode="dialog"
-                            placeholder="Select Company Type"
-                            iosIcon={<Icon name="arrow-down" color='#ffffff' />}
-                            placeholder="Select Gender"
-                            textStyle={{ color: "#ffffff" }}
-                            itemStyle={{
-                              backgroundColor: "#d3d3d3",
-                              marginLeft: 0,
-                              paddingLeft: 10
-                            }}
-                            itemTextStyle={{ color: '#788ad2' }}
-                            style={{ width: undefined,borderColor:'#16bdf5',color:'#ffffff',borderWidth:0.5 ,marginTop:10}}
-                            selectedValue={this.state.company}
-                            onValueChange={(itemValue, itemIndex)=>{
-                              console.log("Item Value :",itemValue);
-                              this.setState({company: itemValue})}}                          
-                          >
-                          {
-                           this.state.companyList
-                          }
                          
-                            
-                          </Picker>  */}
                           <Picker
                                     selectedValue={this.state.type}
                                     textStyle={{ color: "#ffffff" }}
@@ -754,7 +731,7 @@ export default class CompanyProfileScreen extends React.Component {
                       {this.state.ownerErrorMsg}
                     </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.url} onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
                     </Item>
 
@@ -772,7 +749,7 @@ export default class CompanyProfileScreen extends React.Component {
                           <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address? app.errorBorder:app.borderPurpal]} >
                             <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
                           </Item>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                             <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
                           </Item>
                   </View>
@@ -780,10 +757,10 @@ export default class CompanyProfileScreen extends React.Component {
                       {this.state.addressErrorMsg}
                     </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
                     </Item>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
                     </Item>
 

@@ -6,7 +6,8 @@ import { conditionalExpression } from '@babel/types';
     API_PIC:'http://attendance.depixed.in',
     TOKEN:getToken(),
     MSG:showErrorMsg,
-    USER:user()
+    USER:user(),
+    PROFILE:profile(),
     // API_URL :'http://attendance.gangaservices.com/public/api/'
 }
 
@@ -72,6 +73,27 @@ async function showErrorMsg(msg)
         
     } catch (error) {
         console.log("Eroor in tosta",error);
+    }
+}
+
+async function profile()
+{
+    try 
+    {
+        
+         
+        let user =  await AsyncStorage.getItem('profile');
+        console.log("In token",user);
+        if(user != null)
+        {
+            // console.log('user : ',user);
+           return JSON.parse(user);
+        }
+        else
+            return null;
+
+    } catch (error) {
+        console.log("Error in profile : ",error)
     }
 }
 

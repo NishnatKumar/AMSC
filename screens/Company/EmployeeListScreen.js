@@ -65,37 +65,45 @@ export default class CompanyListScreen extends React.Component {
     _httpList= async ()=>{
     console.log("Api Access : ",Global.API_URL+'comapny');
   var connectionInfoLocal = '';
+      let token = await Global.TOKEN;
+
+      console.log("Token : ", token );
+      let profile = await Global.PROFILE;
+      if(profile == null)
+      {
+        this.props.navigation.navigate('CompanyProfile');
+      }
+
+      console.log("Profile : ",profile);
+
   NetInfo.getConnectionInfo().then((connectionInfo) => {
     console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
     // connectionInfo.type = 'none';//force local loding
     if(connectionInfo.type == 'none'){
-      console.log('no internet ');
-      ToastAndroid.showWithGravityAndOffset(
-        'Oops! No Internet Connection',
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      );
+   
+
+      Global.MSG('Oops! No Internet Connection');
       return;
     }else{
       console.log('yes internet '); 
       this.setState({
         isLoding:true,
-      });
-      fetch(Global.API_URL+'employee', {
+      });/**TODO : profile.id */
+      fetch(Global.API_URL+'employee-list/'+52, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',   
-            'Content-Type':'application/json'   
-          }
+            'Content-Type':'application/json',
+            "Authorization": token,     
+          },
+        
         }).then((response) =>response.json() )
         .then((responseJson) => {
           
           console.log("Response : ",responseJson);
            if(responseJson.success){
-             console.log(responseJson.data);
-            this.setState({companyList:responseJson.data});
+                console.log(responseJson.data);
+           this.setState({companyList:responseJson.data.data});
             
            }
           
@@ -145,6 +153,7 @@ _onPressItem = (value) => {
   console.log("Key press Key Type : ",value);
 
   console.log("Login Type  : ",loginType);
+  this.props.navigation.navigate('ProfileView');
 
  
 };

@@ -68,7 +68,7 @@ export default class Timer extends React.Component {
 
         if( 10  >hours  )
         {
-            console.log("In hours");
+           // console.log("In hours");
             hours = '0'+ hours;
         }
 

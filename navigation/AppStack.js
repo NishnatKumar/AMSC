@@ -11,9 +11,11 @@ import AdminWelcomeScreen from "../screens/Company/AdminWelcomeScreen";
 import QRCodeScreen from "../screens/Company/CompanyQRCodeScreen";
 import CheckScreen from "./CheckScreen";
 import EmpListScreen from "../screens/Company/EmployeeListScreen";
+import ProfileViewScreen from "../screens/Company/ProfileViewScreen";
 
 
 const AppStack = createStackNavigator({
+  ProfileView:{screen:ProfileViewScreen },
   Check:{screen: CheckScreen },
                                         CompanyProfile:{screen:CompanyProfileScreen},
                                        
@@ -27,6 +29,7 @@ const AppStack = createStackNavigator({
                                         Profile:{screen:ProfileScreen },
                                         EmpList:{screen:EmpListScreen },
                                        QRCode:{screen:QRScanner },
+                                     
                                                                             
                                       
                                          },config);
