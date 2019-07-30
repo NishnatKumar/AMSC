@@ -65,18 +65,6 @@ export default class AdminWelcomeScreen extends React.Component {
       this.props.navigation.navigate('QRCodeScreen');
     }
 
-    // _officeOut()
-    // {
-    //     this.props.navigation.navigate('QRCode');
-    //     if(this.state.isOut)
-    //     {
-    //       let formatted_date = "Out : "+Time();
-
-    //       console.log("Out Office : ",formatted_date);
-    //       this.setState({outTime:formatted_date,isOut:true});
-    //     }
-    // }
-
     _profile()
     {
       /**Profile of company */
@@ -93,6 +81,7 @@ export default class AdminWelcomeScreen extends React.Component {
         await AsyncStorage.removeItem('userToken');
         await AsyncStorage.removeItem('profile');
         await AsyncStorage.removeItem('userDetails');
+        this.props.navigation.dismiss();
         this.props.navigation.navigate('AuthLoading');
         console.log("Log Out ")
       } catch (error) {
@@ -125,7 +114,8 @@ export default class AdminWelcomeScreen extends React.Component {
 
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} ><Title>Today Key</Title></Button>
 
-                {/* <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._profile()}}><Title>Profile</Title></Button> */}
+                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._profile()}}><Title>Profile</Title></Button>
+               
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._logOut()}}><Title>LogOut</Title></Button>
 
             <Image source={require('../../assets/images/12.png')} style={{width:size.window.width,height:size.window.height/2,marginTop:5,opacity:0.5}} />

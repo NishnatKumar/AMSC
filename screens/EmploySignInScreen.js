@@ -114,7 +114,7 @@ export default class EmploySignInScreen extends Component {
     if(data.user.user_type == 'emp')
     {
         this.props.navigation.navigate('Profile')
-      // await AsyncStorage.setItem('profileEmp',JSON.stringify(data.data));
+      //  await AsyncStorage.setItem('profileEmp',JSON.stringify(data.data));
     }
     else if(data.user.user_type == 'cmp')
     {
@@ -154,7 +154,7 @@ export default class EmploySignInScreen extends Component {
       {
        
         if(loginType == 'emp')
-          this.props.navigation.navigate('CompanyList',{loginType:loginType});
+          this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});
         else if(loginType == 'cmp')
           this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});
       }

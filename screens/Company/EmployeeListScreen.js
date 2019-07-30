@@ -32,7 +32,7 @@ export default class CompanyListScreen extends React.Component {
         this.state={
                      companyList:[],
                      categoryList:[],
-                      loginType:null
+                     
                     }
                     
     }
@@ -41,12 +41,8 @@ export default class CompanyListScreen extends React.Component {
     {
 
       try {
-        console.log("In company List : ")
-        const { navigation } = this.props;
-        const value = navigation.getParam('loginType', 'NO-ID');
       
-        this.setState({loginType:value});
-        console.log("Login Type : "+value+"  ",this.state.loginType);
+      
         
         this._httpList();
       } catch (error) {
@@ -57,7 +53,7 @@ export default class CompanyListScreen extends React.Component {
     }
 
       static navigationOptions = {
-        header: null
+        
     }
 
 
@@ -69,10 +65,13 @@ export default class CompanyListScreen extends React.Component {
 
       console.log("Token : ", token );
       let profile = await Global.PROFILE;
+      console.log("Profile is error : ".profile)
       if(profile == null)
       {
         this.props.navigation.navigate('CompanyProfile');
+        return;
       }
+      
 
       console.log("Profile : ",profile);
 
@@ -89,7 +88,7 @@ export default class CompanyListScreen extends React.Component {
       this.setState({
         isLoding:true,
       });/**TODO : profile.id */
-      fetch(Global.API_URL+'employee-list/'+52, {
+      fetch(Global.API_URL+'employee-list/'+profile.id, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',   
@@ -153,7 +152,7 @@ _onPressItem = (value) => {
   console.log("Key press Key Type : ",value);
 
   console.log("Login Type  : ",loginType);
-  this.props.navigation.navigate('ProfileView');
+  this.props.navigation.navigate('ProfileView',{data:value});
 
  
 };

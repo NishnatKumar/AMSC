@@ -11,6 +11,8 @@ import { conditionalExpression } from '@babel/types';
     // API_URL :'http://attendance.gangaservices.com/public/api/'
 }
 
+
+        /**GET  The TOKEN */
 async function getToken()
 {
     try 
@@ -34,7 +36,7 @@ async function getToken()
     
 }
 
-
+     /**GET  The USER  */
 async function user()
 {
     try 
@@ -44,7 +46,7 @@ async function user()
         // console.log("In token",user);
         if(user != null)
         {
-            // console.log('user : ',user);
+            console.log('user from GLOBAL  : ',user);
            return JSON.parse(user);
         }
         else
@@ -83,7 +85,7 @@ async function profile()
         
          
         let user =  await AsyncStorage.getItem('profile');
-        console.log("In token",user);
+        console.log("In token GEt user Profile",user);
         if(user != null)
         {
             // console.log('user : ',user);

@@ -10,7 +10,9 @@ import {
   StatusBar,
   ImageBackground,
   TouchableHighlight,
-  FlatList
+  FlatList,
+  NetInfo,
+  ToastAndroid
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -21,6 +23,7 @@ import app from '../../constants/app';
 import Logo from '../Logo';
 import Timer from './Timer';
 import Time from '../../constants/Time';
+import Global from '../../constants/Global';
 
 
 
@@ -36,8 +39,9 @@ export default class HistoryScreen extends React.Component {
                       isOut:false,
 
                       header:['Date','In','Out'],
-                      data:[{date:'12/04/2019',in:'12:30',out:'13:08'},{'date':'13/04/2019',in:'09:30',out:'13:08'},{'date':'14/04/2019',in:'09:30',out:'14:08'}],
+                      data:[],
                       borderColor:'',
+                      userID:'',
 
 
                         
@@ -45,7 +49,103 @@ export default class HistoryScreen extends React.Component {
     }
 
   static navigationOptions = {
-    header: null
+    Title:'History'
+}
+
+  componentDidMount()
+  {
+    this._httpGetUserProfile();
+  }
+
+_httpGetUserProfile = async () => {
+   
+  let token = await Global.TOKEN;
+  let user = await Global.USER;
+  console.log("User value ",user.id)
+  
+  let body=JSON.stringify({userID:user.id})
+  if(user != null)
+  {
+
+    const { navigation } = this.props;
+    const value = navigation.getParam('id', null);
+    
+    if(value)
+    {
+      this.setState({userID:value});
+    }
+    else{
+      console.log("User value ",user)
+      user = user.id;
+      this.setState({userID:user.id});
+    }
+    
+
+  
+    
+
+    console.log('yes internet '+Global.API_URL+'attendance-history Data : ',{userID:this.state.userID}); 
+  }
+  else{
+    console.log("Error ");
+    Global.MSG('Not Login');
+    this.prop.navigation.navigate('HomePage');
+  }
+
+  var connectionInfoLocal = '';
+  NetInfo.getConnectionInfo().then((connectionInfo) => {
+   
+    if(connectionInfo.type == 'none'){
+      console.log('no internet ');
+    Global.MSG("No Internet !");
+      return;
+    }else{
+      // console.log('yes internet '+Global.API_URL+'attendance-history Data : '+JSON.stringify(body)); 
+      this.setState({
+        isLoding:true,
+      });
+      fetch(Global.API_URL+'attendance-history', {
+        method:'POST',
+        headers: {
+            'Accept': 'application/json',   
+            "Content-Type": "application/json",
+            "Authorization": token,              
+          },
+        body:body
+
+
+
+        }).then((response) =>response.json() )
+        .then((responseJson) => {
+          // var itemsToSet = responseJson.data;
+        console.log('of Get PRofile resp :',responseJson);
+           if(responseJson.success)
+           {
+              // console.log(responseJson.data);
+              this.setState({isLoding:false,data:responseJson.data.data});
+              // this.setProfile(responseJson.data);
+           }
+           else
+           {
+              console.log('User Not found ');
+              this.setState({isLoding:false});
+           }
+          
+       })
+       .catch((error) => {
+        ToastAndroid.showWithGravityAndOffset(
+          'Network Failed!!! Retrying...',
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
+        );
+        console.log('on error fetching:'+error);
+        //  this._httpSignUp(data);
+      });
+    }
+  });
+  console.log(connectionInfoLocal);
 }
 
 filter()
@@ -53,7 +153,7 @@ filter()
 
 }
 
-        _keyExtractor = (item, index) => item.date;
+        _keyExtractor = (item, index) => item.id+"";
 
         _onPressItem = (id) => {
           // updater functions are preferred for transactional updates
@@ -67,18 +167,24 @@ filter()
 
         _renderItem = ({item}) => {
           console.log("ITem ",item)
-          return(  <View style={styles1.row}>
+          let intime = JSON.parse(item.in)
+          let out =JSON.parse(item.out)
+          let date = JSON.parse(item.in)
+          return(  
+
+          <View style={styles1.row}>
 
             <View style={styles1.cell} >
-              <Text style={styles1.td} >{item.date}</Text> 
+              <Text style={styles1.td} >{date.split(" ")[1]}</Text> 
             </View>
             <View style={styles1.cell} >
-              <Text style={styles1.td}>{item.in}</Text> 
+              <Text style={styles1.td}>{date.split(" ")[2]}</Text> 
             </View>
             <View style={styles1.cell} >
-              <Text style={styles1.td}>{item.out}</Text> 
+              <Text style={styles1.td}>{out!=null?date.split(" ")[2]:''}</Text> 
             </View>
-          </View>)
+          </View>
+          )
         };
           
            
@@ -93,11 +199,11 @@ filter()
           
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
-                <View style={{marginTop:10}}></View> 
+                <View style={{marginTop:20}}></View> 
 
                 <Title style={app.title}>History</Title>
 
-                <Button block full style={styles.btn} onPress={()=>{this.filter()}}><Title>Filter</Title><Icon name={'ios-arrow-down' } size={20}></Icon></Button>
+                {/* <Button block full style={styles.btn} onPress={()=>{this.filter()}}><Title>Filter</Title><Icon name={'ios-arrow-down' } size={20}></Icon></Button> */}
 
                 <Content>
 

@@ -37,20 +37,15 @@ export default class BarcodeScannerExample extends React.Component {
 
   
   _http = async (data) => {
-    console.log("In http");
+    console.log("In http",data);
      var connectionInfoLocal = '';
+     let token = await Global.TOKEN;
      NetInfo.getConnectionInfo().then((connectionInfo) => {
        console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
        // connectionInfo.type = 'none';//force local loding
        if(connectionInfo.type == 'none'){
          console.log('no internet ');
-         ToastAndroid.showWithGravityAndOffset(
-           'Oops! No Internet Connection',
-           ToastAndroid.LONG,
-           ToastAndroid.BOTTOM,
-           25,
-           50,
-         );
+        Global.MSG('No Internet');
          return;
        }else{
          console.log('yes internet '); 
@@ -63,6 +58,7 @@ export default class BarcodeScannerExample extends React.Component {
            headers: {
                'Accept': 'application/json',   
                "Content-Type": "application/json",
+               "Authorization": token, 
               
              },
              body:JSON.stringify(data) 
@@ -71,15 +67,10 @@ export default class BarcodeScannerExample extends React.Component {
              // var itemsToSet = responseJson.data;
               console.log('resp:',responseJson);
               if(responseJson.success){
-                 this.setData(responseJson.data);
+                
+                 this.setData(responseJson.data,data);
               }else{
-                ToastAndroid.showWithGravityAndOffset(
-                  'Internal Server Error',
-                  ToastAndroid.LONG,
-                  ToastAndroid.BOTTOM,
-                  25,
-                  50,
-                );
+               Global.MSG("Server Error")
                 this.setState({
                   isLoding:false,
                 });
@@ -104,17 +95,22 @@ export default class BarcodeScannerExample extends React.Component {
    }
 
 
-  async setData(data)
+  async setData(data,value)
   {
     
+    console.log("Data : ",data);
 
     try {
       if(data.in)
+      {
         await AsyncStorage.setItem('in',JSON.stringify({'in':JSON.parse(data.in),id:data.id}));
-      
-      if(data.out)
-        await AsyncStorage.setItem('in',JSON.stringify({'out':JSON.parse(data.in),id:data.id}));
-      
+        console.log("In in time")
+      }
+      if(data == 1)
+      {
+       await AsyncStorage.setItem('out',JSON.stringify({'out':JSON.parse(value.out)}));
+        console.log("In out time",value);
+      }
 
     } catch (error) {
       console.log("Eroor ",error)
@@ -161,11 +157,12 @@ export default class BarcodeScannerExample extends React.Component {
 
   QurCodeChecker(data)
   {
-   
-    let emp =  data.emp_reg_id.split(".")[3].replace('"','');
+    console.log(data);
+    let emp =  data.empReg.split(".")[3].replace('"','');
+
     let time = data.in.split(" ")[0].replace('"','');
   
-
+    console.log("Emp Timei : "+emp+"  Time : "+time);
    return emp===time
 
   }
@@ -173,13 +170,13 @@ export default class BarcodeScannerExample extends React.Component {
   handleBarCodeScanned =async ({ type, data }) => {
     this.setState({ scanned: true });
    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
-   console.log("QRCode data is : ",data);
+  //  console.log("QRCode data is : ",data);
 
    try {
 
-        let user =JSON.parse(await AsyncStorage.getItem('profile'));
+        let user =JSON.parse(await AsyncStorage.getItem('profileEmp'));
 
-          console.log("USER DETAILS : ",user);  
+          // console.log("USER DETAILS : ",user);  
             const { navigation } = this.props;
             const value = navigation.getParam('types', null);
 
@@ -189,9 +186,9 @@ export default class BarcodeScannerExample extends React.Component {
             {
                   if(value == 'in')
                   {
-                    console.log("Emp REg ID : ",user.emp_reg_id);
-                    let dataToSave = {'emp_reg_id':user.emp_reg_id,'in':data};
-                   if(this.QurCodeChecker(dataToSave))
+                    // console.log("Emp REg ID : ",user.emp_reg_id);
+                    let dataToSave = {'empReg':user.emp_reg_id,'in':data};
+                   if(!this.QurCodeChecker(dataToSave))
                    {
                       this._http(dataToSave);
                    }                    
@@ -210,6 +207,40 @@ export default class BarcodeScannerExample extends React.Component {
                   if(value == 'out')
                   {
                  //await AsyncStorage.setItem('out',data)
+               
+                  let inTime = JSON.parse(await AsyncStorage.getItem('in'));
+                        console.log("Date out : ",inTime);
+                      if(inTime!= null)
+                      {
+                        let dataToSave = {'empReg':user.emp_reg_id,'out':data,id:inTime.id};
+                        console.log("Data toi save : ",dataToSave);
+
+                        let emp =  dataToSave.empReg.split(".")[3].replace('"','');
+    
+                        let time = dataToSave.out.split(" ")[0].replace('"','');
+                      
+                        console.log("Emp Timei : "+emp+"  Time : "+time);
+                      
+                        if( emp!=time)
+                        {
+                          
+                            this._http(dataToSave);
+                        }                    
+                        else
+                        {
+                            ToastAndroid.showWithGravityAndOffset(
+                              'This is Not Your Company Code Scan Correct Code ',
+                              ToastAndroid.LONG,
+                              ToastAndroid.BOTTOM,
+                              25,
+                              50,
+                            );
+                          }
+
+                      }
+                     
+                      
+                
                   }
                   this.props.navigation.navigate('Home');
             }

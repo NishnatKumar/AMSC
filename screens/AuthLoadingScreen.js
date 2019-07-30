@@ -22,8 +22,8 @@ export default class AuthLoadScreen extends React.Component {
     //  await AsyncStorage.removeItem('userToken');
     //  await AsyncStorage.removeItem('profile');
     //  await AsyncStorage.removeItem('userDetails');
-      const userToken =await Global.TOKEN; //await AsyncStorage.getItem('userToken');
-      console.log("USerToken :",userToken);
+      const userToken =await Global.TOKEN; 
+     
     
      this.props.navigation.navigate(userToken ? 'App' : 'Auth');
     };
@@ -33,11 +33,13 @@ export default class AuthLoadScreen extends React.Component {
     }
   
     componentWillUnmount() {
+     
       this.backHandler.remove()
     }
   
     handleBackPress = () => {
       this.goBack(); // works best when the goBack is async
+      this._bootstrapAsync();
       return true;
     }  
 

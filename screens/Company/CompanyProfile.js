@@ -168,7 +168,7 @@ export default class CompanyProfileScreen extends React.Component {
 
 
   static navigationOptions = {
-    header: null
+    
 }
 
   componentWillMount()
@@ -180,19 +180,11 @@ export default class CompanyProfileScreen extends React.Component {
 
 
 
-  componentWillUnmount() {
-
-    
-    this.backHandler.remove();
-  }
+ 
   
   async componentDidMount() {
     try {
-      this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-        this.goBack(); // works best when the goBack is async
-       // this.props.navigation.navigate('')
-        return true;
-      });
+      
           let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
           if(!userID)
           {
@@ -274,7 +266,7 @@ export default class CompanyProfileScreen extends React.Component {
     else{
       console.log("Error ");
       Global.MSG('Not Login');
-      this.props.navigation.navigate('HomePage');
+      // this.props.navigation.navigate('HomePage');
     }
 
     var connectionInfoLocal = '';
@@ -301,10 +293,10 @@ export default class CompanyProfileScreen extends React.Component {
           }).then((response) =>response.json() )
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
-             console.log('of Get PRofile resp :',responseJson);
+            // console.log('of Get PRofile resp :',responseJson);
              if(responseJson.success)
              {
-                console.log(responseJson.data);
+               // console.log(responseJson.data);
                 this.setState({isLoding:false});
                 this.setProfile(responseJson.data);
              }
@@ -659,7 +651,7 @@ export default class CompanyProfileScreen extends React.Component {
         });
         console.log("Profile Data y ",data);
         await AsyncStorage.setItem('profile',JSON.stringify(data));
-        this.props.navigation.navigate('AdminWelcome');
+        this.props.navigation.navigate('CompanyProfileView',{'data':data});
     }
     else
     {

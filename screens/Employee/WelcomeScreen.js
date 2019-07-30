@@ -23,6 +23,7 @@ import Logo from '../Logo';
 import Timer from './Timer';
 import Time from '../../constants/Time';
 import { checkForUpdateAsync } from 'expo/build/Updates/Updates';
+import Global from '../../constants/Global';
 
 
 
@@ -49,11 +50,38 @@ export default class WelcomeScreen extends React.Component {
      
     }
 
+    async checkStoreDate()
+    {
+        try {
+
+          
+          let inTime = JSON.parse(await AsyncStorage.getItem('in'));
+          
+          var date = new Date().getDate(); //Current Date
+          var month = new Date().getMonth() + 1; //Current Month
+          var year = new Date().getFullYear(); //Current Year
+
+          if(inTime)
+          {
+            if(date.split(" ")[1] != date+"/"+month+"/"+year )
+            {
+                await AsyncStorage.removeItem('in');
+                await AsyncStorage.removeItem('out');
+            }
+          }
+
+
+        } catch (error) {
+          console.log("Check is store check : ",error);
+        }
+      
+    } 
+
    async entryCheck()
     {
       try {
 
-        await AsyncStorage.removeItem('in');
+        // await AsyncStorage.removeItem('in');
         let inTime = JSON.parse(await AsyncStorage.getItem('in'));
         let outTime = JSON.parse(await AsyncStorage.getItem('out'));
       //  console.log(inTime);
@@ -61,23 +89,24 @@ export default class WelcomeScreen extends React.Component {
       
           if(inTime)
           {
-           // console.log("Date in : ",inTime);
-            let formatted_date = "IN : "+inTime;
+        //  console.log("Date in : ",inTime);
+            let formatted_date = "IN : "+inTime.in;
 
            // console.log("In Office in ",formatted_date);
             this.setState({inTime:formatted_date,isIn:true});
+
+
             
           }
            if(outTime)
           {
-          //  console.log("Date out : ",outTime);
-            if(this.state.isOut)
-            {
-              let formatted_date = "Out : "+outTime;
+        //  console.log("Date out : ",outTime);
+           
+              let formatted_date = "Out : "+outTime.out;
     
             //  console.log("Out Office : ",formatted_date);
               this.setState({outTime:formatted_date,isOut:true});
-            }
+           
           }
 
        
@@ -111,7 +140,10 @@ export default class WelcomeScreen extends React.Component {
 
     _officeOut()
     {
+      if(isIn)
         this.props.navigation.navigate('QRCode',{'types':'out'});
+      else
+        Global.MSG("Invalide Option Press");
         // if(this.state.isOut)
         // {
         //   let formatted_date = "Out : "+Time();
@@ -137,8 +169,10 @@ export default class WelcomeScreen extends React.Component {
     {
       try {
         await AsyncStorage.removeItem('userToken');
-        await AsyncStorage.removeItem('profile');
+        await AsyncStorage.removeItem('profileEmp');
         await AsyncStorage.removeItem('userDetails');
+        await AsyncStorage.removeItem('in');
+        await AsyncStorage.removeItem('out')
         this.props.navigation.navigate('AuthLoading');
         console.log("Log Out ")
       } catch (error) {

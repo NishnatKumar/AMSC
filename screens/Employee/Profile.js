@@ -113,18 +113,14 @@ export default class ProfileScreen extends React.Component {
                     }
               console.log("In profile");
 
-              this._httpGetUserProfile()
-              this._httpGetUserIndustry();
+             
     }
 
 
    async componentDidMount()
     {
-      
-      
-      
-      console.log("USer Data : ",await Global.USER);
-
+      this._httpGetUserProfile()
+      this._httpGetUserIndustry();
 
     }
 
@@ -192,13 +188,13 @@ export default class ProfileScreen extends React.Component {
     if(user != null)
     {
       user = user.id;
-      this.setState({userID:user.id});
+     
       console.log('yes internet '+Global.API_URL+'employee-details/'+user); 
     }
     else{
       console.log("Error ");
       Global.MSG('Not Login');
-      this.prop.navigation.navigate('HomePage');
+      this.props.navigation.navigate('HomePage');
     }
 
     var connectionInfoLocal = '';
@@ -225,7 +221,7 @@ export default class ProfileScreen extends React.Component {
           }).then((response) =>response.json() )
           .then((responseJson) => {
             // var itemsToSet = responseJson.data;
-             console.log('of Get PRofile resp :',responseJson);
+           //  console.log('of Get PRofile resp :',responseJson);
              if(responseJson.success)
              {
                 // console.log(responseJson.data);
@@ -255,6 +251,15 @@ export default class ProfileScreen extends React.Component {
     console.log(connectionInfoLocal);
   }
 
+
+ async setProfile(responseJson)
+  {
+      console.log("USer Profile :",responseJson);
+      responseJson.address =JSON.parse(responseJson.address);
+      responseJson.bank = JSON.parse(responseJson.bank);
+      await AsyncStorage.setItem('profileEmp',JSON.stringify(responseJson));
+      this.props.navigation.navigate('ProfileView',{data:responseJson});
+  }
 
     
   onValueChnageAddress(text,key){

@@ -95,87 +95,7 @@ export default class BankScreen extends React.Component {
       this.props.navigation.navigate('Profile');
     }
 
-  async  _onSubmit()
-    {
-      let fv = new FormData();
-      /*  console.log("Submit Press");
-    
-        let temp = this.state.data;
-        console.log("TEmp : ",temp);
 
-     
-         
-     
-         
-      
-          if(temp.pic == null)
-          {
-            console.log("Pic not come");
-            return;
-          }
-            
-        fv.append("pic",temp.pic );
-
-       
-
-        if(temp.resume == null)
-        {
-          console.log("resume not come");
-            return;
-        }
-           
-        fv.append("resume",temp.resume);
-
-
-       
-
-        
-      
-            let user = await Global.USER;
-          if(user != null)
-          {
-            user = user.id;
-            fv.append('user_id',user+"")
-            console.log('yes internet '+Global.API_URL+'company-details/'+user); 
-          }
-          else{
-            console.log("Error ");
-            Global.MSG('Not Login');
-            this.prop.navigation.navigate('HomePage');
-          }
-         
-       
-        fv.append('joining_date',temp.join+"")
-        fv.append('address',JSON.stringify(temp.address))
-        fv.append('date_of_birth',temp.DOB+"")
-        fv.append('designation','developer')
-        fv.append('name',temp.name+"")
-       
-        fv.append('company_id',temp.compnay_id)*/
-       
-       
-       
-        // fv.append('bank',JSON.stringify(this.state.BankData))
-
-        // let users  = await Global.USER;
-
-        // if(users != null)
-        // {
-        //    console.log(users.id);
-        //    fv.append('user_id',users.id+"");
-        // }
-        
-      
-      
-        console.log("Http To call");
-  
-
-       return fv;
-
-    
-     
-      
-    }
 
 
   
@@ -268,10 +188,36 @@ export default class BankScreen extends React.Component {
   console.log(connectionInfoLocal);
 }
 
-   setProfile(data)
+ 
+async setProfile(data)
+{
+
+  try {
+    
+  if( data != 1)
   {
-      console.log("Data : ",data);
+    console.log(data);
+      data['address']= JSON.parse(data.address);
+
+      this.setState({
+        isLoding:false
+      });
+      console.log("Profile Data y ",data);
+      await AsyncStorage.setItem('profile',JSON.stringify(data));
+      this.props.navigation.navigate('AdminWelcome');
   }
+  else
+  {
+    this.props.navigation.navigate('AdminWelcome');
+  }
+} catch (error) {
+
+  console.log("Error In Conpony Prfile",error);
+  this.props.navigation.navigate('AdminWelcome');
+    
+}
+
+}
 
     
   async  checkValidation()

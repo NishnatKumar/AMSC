@@ -4,7 +4,7 @@ import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Ri
 import Processing from '../Processing';
 import Global from '../../constants/Global';
 
-export default class ProfileViewScreen extends React.Component
+export default class CompanyProfileViewScreen extends React.Component
 {
     constructor(props)
     {
@@ -23,9 +23,9 @@ export default class ProfileViewScreen extends React.Component
 
             bank:{},
             email:'nishnatraj656@gmail.com',
-            gender:'Other',
+            Owner:'Other',
             DOB:'',
-            joining_date:''
+            type:''
 
             
         }
@@ -39,9 +39,9 @@ export default class ProfileViewScreen extends React.Component
         console.log("#########################Data Value he ye  : ",data);
         if(data != null)
         {
-            this.setState({isLoading:false,address:data.address,bank:data.bank,name:data.name,
-            contact:data.contact_no,post:data.designation,email:data.email_id,gender:data.gender,DOB:data.date_of_birth,
-            uri:Global.API_PIC+data.image,joining_date:data.joining_date
+            this.setState({isLoading:false,address:data.address,name:data.company_name,
+            contact:data.address.contact_no,email:data.address.email_id,Owner:data.owner,type:data.type,
+            uri:Global.API_PIC+data.pic
         })
         }
         
@@ -50,7 +50,7 @@ export default class ProfileViewScreen extends React.Component
 
     render()
     {
-        const {name,post,contact,email,isLoading,address,uri,bank,DOB,gender,joining_date,id} =this.state;
+        const {name,contact,email,isLoading,address,uri,Owner,type} =this.state;
         if(!isLoading)
         return(
             <Container>
@@ -62,7 +62,7 @@ export default class ProfileViewScreen extends React.Component
                             </Left>
                             <Body>
                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
-                                <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{post}</Text>
+                                <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
                             </Body>
                         </CardItem>
                     </Card>
@@ -80,33 +80,17 @@ export default class ProfileViewScreen extends React.Component
                     </View>
 
                     <Card>
+                       
                         <CardItem>
                             <Left>
-                                <Title style={{color:'#000000'}}>DOB</Title>
+                                <Title style={{color:'#000000'}}>Owner</Title>
                             </Left>
                             <Right>
                                
-                                <Subtitle style={{color:'#000000'}}>{DOB}</Subtitle>
+                                <Subtitle style={{color:'#000000'}}>{Owner}</Subtitle>
                             </Right>
                         </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>Gender</Title>
-                            </Left>
-                            <Right>
-                               
-                                <Subtitle style={{color:'#000000'}}>{gender}</Subtitle>
-                            </Right>
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>Joining Date</Title>
-                            </Left>
-                            <Right>
-                               
-                                <Subtitle style={{color:'#000000'}}>{joining_date}</Subtitle>
-                            </Right>
-                        </CardItem>
+                        
                     </Card>
                    
 
@@ -163,45 +147,7 @@ export default class ProfileViewScreen extends React.Component
                     </View>
 
                     </View>
-                    <Card>
-                        
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>Name</Title>
-                            </Left>
-                            <Right>
-                               
-                                <Subtitle style={{color:'#000000'}}>{bank.name}</Subtitle>
-                            </Right>
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>Bank</Title>
-                            </Left>
-                            <Right>                               
-                                <Subtitle style={{color:'#000000'}}>{bank.Bank}</Subtitle>
-                            </Right>
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>AC</Title>
-                            </Left>
-                            <Right>                               
-                                <Subtitle style={{color:'#000000'}}>{bank.AC}</Subtitle>
-                            </Right>
-                        </CardItem>
-                        <CardItem>
-                            <Left>
-                                <Title style={{color:'#000000'}}>IFSC CODE</Title>
-                            </Left>
-                            <Right>                               
-                                <Subtitle style={{color:'#000000'}}>{bank.IFSCCODE}</Subtitle>
-                            </Right>
-                        </CardItem>
-                    </Card>
-
-                    <Button block full onPress={()=>{this.props.navigation.navigate('History',{'id':id})}}><Title>View History</Title></Button>
-
+                  
                     
                 </Content>
             </Container>
