@@ -8,6 +8,7 @@ import { conditionalExpression } from '@babel/types';
     MSG:showErrorMsg,
     USER:user(),
     PROFILE:profile(),
+    PROFILE:profile(),
     // API_URL :'http://attendance.gangaservices.com/public/api/'
 }
 

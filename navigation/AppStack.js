@@ -17,7 +17,7 @@ import CompanyProfileViewScreen from "../screens/Company/CompnayProfileViewScree
 
 const AppStack = createStackNavigator({
  
-  Check:{screen: CheckScreen },
+                                        Check:{screen: CheckScreen },
                                         CompanyProfile:{screen:CompanyProfileScreen},
                                         CompanyProfileView:{screen:CompanyProfileViewScreen},
                                        
@@ -41,51 +41,9 @@ const config = {
       headerVisible: false,
     },
     initialRouteName:'QRCode'
-   }
-
- 
-
-//  class CheckScreen extends React.Component {
-//     constructor() {
-//       super();
-     
-//     }
-  
-//     // Fetch the token from storage then navigate to our appropriate place
-//     async componentWillMount() {
-//       const userToken = await AsyncStorage.getItem('userToken');
-
-//       if(userToken != null)
-//       {
-//         const userData = JSON.parse(userToken);
-
-          
-//       }
-
-//     };
-  
-//     // Render any loading content that you like here
-//     render() {
-//       return (
-//         <View style={styles.container}>
-//           <ActivityIndicator />
-//           <StatusBar barStyle="default" />
-//         </View>
-//       );
-//     }
-//   }
+   }  
   
   
-  
-  
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
   
 
 export default AppStack

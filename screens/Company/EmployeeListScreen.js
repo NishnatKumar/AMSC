@@ -57,9 +57,9 @@ export default class CompanyListScreen extends React.Component {
     }
 
 
-    
+    /**Get the list of employee */
     _httpList= async ()=>{
-    console.log("Api Access : ",Global.API_URL+'comapny');
+   
   var connectionInfoLocal = '';
       let token = await Global.TOKEN;
 
@@ -68,7 +68,8 @@ export default class CompanyListScreen extends React.Component {
       console.log("Profile is error : ".profile)
       if(profile == null)
       {
-        this.props.navigation.navigate('CompanyProfile');
+        this.props.navigation.goBack();
+        Global.MSG("Profile Not Found ");
         return;
       }
       
@@ -146,12 +147,10 @@ setValues(data)
 _keyExtractor = (item, index) => item.id+'';
 
 _onPressItem = (value) => {
-  // updater functions are preferred for transactional updates
-
-  const {loginType} = this.state;
+  
   console.log("Key press Key Type : ",value);
 
-  console.log("Login Type  : ",loginType);
+
   this.props.navigation.navigate('ProfileView',{data:value});
 
  

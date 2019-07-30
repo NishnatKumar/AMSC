@@ -29,6 +29,15 @@ export default class EmploySignInScreen extends Component {
                 }
     }
 
+    
+    componentWillMount()
+    {
+      const { navigation } = this.props;
+      const value = navigation.getParam('loginType', null);
+      if(value != null)
+        this.setState({loginType:value});
+    }
+
     static navigationOptions = {
         header: null
     }
@@ -102,19 +111,19 @@ export default class EmploySignInScreen extends Component {
  async setValues(data)
   {
   
-    this.setState({isLoding:false});
+   
 
     try {
 
-      console.log("DATA OF LOGIN : ",data.token);
+     
 
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
 
     if(data.user.user_type == 'emp')
     {
-        this.props.navigation.navigate('Profile')
-      //  await AsyncStorage.setItem('profileEmp',JSON.stringify(data.data));
+        this.props.navigation.navigate('Home')
+     
     }
     else if(data.user.user_type == 'cmp')
     {
@@ -129,34 +138,25 @@ export default class EmploySignInScreen extends Component {
       
     //  this.props.navigation.navigate('AuthLoading');
 
+
     } catch (error) {
-      console.log("Eroor is signup ",error);
+      console.log("Eroor is in EmployeeSignInScreen ",error);
+      this.setState({isLoding:false});
     }
     
 
-
+    this.setState({isLoding:false});
 
   }
 
 
-    componentWillMount()
-    {
-      const { navigation } = this.props;
-      const value = navigation.getParam('loginType', 'NO-ID');
-      
-      this.setState({loginType:value});
-    }
 
     _signUP()
     {
       const {loginType} = this.state;
       if(loginType != null )
       {
-       
-        if(loginType == 'emp')
-          this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});
-        else if(loginType == 'cmp')
-          this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});
+        this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});       
       }
       
     }
@@ -164,6 +164,7 @@ export default class EmploySignInScreen extends Component {
     checkValidation()
     {
     
+      /**This code is for re-set fields */
       this.setState({
        
         isUsernameError:false,
@@ -174,8 +175,12 @@ export default class EmploySignInScreen extends Component {
         passwordErrorMsg:''
     })
 
+
+
       let username = this.state.username;
       let password = this.state.password;
+
+
 
       if(username.length <3 )
       {
@@ -183,7 +188,7 @@ export default class EmploySignInScreen extends Component {
         this.setState({usernameErrorMsg :'Enter The Correct Email',
                         isUsernameError:true});
 
-        console.log("Erroor ins PAssword : ",this.state.usernameErrorMsg);
+        console.log("Erroor in PAssword : ",this.state.usernameErrorMsg);
       }
       else if(password.length <3)
       {
@@ -230,13 +235,6 @@ export default class EmploySignInScreen extends Component {
                 <Logo></Logo>
                 <Card transparent style={{marginTop:5,padding:20 }}>
                
-                  {/* { this.state.errorMsg.length !=0 ?
-                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
-                      <Text style={{fontSize:20,color:'red'}}>{this.state.errorMsg}</Text>
-                    </View>
-                    :
-                    <Text></Text>
-                  }                   */}
                     <Item regular  style={[app.formGroup,this.state.isUsernameError? app.errorBorder:app.borderPurpal]} >
                          <Input value={username} placeholder="Username" onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
                     </Item>
@@ -246,10 +244,6 @@ export default class EmploySignInScreen extends Component {
 
  
 
-                    			{/* { usernameErrorMsg.length !=0 ?
-                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
-                    <Text style={{fontSize:20,color:'red'}}>{usernameErrorMsg}</Text>
-                    </View>:<Text></Text>} */}
                     
                     <Item regular  style={[app.formGroup,isPasswordError? app.errorBorder:app.borderPurpal,{marginTop:size.window.height/15}]}>
                          <Input value={password} onChangeText={(text)=>{this.setState({password:text});}} placeholder="Password" secureTextEntry={true} textContentType="password"  />
@@ -259,10 +253,7 @@ export default class EmploySignInScreen extends Component {
                     </Text>
 
 
-                    {/* { passwordErrorMsg.length !=0 ?
-                    <View style={{margin:10, backgroundColor:'#ebb7c1',borderWidth:0.5,borderColor:'red',borderRadius:5,padding:7}}>
-                    <Text style={{fontSize:20,color:'red'}}>{passwordErrorMsg}</Text>
-                    </View>:<Text></Text>} */}
+                  
                    
             <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Forgot Press");
                     this.props.navigation.navigate('ForgotPassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>

@@ -144,13 +144,7 @@ export default class WelcomeScreen extends React.Component {
         this.props.navigation.navigate('QRCode',{'types':'out'});
       else
         Global.MSG("Invalide Option Press");
-        // if(this.state.isOut)
-        // {
-        //   let formatted_date = "Out : "+Time();
-
-        //   console.log("Out Office : ",formatted_date);
-        //   this.setState({outTime:formatted_date,isOut:true});
-        // }
+      
     }
 
     _profile()

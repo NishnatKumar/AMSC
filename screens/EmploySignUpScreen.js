@@ -40,7 +40,16 @@ export default class EmploySignUpScreen extends Component {
     };
   }
 
+  componentWillMount()
+  {
+    const { navigation } = this.props;
+    const loginType = navigation.getParam('loginType', null);
 
+    const cmpID = navigation.getParam('cmpID',null)
+    
+    this.setState({loginType:loginType,cmpID:cmpID});
+      console.log(" Login : "+loginType+" : "+cmpID);
+  }
 
 
   _httpSignUp = async (data) => {
@@ -110,17 +119,7 @@ export default class EmploySignUpScreen extends Component {
     console.log(connectionInfoLocal);
   }
 
-  componentWillMount()
-  {
-    const { navigation } = this.props;
-    const loginType = navigation.getParam('loginType', 'NO-ID');
-
-    const cmpID = navigation.getParam('cmpID',null)
-    
-    this.setState({loginType:loginType,
-                    cmpID:cmpID});
-      console.log(" Login : "+loginType+" : "+cmpID);
-  }
+ 
 
   onValueChange(value) {
     this.setState({
