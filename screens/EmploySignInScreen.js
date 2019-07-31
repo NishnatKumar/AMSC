@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo} from 'react-native';
+import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo,Alert} from 'react-native';
 import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Toast } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
@@ -122,11 +122,13 @@ export default class EmploySignInScreen extends Component {
 
     if(data.user.user_type == 'emp')
     {
+        Alert.alert(" Successful!  Login")
         this.props.navigation.navigate('Home')
      
     }
     else if(data.user.user_type == 'cmp')
     {
+      Alert.alert(" Successful!  Login")
         this.props.navigation.navigate('AdminWelcome')
     }
     else

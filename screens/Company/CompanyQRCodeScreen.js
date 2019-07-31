@@ -1,5 +1,6 @@
  import React from 'react';
- import {StatusBar,AsyncStorage} from 'react-native';
+ import {StatusBar,AsyncStorage, BackHandler,
+    Alert} from 'react-native';
 import { Container, View } from 'native-base';
 import QRCode from 'react-native-qrcode';
 import size from '../../constants/Layout';
@@ -44,6 +45,14 @@ export default class QRCodeScreen extends React.Component
 
    }
 
+     
+componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+    
 
    timeUpdate()
    {

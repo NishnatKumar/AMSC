@@ -13,6 +13,7 @@ import CheckScreen from "./CheckScreen";
 import EmpListScreen from "../screens/Company/EmployeeListScreen";
 import ProfileViewScreen from "../screens/Company/ProfileViewScreen";
 import CompanyProfileViewScreen from "../screens/Company/CompnayProfileViewScreen";
+import CheckProfile from "../screens/Employee/CheckProfile";
 
 
 const AppStack = createStackNavigator({
@@ -20,9 +21,10 @@ const AppStack = createStackNavigator({
                                         Check:{screen: CheckScreen },
                                         CompanyProfile:{screen:CompanyProfileScreen},
                                         CompanyProfileView:{screen:CompanyProfileViewScreen},
-                                       
+                                        CheckProfile:{screen:CheckProfile},
                                         Home:{screen:WelcomeScreen},
                                         QRCodeScreen:{screen:QRCodeScreen},
+                                        
                                        
                                    
                                         AdminWelcome:{screen:AdminWelcomeScreen},

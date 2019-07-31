@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 
 import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button } from "native-base";
+
+import { BackHandler,
+    Alert} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
 
@@ -32,7 +35,7 @@ export default class ProfileViewScreen extends React.Component
 
     }
 
-    componentWillMount()
+    componentDidMount()
     {
         const { navigation } = this.props;
         const data = navigation.getParam('data', null);
@@ -44,9 +47,19 @@ export default class ProfileViewScreen extends React.Component
             uri:Global.API_PIC+data.image,joining_date:data.joining_date
         })
         }
+        this.setState({isLoading:false});
         
 
     }
+
+    
+componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
+  }
+    
 
     render()
     {
@@ -61,6 +74,7 @@ export default class ProfileViewScreen extends React.Component
                                 <Thumbnail large source={{uri:uri}}/>
                             </Left>
                             <Body>
+                                <Button transparent onPress={()=>{this.props.navigation.navigate('Profile')}}><Text>Edit</Text></Button>                           
                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                                 <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{post}</Text>
                             </Body>

@@ -12,7 +12,9 @@ import {
   TouchableHighlight,
   FlatList,
   NetInfo,
-  ToastAndroid
+  ToastAndroid,
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -56,6 +58,12 @@ export default class HistoryScreen extends React.Component {
   {
     this._httpGetUserProfile();
   }
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
 
 _httpGetUserProfile = async () => {
    

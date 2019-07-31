@@ -14,7 +14,9 @@ import {
   DatePickerAndroid,
   FlatList,
   NetInfo,
-  ToastAndroid
+  ToastAndroid,
+  BackHandler,
+  Alert
 
 } from 'react-native';
 
@@ -72,6 +74,7 @@ export default class CompanyListScreen extends React.Component {
         Global.MSG("Profile Not Found ");
         return;
       }
+      
       
 
       console.log("Profile : ",profile);
@@ -138,6 +141,14 @@ export default class CompanyListScreen extends React.Component {
   console.log(connectionInfoLocal);
 }
 
+  
+componentWillMount() {
+  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+componentWillUnmount() {
+  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+  
 
 setValues(data)
 {

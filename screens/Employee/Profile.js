@@ -15,7 +15,8 @@ import {
   ToastAndroid,
   DatePickerAndroid,
   AsyncStorage,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  BackHandler
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -40,8 +41,7 @@ export default class ProfileScreen extends React.Component {
         super(props)
         this.state={
                       
-                      // post:'',
-                      // image:'',
+                    
 
                       companyList:[],
                      
@@ -63,7 +63,7 @@ export default class ProfileScreen extends React.Component {
                       
                 
 
-                      name:'nishant Kumar',
+                      name:'',
                         isnameError:false,
                           nameErrorMsg:'',
                       
@@ -83,7 +83,7 @@ export default class ProfileScreen extends React.Component {
                         ispicError:false,
                           picErrorMsg:'',
 
-                      email:'nishnatraj656@gmail.com',
+                      email:'',
                       isemailError:false,
                         emailErrorMsg:'',
 
@@ -108,7 +108,7 @@ export default class ProfileScreen extends React.Component {
                 isaddressError:false,
                   addressErrorMsg:'',
 
-                      
+                isLoading:false
                         
                     }
               console.log("In profile");
@@ -119,10 +119,17 @@ export default class ProfileScreen extends React.Component {
 
    async componentDidMount()
     {
-      this._httpGetUserProfile()
       this._httpGetUserIndustry();
-
+     
     }
+
+    componentWillMount() {
+      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+  componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+  
 
   static navigationOptions = {
         header: null
@@ -179,78 +186,7 @@ export default class ProfileScreen extends React.Component {
   }
   
 
-    // to get the profile of the employee
-     //get user DAta   
-  _httpGetUserProfile = async () => {
    
-    let token = await Global.TOKEN;
-    let user = await Global.USER;
-    if(user != null)
-    {
-      user = user.id;
-     
-      console.log('yes internet '+Global.API_URL+'employee-details/'+user); 
-    }
-    else{
-      console.log("Error ");
-      Global.MSG('Not Login');
-      this.props.navigation.navigate('HomePage');
-    }
-
-    var connectionInfoLocal = '';
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-     
-      if(connectionInfo.type == 'none'){
-        console.log('no internet ');
-      Global.MSG("No Internet !");
-        return;
-      }else{
-        console.log('yes internet '+Global.API_URL+'employee-details/'+user); 
-        this.setState({
-          isLoding:true,
-        });
-        fetch(Global.API_URL+'employee-details/'+user, {
-          method:'GET',
-          headers: {
-              'Accept': 'application/json',   
-              "Content-Type": "application/json",
-              "Authorization": token,              
-            }
-
-
-          }).then((response) =>response.json() )
-          .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
-           //  console.log('of Get PRofile resp :',responseJson);
-             if(responseJson.success)
-             {
-                // console.log(responseJson.data);
-                this.setState({isLoding:false});
-                this.setProfile(responseJson.data);
-             }
-             else
-             {
-                console.log('User Not found ');
-                this.setState({isLoding:false});
-             }
-            
-         })
-         .catch((error) => {
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-          console.log('on error fetching:'+error);
-          //  this._httpSignUp(data);
-        });
-      }
-    });
-    console.log(connectionInfoLocal);
-  }
-
 
  async setProfile(responseJson)
   {

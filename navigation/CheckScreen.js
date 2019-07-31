@@ -24,30 +24,18 @@ export default class CheckScreen extends React.Component {
         
       
     /** TODO : WE have to remove comment */    
-      const userToken = await AsyncStorage.getItem('userToken');
+    
       const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
-      const profile = JSON.parse(await AsyncStorage.getItem('profile'));
-      const profileEmp = JSON.parse(await AsyncStorage.getItem('profileEmp'));
-
-      // console.log("Profile : ",profile);
-      // console.log("User Data  : ",userData);
-      // console.log("UserToken : ",userToken);
-    if(userData != null)
+     
+   
       if(userData.user_type == 'cmp'){
-        // console.log("User DAta : ",profile);
-        if(!profile)
-          this.props.navigation.navigate('AdminWelcome');
-        else
+     
+       
           this.props.navigation.navigate('AdminWelcome');
 
       }
      else if(userData.user_type == 'emp'){
-          if(!profileEmp){
-            console.log("In profile")
-            // this.props.navigation.navigate('Profile',{userData:userData});
-            this.props.navigation.navigate('Home');
-          }
-          else
+      
             this.props.navigation.navigate('Home');
       }
       else
@@ -59,12 +47,7 @@ export default class CheckScreen extends React.Component {
         console.log("Error ",error);
     }
 
-    //   if(userToken != null)
-    //   {
-    //     const userData = JSON.parse(userToken);
-
-          
-    //   }
+   
 
     };
   

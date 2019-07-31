@@ -11,7 +11,9 @@ import {
   StatusBar,
   ImageBackground,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -137,10 +139,51 @@ export default class WelcomeScreen extends React.Component {
     }
 
     
+    componentDidMount()
+    {
+      this.props.navigation.dismiss();
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    }
+
+  static navigationOptions = {
+    header: null
+}
+
+    
+
+      componentWillUnmount() {
+      
+        this.backHandler.remove()
+      }
+
+      handleBackPress = () => {
+
+        Alert.alert(
+          'Confirm Exit',
+          'Do You Want to Exit ?',
+          [
+           
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => BackHandler.exitApp()},
+          ],
+          {cancelable: false},
+        );
+
+        
+
+        return true;
+      }  
+
+
+    
 
     _officeOut()
     {
-      if(isIn)
+      if(this.state.isIn)
         this.props.navigation.navigate('QRCode',{'types':'out'});
       else
         Global.MSG("Invalide Option Press");
@@ -149,7 +192,7 @@ export default class WelcomeScreen extends React.Component {
 
     _profile()
     {
-      this.props.navigation.navigate('Profile');
+      this.props.navigation.navigate('CheckProfile');
     }
 
     _history()
@@ -167,7 +210,7 @@ export default class WelcomeScreen extends React.Component {
         await AsyncStorage.removeItem('userDetails');
         await AsyncStorage.removeItem('in');
         await AsyncStorage.removeItem('out')
-        this.props.navigation.navigate('AuthLoading');
+        this.props.navigation.navigate('HomePage');
         console.log("Log Out ")
       } catch (error) {
         console.log("Error he : ",error);

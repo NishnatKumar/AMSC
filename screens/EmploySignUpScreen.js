@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar,KeyboardAvoidingView,StyleSheet,ToastAndroid,NetInfo} from 'react-native';
+import {StatusBar,KeyboardAvoidingView,StyleSheet,ToastAndroid,NetInfo,Alert} from 'react-native';
 import { Container, Header, Content, Form, Icon,Item, Input,Picker,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Toast } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
@@ -87,6 +87,8 @@ export default class EmploySignUpScreen extends Component {
            
              if(responseJson.success){
                Message('Enter Userid And Password to login');
+               Alert.alert('User Registration Successful! Please Login')
+               
              
              this.setState({
                isLoding:false,

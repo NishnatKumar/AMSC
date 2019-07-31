@@ -1,4 +1,4 @@
- import {AsyncStorage,ToastAndroid} from 'react-native';
+ import {AsyncStorage,ToastAndroid,NetInfo,} from 'react-native';
 import { conditionalExpression } from '@babel/types';
 
  const Global = {
@@ -9,7 +9,64 @@ import { conditionalExpression } from '@babel/types';
     USER:user(),
     PROFILE:profile(),
     PROFILE:profile(),
-    // API_URL :'http://attendance.gangaservices.com/public/api/'
+    PROFILECHECK:async function(userID,type) {
+        // let data = null;
+       let token = await Global.TOKEN
+        let url;
+        console.log("In Global PROFILE CHECK");
+        if(type == "emp")
+            url =Global.API_URL+'employee-details/'+userID;
+        else if(type == "cmp")
+            url = Global.API_URL+'company-details/'+userID;
+        else {
+            console.log("Type Not Found")
+        return;}
+    
+      await  NetInfo.getConnectionInfo().then((connectionInfo) => {
+         
+          if(connectionInfo.type == 'none'){
+            console.log('no internet ');
+          Global.MSG("No Internet !");
+            return;
+          }else{
+            console.log('yes internet '+url); 
+           
+            fetch(url, {
+              method:'GET',
+              headers: {
+                  'Accept': 'application/json',   
+                  "Content-Type": "application/json",
+                  "Authorization":  token,              
+                }
+    
+    
+              }).then((response) =>response.json() )
+              .then((responseJson) => {
+               console.log("Responase IN GLobal Profile Check : ",responseJson)
+              return responseJson;
+            
+                
+             })
+             .catch((error) => {
+              ToastAndroid.showWithGravityAndOffset(
+                'Network Failed!!! Retrying...',
+                ToastAndroid.LONG,
+                ToastAndroid.BOTTOM,
+                25,
+                50,
+              );
+              console.log('on error fetching from Global check Function :'+error);
+              //  this._httpSignUp(data);
+            });
+          }
+        });
+        
+        // if(data !== 'undefined')
+        //     return data;
+      
+    
+    }
+  
 }
 
 
@@ -35,6 +92,65 @@ async function getToken()
         console.log("Error In token get ",error);
     }
     
+}
+
+    /**Check Profile if exist or not  */
+
+const profileCheck =async function(userID,type) {
+    let data = null;
+   let token = await Global.TOKEN
+    let url;
+    console.log("In Global PROFILE CHECK");
+    if(type == "emp")
+        url =Global.API_URL+'employee-details/'+userID;
+    else if(type == "cmp")
+        url = Global.API_URL+'company-details/'+userID;
+    else {
+        console.log("Type Not Found")
+    return;}
+
+  await  NetInfo.getConnectionInfo().then((connectionInfo) => {
+     
+      if(connectionInfo.type == 'none'){
+        console.log('no internet ');
+      Global.MSG("No Internet !");
+        return;
+      }else{
+        console.log('yes internet '+url); 
+       
+        fetch(url, {
+          method:'GET',
+          headers: {
+              'Accept': 'application/json',   
+              "Content-Type": "application/json",
+              "Authorization":  token,              
+            }
+
+
+          }).then((response) =>response.json() )
+          .then((responseJson) => {
+           console.log("Responase IN GLobal Profile Check : ",responseJson)
+          return data =responseJson;
+          console.log(data);
+            
+         })
+         .catch((error) => {
+          ToastAndroid.showWithGravityAndOffset(
+            'Network Failed!!! Retrying...',
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50,
+          );
+          console.log('on error fetching from Global check Function :'+error);
+          //  this._httpSignUp(data);
+        });
+      }
+    });
+    
+    console.log(data);
+  return data;
+
 }
 
      /**GET  The USER  */
@@ -97,6 +213,16 @@ async function profile()
 
     } catch (error) {
         console.log("Error in profile : ",error)
+    }
+}
+
+function Alert()
+{
+    try {
+
+        
+    } catch (error) {
+        console.log("Error in Alert");
     }
 }
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 
-import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button } from "native-base";
+import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button, Icon } from "native-base";
+import { BackHandler,
+    Alert} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
 
@@ -32,6 +34,14 @@ export default class CompanyProfileViewScreen extends React.Component
 
     }
 
+      
+componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+    
     componentWillMount()
     {
         const { navigation } = this.props;
@@ -61,9 +71,13 @@ export default class CompanyProfileViewScreen extends React.Component
                                 <Thumbnail large source={{uri:uri}}/>
                             </Left>
                             <Body>
+                            <Button transparent onPress={()=>{this.props.navigation.navigate('CompanyProfile')}}><Text>Edit</Text></Button>
+                           
                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                                 <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
+                               
                             </Body>
+                           
                         </CardItem>
                     </Card>
 
@@ -136,17 +150,7 @@ export default class CompanyProfileViewScreen extends React.Component
                             </Right>
                         </CardItem>
                     </Card>
-                   
-                    <View style={{padding:5,paddingHorizontal:5,alignItems:'center',backgroundColor:'#ededed',justifyContent:'space-between',flexDirection:'row',borderColor:'#000000' }}>
-                    <View>
-                  
-                        <Text style={{alignSelf:'center'}}>Bank</Text>
-                    </View>
-                    <View>
-                        
-                    </View>
-
-                    </View>
+                 
                   
                     
                 </Content>

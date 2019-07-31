@@ -12,7 +12,9 @@ import {
   ImageBackground,
   TouchableHighlight,
   ActivityIndicator,
-  AsyncStorage
+  AsyncStorage,
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -48,11 +50,41 @@ export default class AdminWelcomeScreen extends React.Component {
     componentDidMount()
     {
       this.props.navigation.dismiss();
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
 
   static navigationOptions = {
     header: null
 }
+
+    
+
+      componentWillUnmount() {
+      
+        this.backHandler.remove()
+      }
+
+      handleBackPress = () => {
+
+        Alert.alert(
+          'Confirm Exit',
+          'Do You Want to Exit ?',
+          [
+           
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => BackHandler.exitApp()},
+          ],
+          {cancelable: false},
+        );
+
+        
+
+        return true;
+      }  
 
     _employeeList()
     {
@@ -68,7 +100,7 @@ export default class AdminWelcomeScreen extends React.Component {
     _profile()
     {
       /**Profile of company */
-      this.props.navigation.navigate('CompanyProfile');
+      this.props.navigation.navigate('CheckProfile');
 
 
 
@@ -82,7 +114,7 @@ export default class AdminWelcomeScreen extends React.Component {
         await AsyncStorage.removeItem('profile');
         await AsyncStorage.removeItem('userDetails');
         this.props.navigation.dismiss();
-        this.props.navigation.navigate('AuthLoading');
+        this.props.navigation.navigate('HomePage');
         console.log("Log Out ")
       } catch (error) {
         console.log("Error he : ",error);

@@ -16,7 +16,8 @@ import {
   ToastAndroid,
   KeyboardAvoidingView,
   AsyncStorage,
-  BackHandler
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -100,9 +101,8 @@ export default class CompanyProfileScreen extends React.Component {
                    
                         
                     }
-
-                  this._httpGetUserIndustry();
-                    this._httpGetUserProfile();
+                    this._httpGetUserIndustry();
+                                 
     }
 
    async checkValidation()
@@ -173,7 +173,7 @@ export default class CompanyProfileScreen extends React.Component {
 
   componentWillMount()
   {
-    // this._httpGetUserIndustry();
+      
   }
 
 
@@ -182,24 +182,24 @@ export default class CompanyProfileScreen extends React.Component {
 
  
   
-  async componentDidMount() {
-    try {
+  // async componentDidMount() {
+  //   try {
       
-          let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
-          if(!userID)
-          {
-            this.props.navigation.navigate('EmployeeSignIn');  
+  //         let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
+  //         if(!userID)
+  //         {
+  //           this.props.navigation.navigate('EmployeeSignIn');  
             
-          }
+  //         }
            
-         this.setState({userID:userID.id});
-            console.log(userID)
-       // this._httpGetUserProfile(userID.id)
+  //        this.setState({userID:userID.id});
+  //           console.log(userID)
+  //      // this._httpGetUserProfile(userID.id)
 
-        } catch (error) {
-          console.log("Error in CompnayProfile : ",error);
-        }
-  }
+  //       } catch (error) {
+  //         console.log("Error in CompnayProfile : ",error);
+  //       }
+  // }
 
   // Get Indistry type
   //get user DAta 
@@ -251,78 +251,6 @@ export default class CompanyProfileScreen extends React.Component {
     console.log(connectionInfoLocal);
   }
   
-
-  //get user DAta   
-  _httpGetUserProfile = async () => {
-   
-    let token = await Global.TOKEN;
-    let user = await Global.USER;
-    if(user != null)
-    {
-      user = user.id;
-      this.setState({userID:user.id});
-      console.log('yes internet '+Global.API_URL+'company-details/'+user); 
-    }
-    else{
-      console.log("Error ");
-      Global.MSG('Not Login');
-      // this.props.navigation.navigate('HomePage');
-    }
-
-    var connectionInfoLocal = '';
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-     
-      if(connectionInfo.type == 'none'){
-        console.log('no internet ');
-      Global.MSG("No Internet !");
-        return;
-      }else{
-        console.log('yes internet '+Global.API_URL+'company-details/'+user); 
-        this.setState({
-          isLoding:true,
-        });
-        fetch(Global.API_URL+'company-details/'+user, {
-          method:'GET',
-          headers: {
-              'Accept': 'application/json',   
-              "Content-Type": "application/json",
-              "Authorization": token,              
-            }
-
-
-          }).then((response) =>response.json() )
-          .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
-            // console.log('of Get PRofile resp :',responseJson);
-             if(responseJson.success)
-             {
-               // console.log(responseJson.data);
-                this.setState({isLoding:false});
-                this.setProfile(responseJson.data);
-             }
-             else
-             {
-                console.log('User Not found ');
-                this.setState({isLoding:false});
-             }
-            
-         })
-         .catch((error) => {
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-          console.log('on error fetching:'+error);
-          //  this._httpSignUp(data);
-        });
-      }
-    });
-    console.log(connectionInfoLocal);
-  }
-
 
   //Save PRofile on server  
   _httpSetUserProfile = async (data) => {
@@ -388,6 +316,14 @@ export default class CompanyProfileScreen extends React.Component {
 
   }
 
+    
+componentWillMount() {
+  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+componentWillUnmount() {
+  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+  
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
@@ -471,8 +407,7 @@ export default class CompanyProfileScreen extends React.Component {
 };
 
   onValueChnageAddress(text,key){
-      console.log("Text : ",text);
-      console.log("Key ",key);
+   
      let tempAddress = this.state.address;
 
       if(key == 'Office')
@@ -568,7 +503,7 @@ export default class CompanyProfileScreen extends React.Component {
       
     }
 
-
+    /**Save Data on server */
   _httpSaveUp = async (data) => {
    
       let token = await Global.TOKEN;
@@ -651,16 +586,17 @@ export default class CompanyProfileScreen extends React.Component {
         });
         console.log("Profile Data y ",data);
         await AsyncStorage.setItem('profile',JSON.stringify(data));
-        this.props.navigation.navigate('CompanyProfileView',{'data':data});
+      
     }
-    else
-    {
-      this._httpGetUserProfile();
+    else{
+      Alert.alert('Profile Update !')
+      this.props.navigation.navigate('Home')
     }
+   
   } catch (error) {
 
     console.log("Error In Conpony Prfile",error);
-    this._httpGetUserProfile();
+  
       
   }
 

@@ -15,6 +15,8 @@ import {
   AsyncStorage,
   NetInfo,
   ToastAndroid,
+  BackHandler,
+  Alert
 } from 'react-native';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -166,6 +168,12 @@ export default class BarcodeScannerExample extends React.Component {
    return emp===time
 
   }
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
 
   handleBarCodeScanned =async ({ type, data }) => {
     this.setState({ scanned: true });

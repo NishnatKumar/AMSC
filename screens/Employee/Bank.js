@@ -16,6 +16,8 @@ import {
   AsyncStorage,
   NetInfo,
   ToastAndroid,
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -40,21 +42,21 @@ export default class BankScreen extends React.Component {
     {
         super(props)
         this.state={
-                      AC:'dsf',
+                      AC:'',
                     isACError:false,
                     errorACMsg:'',
 
 
 
-                      IFSCCODE:'dsaf',
+                      IFSCCODE:'',
                       isIFCError:false,
                         errorIFSCMsg:'',
 
-                    Name:'sdaf',
+                    Name:'',
                     isNameError:false,
                         errorNameCMsg:'',
 
-                    Bank:'dsaf',
+                    Bank:'',
                     isBankError:false,
                         errorBankCMsg:'',
 
@@ -71,6 +73,13 @@ export default class BankScreen extends React.Component {
 
   static navigationOptions = {
     header: null
+}
+
+componentWillMount() {
+  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+}
+componentWillUnmount() {
+  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
 }
 
   
@@ -161,11 +170,30 @@ export default class BankScreen extends React.Component {
           },
           body: fv 
         }).then((response) =>response.json() )
-        .then((responseJson) => {
+        .then(async(responseJson) => {
           // var itemsToSet = responseJson.data;
            console.log('resp:',responseJson);
            if(responseJson.success){
-             this.setProfile(responseJson.data)
+                if(responseJson.data != 1)
+                {
+                  console.log(responseJson.data);
+                  responseJson.data['address']= JSON.parse(responseJson.data.address);
+
+                    responseJson.data['bank']= JSON.parse(responseJson.data.bank);
+              
+                    this.setState({
+                      isLoding:false
+                    });
+                    console.log("Profile Data y ",responseJson.data);
+                    await AsyncStorage.setItem('profile',JSON.stringify(responseJson.data));
+                    Global.MSG("Profile Save !")
+                    this.props.navigation.navigate('Home');
+                }
+                else
+                {
+                  Global.MSG('Profile Update!')
+                  this.props.navigation.navigate('Home');
+                }
            }else{
             Global.MSG(responseJson.msg)
             this.setState({isLoding:false})
@@ -204,16 +232,17 @@ async setProfile(data)
       });
       console.log("Profile Data y ",data);
       await AsyncStorage.setItem('profile',JSON.stringify(data));
-      this.props.navigation.navigate('AdminWelcome');
+      Global.MSG("Profile Save !")
+      this.props.navigation.navigate('Welcome');
   }
   else
   {
-    this.props.navigation.navigate('AdminWelcome');
+    this.props.navigation.navigate('Welcome');
   }
 } catch (error) {
 
   console.log("Error In Conpony Prfile",error);
-  this.props.navigation.navigate('AdminWelcome');
+  this.props.navigation.navigate('Welcome');
     
 }
 
@@ -245,7 +274,7 @@ async setProfile(data)
       {
         data = {IFSCCODE:IFSCCODE,name:Name,AC:AC,Bank:Bank};  
         this.setState({BankData:data})
-        this._httpSaveUp(this._onSubmit())
+        this._httpSaveUp()
       }
       } catch (error) {
         console.log("Error : ",error);
