@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 
-import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button } from "native-base";
+import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button, Header } from "native-base";
 
 import { BackHandler,
     Alert} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
+import Headers from '../Headers';
 
 export default class ProfileViewScreen extends React.Component
 {
@@ -52,6 +53,10 @@ export default class ProfileViewScreen extends React.Component
 
     }
 
+    static navigationOptions = {
+        header: null
+    }
+
     
 componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
@@ -67,6 +72,7 @@ componentWillMount() {
         if(!isLoading)
         return(
             <Container>
+                <Headers title="Profile"/>
                 <Content>
                     <Card>
                         <CardItem>

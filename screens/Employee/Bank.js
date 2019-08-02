@@ -31,6 +31,7 @@ import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
 import { switchCase } from '@babel/types';
 import Global from '../../constants/Global';
+import Headers from '../Headers';
 
 
 
@@ -289,7 +290,7 @@ async setProfile(data)
         return (
           
           <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
+            <Headers title="Bank Details"/>
               <View style={{marginTop:15}}></View>
               
               <Content>

@@ -29,6 +29,7 @@ import Timer from './Timer';
 import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
 import Global from '../../constants/Global';
+import Headers from '../Headers';
 
 
 
@@ -57,11 +58,6 @@ export default class ProfileScreen extends React.Component {
 
 
                       companyname:'',
-
-                     
-
-                      
-                
 
                       name:'',
                         isnameError:false,
@@ -120,14 +116,14 @@ export default class ProfileScreen extends React.Component {
    async componentDidMount()
     {
       this._httpGetUserIndustry();
-     
+      
     }
 
     componentWillMount() {
-      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
   }
   componentWillUnmount() {
-      BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+      BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
   }
   
 
@@ -151,6 +147,7 @@ export default class ProfileScreen extends React.Component {
         this.setState({
           isLoding:true,
         });
+        console.log("Token : ",token);
        fetch(Global.API_URL+'company', {
           
           headers: {
@@ -171,7 +168,8 @@ export default class ProfileScreen extends React.Component {
              else
              {
                Global.MSG("Somthing Error");
-                this.setState({isLoding:false})
+                this.setState({isLoding:false});
+
              }
            
          })
@@ -229,6 +227,11 @@ export default class ProfileScreen extends React.Component {
       tempAddress.state = text;
       this.setState({address:tempAddress});
      
+    }
+    else if(key == 'PinCode')
+    {
+      tempAddress.pincode =text
+      this.setState({address:tempAddress});
     }
     else if(key == 'Url')
     {
@@ -424,12 +427,12 @@ export default class ProfileScreen extends React.Component {
         return (
           
           <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
+            <Headers title="profile"/>
               <View style={{marginTop:25}}></View>
               
               <Content>
               <KeyboardAvoidingView behavior="padding" enabled>
-              <Title style={app.title}>Profile </Title>
+          
                   <Card style={app.Form} transparent >
                  
                   <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
@@ -521,6 +524,10 @@ export default class ProfileScreen extends React.Component {
                     </Item>
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
                       <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
+                    </Item>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChnageAddress(text,'PinCode')}} placeholder="PinCode" style={{}} />
                     </Item>
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isEmailErorr? app.errorBorder:app.borderPink]} >

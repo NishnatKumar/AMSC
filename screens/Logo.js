@@ -38,8 +38,8 @@ export default class Logo extends React.Component {
           return (
             
   
-               <View > 
-                  <View style={{marginTop:size.window.height/8,alignSelf:'center'}}>
+               <View style={{marginBottom:20}} > 
+                  <View style={{marginTop:StatusBar.currentHeight,alignSelf:'center'}}>
                         <Thumbnail large source={require('../assets/images/appLogo.png')} size={100} /> 
                             
                     </View> 

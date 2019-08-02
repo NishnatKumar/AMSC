@@ -11,7 +11,9 @@ import {
   View,  
   StatusBar,
   ImageBackground,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert,
+  BackHandler,
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
@@ -25,6 +27,63 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
 }
+
+
+componentDidMount()
+{
+  this.props.navigation.dismiss();
+  this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+}
+
+static navigationOptions = {
+header: null
+}
+  componentWillMount()
+  {
+    this.rest();
+     
+  }
+
+  async rest()
+  {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('profile');
+      await AsyncStorage.removeItem('userDetails');
+      await AsyncStorage.removeItem('userDetails');
+      
+    } catch (error) {
+      
+    }
+
+  }
+
+  componentWillUnmount() {
+    this.rest();
+    this.backHandler.remove()
+  }
+
+  handleBackPress = () => {
+
+    Alert.alert(
+      'Confirm Exit',
+      'Do You Want to Exit ?',
+      [
+       
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => BackHandler.exitApp()},
+      ],
+      {cancelable: false},
+    );
+
+    
+
+    return true;
+  }  
     render(){
         return (
           

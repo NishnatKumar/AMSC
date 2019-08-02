@@ -210,9 +210,12 @@ export default class WelcomeScreen extends React.Component {
         await AsyncStorage.removeItem('userDetails');
         await AsyncStorage.removeItem('in');
         await AsyncStorage.removeItem('out')
+        this.backHandler.remove();
+        this.props.navigation.dismiss();
         this.props.navigation.navigate('HomePage');
         console.log("Log Out ")
       } catch (error) {
+        this.backHandler.remove();
         console.log("Error he : ",error);
       }
      

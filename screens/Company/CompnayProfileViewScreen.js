@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
-import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button, Icon } from "native-base";
+import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button, Icon, Header } from "native-base";
 import { BackHandler,
-    Alert} from 'react-native';
+    Alert,StatusBar} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
 
@@ -34,12 +34,13 @@ export default class CompanyProfileViewScreen extends React.Component
 
     }
 
-      
-componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
-  }
+   
+    static navigationOptions = {
+        header: null
+    }
+ 
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
   }
     
     componentWillMount()
@@ -54,7 +55,7 @@ componentWillMount() {
             uri:Global.API_PIC+data.pic
         })
         }
-        
+        BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
 
     }
 
@@ -64,6 +65,17 @@ componentWillMount() {
         if(!isLoading)
         return(
             <Container>
+                <StatusBar
+                            backgroundColor="blue"
+                            barStyle="light-content"
+                        />
+                <View style={{height:StatusBar.currentHeight,backgroundColor:'#022cfa'}}></View>
+                <Header>
+                    <Left/>
+                    <Body>
+                        <Title>Profile</Title>
+                    </Body>
+                </Header>
                 <Content>
                     <Card>
                         <CardItem>
@@ -129,6 +141,7 @@ componentWillMount() {
                                 <Subtitle style={{color:'#000000'}}>{address.address}</Subtitle>
                                 <Subtitle style={{color:'#000000'}}>{address.street}</Subtitle>
                                 <Subtitle style={{color:'#000000'}}>{address.state}</Subtitle>
+                                <Subtitle style={{color:'#000000'}}>{address.pincode}</Subtitle>
                             </Right>
                         </CardItem>
                         <CardItem>

@@ -111,10 +111,12 @@ export default class AdminWelcomeScreen extends React.Component {
     {
       try {
         await AsyncStorage.removeItem('userToken');
+        await AsyncStorage.removeItem('userDetails')
         await AsyncStorage.removeItem('profile');
-        await AsyncStorage.removeItem('userDetails');
+        this.backHandler.remove()
         this.props.navigation.dismiss();
         this.props.navigation.navigate('HomePage');
+        
         console.log("Log Out ")
       } catch (error) {
         console.log("Error he : ",error);
@@ -136,13 +138,13 @@ export default class AdminWelcomeScreen extends React.Component {
           
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
-                <View style={{marginTop:10}}></View> 
+                <View style={{height: StatusBar.currentHeight +10, backgroundColor:'#ffffff' }}></View> 
 
 
                 <Logo></Logo>
              
 
-                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
+                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,marginTop:20}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
 
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} ><Title>Today Key</Title></Button>
 

@@ -33,6 +33,7 @@ import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Processing from '../Processing';
+import Headers from '../Headers';
 
 
 
@@ -79,7 +80,8 @@ export default class CompanyProfileScreen extends React.Component {
                                     pincode:'',
                                     contact:'',
                                     email:'',
-                                    url:''
+                                    url:'',
+                                 
                               },
                         isaddressError:false,
                           addressErrorMsg:'',
@@ -176,32 +178,7 @@ export default class CompanyProfileScreen extends React.Component {
       
   }
 
-
-
-
-
  
-  
-  // async componentDidMount() {
-  //   try {
-      
-  //         let userID =JSON.parse(await AsyncStorage.getItem('userDetails'));
-  //         if(!userID)
-  //         {
-  //           this.props.navigation.navigate('EmployeeSignIn');  
-            
-  //         }
-           
-  //        this.setState({userID:userID.id});
-  //           console.log(userID)
-  //      // this._httpGetUserProfile(userID.id)
-
-  //       } catch (error) {
-  //         console.log("Error in CompnayProfile : ",error);
-  //       }
-  // }
-
-  // Get Indistry type
   //get user DAta 
   
   _httpGetUserIndustry = async () => {
@@ -229,7 +206,7 @@ export default class CompanyProfileScreen extends React.Component {
           .then((response) =>response.json() )
           .then((responseJson) => {
            
-             console.log('resp:',responseJson.data);
+             console.log('resp:',responseJson);
              if(responseJson.success)
              {
                this.setState({companyList:responseJson.data,isLoding:false})
@@ -243,66 +220,14 @@ export default class CompanyProfileScreen extends React.Component {
          })
          .catch((error) => {
          Global.MSG('Server Error');
-          //  this._httpSignUp(data);
+         
           console.log("Error : ",error);
         });
       }
     });
     console.log(connectionInfoLocal);
   }
-  
-
-  //Save PRofile on server  
-  _httpSetUserProfile = async (data) => {
-   
-    let token = await Global.TOKEN;
-    let user = await Global.USER;
-    console.log("USer : ",user);
-     var connectionInfoLocal = '';
-     NetInfo.getConnectionInfo().then((connectionInfo) => {
-      
-       if(connectionInfo.type == 'none'){
-         console.log('no internet ');
-       Global.MSG("No Internet !");
-         return;
-       }else{
-         console.log('yes internet '); 
-         this.setState({
-           isLoding:true,
-         });
-         fetch(Global.API_URL+'company-store', {
-           
-           headers: {
-               'Accept': 'application/json',   
-               "Content-Type": "application/json",
-               "Authorization": token,              
-             }
  
- 
-           }).then((response) =>response.json() )
-           .then((responseJson) => {
-             // var itemsToSet = responseJson.data;
-              console.log('resp:',responseJson);
-             
-          })
-          .catch((error) => {
-           ToastAndroid.showWithGravityAndOffset(
-             'Network Failed!!! Retrying...',
-             ToastAndroid.LONG,
-             ToastAndroid.BOTTOM,
-             25,
-             50,
-           );
-           console.log('on error fetching:'+error);
-           //  this._httpSignUp(data);
-         });
-       }
-     });
-     console.log(connectionInfoLocal);
-   }
- 
-
-
 
   checkPermission()
   {
@@ -318,10 +243,17 @@ export default class CompanyProfileScreen extends React.Component {
 
     
 componentWillMount() {
-  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  let picker = [];
+  this.state.companyList.forEach(element=>{
+      picker.push(<Picker.Item label={element} value={element} /> );
+  });
+  this.setState({
+    companyList:picker
+  });
+  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
 }
 componentWillUnmount() {
-  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
 }
   
   _getLocationAsync = async () => {
@@ -343,17 +275,7 @@ componentWillUnmount() {
   };
 
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
-  componentWillMount() {
-   
-    let picker = [];
-    this.state.companyList.forEach(element=>{
-        picker.push(<Picker.Item label={element} value={element} /> );
-    });
-    this.setState({
-      companyList:picker
-    });
-  }
-
+  
    
 
   async _onDocument()
@@ -455,6 +377,12 @@ componentWillUnmount() {
       else if(key == 'Owner')
       {
         this.setState({owner:text})
+      }
+      else if(key == 'PinCode')
+      {
+      
+        tempAddress.pincode = text;
+        this.setState({address:tempAddress});
       }
       
       
@@ -590,17 +518,21 @@ componentWillUnmount() {
     }
     else{
       Alert.alert('Profile Update !')
-      this.props.navigation.navigate('Home')
+      this.props.navigation.navigate('AdminWelcome')
     }
    
   } catch (error) {
 
-    console.log("Error In Conpony Prfile",error);
+    console.log("Error In Company profile",error);
   
       
   }
 
   }
+
+  static navigationOptions = {
+    header: null
+}
 
     
     render(){
@@ -610,7 +542,7 @@ componentWillUnmount() {
         return (
           
           <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
+              <Headers title="Edit Profile"/>
               <View style={{marginTop:25}}></View>
              
               <Content>
@@ -639,7 +571,13 @@ componentWillUnmount() {
                     </View>
                   
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={companyname} onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}} placeholder="Title" style={{}} />
+                      <Input
+                       value={companyname}
+                       onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}}
+                        placeholder="Title" style={{}} 
+                          textContentType="name"
+                          
+                        />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.companyErrorMsg}
@@ -691,6 +629,11 @@ componentWillUnmount() {
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
                     </Item>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChnageAddress(text,'PinCode')}} placeholder="PinCode" style={{}} />
+                    </Item>
+
 
                     {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>
                    */}

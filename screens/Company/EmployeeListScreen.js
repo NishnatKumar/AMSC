@@ -24,6 +24,7 @@ import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Fo
 import app from '../../constants/app';
 import size from '../../constants/Layout';
 import Global from '../../constants/Global';
+import Headers from '../Headers';
 
 
 export default class CompanyListScreen extends React.Component {
@@ -38,6 +39,8 @@ export default class CompanyListScreen extends React.Component {
                     }
                     
     }
+
+   
 
     componentWillMount()
     {
@@ -54,9 +57,10 @@ export default class CompanyListScreen extends React.Component {
 
     }
 
-      static navigationOptions = {
-        
-    }
+    static navigationOptions = {
+      header: null
+  }
+
 
 
     /**Get the list of employee */
@@ -191,11 +195,9 @@ _rendercompanyListItem = ({item}) => {
         return (
           
           <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
+              <Headers title={"Employee List"}/>
               <View style={{marginTop:15}}></View>
               <Content>
-                <Title style={app.title}>Employee List </Title>
-
                       <FlatList
                           data={this.state.companyList}
                           extraData={this.state}

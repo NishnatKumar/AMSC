@@ -24,10 +24,19 @@ export default class CheckProfile extends React.Component
 
      
 componentWillMount() {
-  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  try {
+    BackHandler.addEventListener('hardwareBackPress', () =>{this.props.navigation.goBack();});
+  } catch (error) {
+    console.log("Error in CheckProfile.js ",error); this.http();  
+  }
+ 
 }
 componentWillUnmount() {
-  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  try {
+    BackHandler.addEventListener('hardwareBackPress', () =>{this.props.navigation.goBack();});
+  } catch (error) {
+    console.log("Error in CheckProfile.js ",error); this.http();  
+  }
 }
   
 
@@ -43,7 +52,7 @@ componentWillUnmount() {
         let nNav;
         let store;
         
-        let user =await Global.USER
+        let user =JSON.parse( await AsyncStorage.getItem('userDetails'));
         if(user == null)
         {
           this.props.navigation.goBack();

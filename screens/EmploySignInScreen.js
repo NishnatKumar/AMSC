@@ -115,7 +115,7 @@ export default class EmploySignInScreen extends Component {
 
     try {
 
-     
+     console.log("DAta vlaue : ",data);
 
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))

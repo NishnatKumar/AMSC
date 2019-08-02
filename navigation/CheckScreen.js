@@ -24,7 +24,7 @@ export default class CheckScreen extends React.Component {
         
       
     /** TODO : WE have to remove comment */    
-    
+      
       const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
      
    
