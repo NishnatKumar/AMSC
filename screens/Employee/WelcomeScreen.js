@@ -231,9 +231,9 @@ export default class WelcomeScreen extends React.Component {
                 
                 <Timer></Timer>
 
-                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
+                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
 
-                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurpal,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut }><Title>{this.state.outTime}</Title></Button>
+                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut }><Title>{this.state.outTime}</Title></Button>
 
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
@@ -245,4 +245,4 @@ export default class WelcomeScreen extends React.Component {
     }
 }
 
-const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,}]}
+const styles ={ btn:[app.btn,app.btnPurple,{marginBottom:20,}]}

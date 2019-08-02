@@ -159,6 +159,7 @@ export default class CompanyProfileScreen extends React.Component {
         console.log('Error in address')
         this.setState({isaddressError:true,addressErrorMsg:'Plese Enter Correct Address'})
       }
+      
       else
       {
           await this._httpSaveUp(await this.createFormData());
@@ -363,7 +364,17 @@ componentWillUnmount() {
       else if(key == 'Url')
       {
         tempAddress.url = text;
-        this.setState({url:tempAddress});
+        this.setState({address:tempAddress});
+      }
+      else if(key == 'Email')
+      {
+        tempAddress.email = text;
+        this.setState({address:tempAddress});
+      }
+      else if(key == 'Contact')
+      {
+        tempAddress.contact = text;
+        this.setState({address:tempAddress});
       }
       
       else if(key == 'Title')
@@ -589,6 +600,17 @@ componentWillUnmount() {
                     <Text style={app.errorMsg}>
                       {this.state.regNoErrorMsg}
                     </Text>
+                    
+                    
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.contact} onChangeText={(text)=>{this.onValueChnageAddress(text,'Contact')}} placeholder="Contact" style={{}} />
+                    </Item>
+
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.email} onChangeText={(text)=>{this.onValueChnageAddress(text,'Email')}} placeholder="Email" style={{}} />
+                    </Item>
+
+                    
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isownerError? app.errorBorder:app.borderPurpal]} >
                       <Input value={owner} onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
@@ -643,7 +665,7 @@ componentWillUnmount() {
                       <Title style={[app.placeholder,{color:'#000000',fontWeight:'900'}]}>{this.state.name} </Title>
                     </View>
 
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkValidation();console.log("Next Click")}}><Title>Save</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkValidation();console.log("Next Click")}}><Title>Save</Title></Button>
                  
                         
                   </Card>
@@ -660,4 +682,4 @@ componentWillUnmount() {
     }
 }
 
-const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,}]}
+const styles ={ btn:[app.btn,app.btnPurple,{marginBottom:20,}]}

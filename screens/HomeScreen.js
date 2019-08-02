@@ -90,8 +90,8 @@ header: null
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />       
           
-       
-              <Logo />
+              <View style={{marginVertical:20}}></View>
+              <Logo uri={{}}/>
              
             
               <View style={{ alignSelf:'center',marginTop:size.window.height/9+20,  }}>
@@ -111,12 +111,6 @@ header: null
               </View>
            
             <Image source={require('../assets/images/home.png')} style={{width:size.window.width,height:size.window.height/3.1,marginTop:5,opacity:0.5}} />
-
-              
-         
-            
-                 
-         
           
         
           </Container>
@@ -125,5 +119,5 @@ header: null
     }
 }
 
-const styles ={ btn1:[app.btn,app.btnPurpal],
+const styles ={ btn1:[app.btn,app.btnPurple],
 btn2:[app.btn,app.btnPink,{marginTop:60}]}

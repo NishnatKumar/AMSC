@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo,Alert} from 'react-native';
+import {StatusBar,KeyboardAvoidingView,AsyncStorage,NetInfo,Alert,BackHandler} from 'react-native';
 import { Container, Header, Content, Form, Item, Input,Text, Label, Button,Card,CardItem,Body, Title, Thumbnail, View, Toast } from 'native-base';
 import size from '../constants/Layout';
 import { processFontFamily } from 'expo-font';
@@ -7,6 +7,7 @@ import app from '../constants/app';
 import Logo from './Logo';
 import Global from '../constants/Global';
 import Processing from './Processing';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 export default class EmploySignInScreen extends Component {
 
     constructor(props)
@@ -30,12 +31,20 @@ export default class EmploySignInScreen extends Component {
     }
 
     
+ 
+  componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+
+
+    
     componentWillMount()
     {
       const { navigation } = this.props;
       const value = navigation.getParam('loginType', null);
       if(value != null)
         this.setState({loginType:value});
+        BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
     }
 
     static navigationOptions = {
@@ -226,6 +235,7 @@ export default class EmploySignInScreen extends Component {
 
       <Container>
       <StatusBar backgroundColor="green" barStyle="default" />
+      <View style={{height:StatusBar.currentHeight}}></View>
          
       
         <Content>
@@ -235,32 +245,61 @@ export default class EmploySignInScreen extends Component {
          <KeyboardAvoidingView  behavior="padding" enabled>
 
                 <Logo></Logo>
-                <Card transparent style={{marginTop:5,padding:20 }}>
-               
+                <Card transparent style={app.Form}>
+                  <View >
                     <Item regular  style={[app.formGroup,this.state.isUsernameError? app.errorBorder:app.borderPurpal]} >
-                         <Input value={username} placeholder="Username" onChangeText={(text)=>{this.setState({username:text}); console.log(text)}} textContentType="username" keyboardType="default" />
+                         <Input value={username}
+                            placeholder="Username" 
+                            onChangeText={(text)=>{this.setState({username:text}); 
+                            console.log(text)}} 
+                            textContentType="emailAddress"
+                            keyboardType="default" 
+                            blurOnSubmit={false}
+                            onBlur={()=>{if(username.length ==0 )
+                                            {
+                                              this.setState({usernameErrorMsg:'Enter correct username',isUsernameError:true})
+                                            }
+
+                                          }}
+                           
+                           />                           
                     </Item>
                     <Text style={app.errorMsg}>
-                      {this.state.usernameErrorMsg}
+                              {this.state.usernameErrorMsg}
                     </Text>
+                  </View>
+                   
 
  
 
-                    
-                    <Item regular  style={[app.formGroup,isPasswordError? app.errorBorder:app.borderPurpal,{marginTop:size.window.height/15}]}>
-                         <Input value={password} onChangeText={(text)=>{this.setState({password:text});}} placeholder="Password" secureTextEntry={true} textContentType="password"  />
+                    <View>
+                    <Item regular  style={[app.formGroup,isPasswordError? app.errorBorder:app.borderPurpal,{marginTop:20}]}>
+                         <Input 
+                         value={password}
+                          onChangeText={(text)=>{this.setState({password:text});}}
+                           placeholder="Password" 
+                           secureTextEntry={true} 
+                           textContentType="password" 
+                           onSubmitEditing={()=>{this.checkValidation()}}
+                           returnKeyType={"go"}
+                           onBlur={()=>{if(username.length ==0 )
+                                            {
+                                              this.setState({passwordErrorMsg :'Password Required', isPasswordError:true})
+                                            }
+
+                                          }}
+                         
+                            />
                     </Item>  
                     <Text style={app.errorMsg}>
                         {this.state.passwordErrorMsg}
                     </Text>
-
+                  </View>
 
                   
                    
-            <Button transparent  style={{alignSelf:'flex-end' }} primary onPress={()=>{console.log("Forgot Press");
-                    this.props.navigation.navigate('ForgotPassword');}}  ><Text style={{color:'#a6a4a8',fontSize:15}} > Forgot Password? </Text></Button>
-
-
+            <Button transparent style={{alignSelf:'flex-end'}} primary onPress={()=>{console.log("Forgot Press");
+                    this.props.navigation.navigate('ForgotPassword');}}  ><Text style={[app.textGray,{fontSize:15,}]} > Forgot Password? </Text></Button>                 
 
                 
                    
@@ -269,12 +308,14 @@ export default class EmploySignInScreen extends Component {
             </Card>
 
 
+             
+            </KeyboardAvoidingView>
+            <View style={{paddingLeft:11}}>
             <Button block danger style={styles.btn} onPress={()=>{console.log("Login Press"); this.checkValidation(); }}  ><Text sty > Login  </Text></Button>
                    
-                  
-            </KeyboardAvoidingView>
+               
             <Button  transparent style={{alignSelf:'center',marginTop:10}} onPress={()=>{console.log("SignUp"); this._signUP(); }} ><Text style={{color:'#bfc2c7',fontSize:15,fontFamily:'AlegreyaRegularItalic',}} > Don't have an account?</Text><Text style={{color:'#FF00DD',fontSize:15,fontFamily:'AlegreyaRegularItalic',textDecorationLine:'underline',textDecorationColor:'#000000' }} > SignUp </Text></Button> 
-           
+          </View>
                    
                
         </Content>
@@ -285,4 +326,4 @@ export default class EmploySignInScreen extends Component {
   }
 }
 
-const styles={btn:[app.btnPurpal,app.btn]}
+const styles={btn:[app.btnPurple,app.btn]}

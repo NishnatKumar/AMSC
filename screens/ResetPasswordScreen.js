@@ -110,6 +110,6 @@ export default class ResetPasswordScreen extends Component {
 
 
 const styles = {FormItem:[app.formGroup],
-btn:[app.btn, app.btnPurpal]}
+btn:[app.btn, app.btnPurple]}
 
 // TODO :,{margin:5,borderColor:this.state.ispassworderror?'#f51616':'#16bdf5'}

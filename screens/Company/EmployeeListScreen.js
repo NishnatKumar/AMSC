@@ -37,18 +37,25 @@ export default class CompanyListScreen extends React.Component {
                      categoryList:[],
                      
                     }
-                    
+                  
     }
 
-   
+    componentDidMount()
+    {
+      try {
+        console.log("In employee List");
+        this._httpList();
+      } catch (error) {
+        console.log("Error in ComponnetList : ");
+      }
+     
+    }
 
     componentWillMount()
     {
 
       try {
-      
-      
-        
+        console.log("In employee List");
         this._httpList();
       } catch (error) {
         console.log("Error in ComponnetList : ");
@@ -65,7 +72,7 @@ export default class CompanyListScreen extends React.Component {
 
     /**Get the list of employee */
     _httpList= async ()=>{
-   
+   console.log("Going to fetch server data");
   var connectionInfoLocal = '';
       let token = await Global.TOKEN;
 
@@ -166,13 +173,13 @@ _onPressItem = (value) => {
   console.log("Key press Key Type : ",value);
 
 
-  this.props.navigation.navigate('ProfileView',{data:value});
+  this.props.navigation.navigate('EmployeeView',{data:value});
 
  
 };
 
 _rendercompanyListItem = ({item}) => {
- console.log("ITem "+Global.API_PIC,item.image)
+ console.log("ITem ",item)
   return(
     <TouchableHighlight onPress={()=>{this._onPressItem(item)}}>
          <Card style={{elevation :20}}> 
@@ -184,6 +191,19 @@ _rendercompanyListItem = ({item}) => {
                <Title style={{fontSize:20,fontWeight:'900',color:'#000000'}} >{item.name}</Title>
                <Title style={{fontSize:15,fontWeight:'500',color:'#c0c1c2'}}>{item.designation} </Title>
             </Body>
+            <Right>
+              {
+                item.status == 0 ?<View style={{backgroundColor:'#ec971f',padding:5,borderRadius:5}} ><Text style={{color:'#fff'}}>Not Verified</Text></View>
+                :
+                item.status == 1 ?
+                <View style={{backgroundColor:'#3cd1c2',padding:5,borderRadius:5}} ><Text style={{color:'#fff'}}>Active</Text></View>
+                :
+                <View style={{backgroundColor:'#d9534f',padding:5,borderRadius:5}} ><Text style={{color:'#fff'}}>Blocked</Text></View>
+              
+     
+     
+              }
+                       </Right>
             </CardItem>
         </Card>
         </TouchableHighlight>);

@@ -8,7 +8,7 @@ import Processing from '../Processing';
 import Global from '../../constants/Global';
 import Headers from '../Headers';
 
-export default class ProfileViewScreen extends React.Component
+export default class EmployeeViewScreen extends React.Component
 {
     constructor(props)
     {
@@ -17,6 +17,7 @@ export default class ProfileViewScreen extends React.Component
             isLoading:true,
 
             uri:"",
+            status:'0',
 
             name:'Nishant Kumar',
             status:'0',
@@ -29,7 +30,8 @@ export default class ProfileViewScreen extends React.Component
             email:'nishnatraj656@gmail.com',
             gender:'Other',
             DOB:'',
-            joining_date:''
+            joining_date:'',
+            id:''
 
             
         }
@@ -38,15 +40,18 @@ export default class ProfileViewScreen extends React.Component
 
     componentDidMount()
     {
+        this.setState({isLoading:false});
         const { navigation } = this.props;
         const data = navigation.getParam('data', null);
-        console.log("#########################Data Value he ye  : ",data);
+     
         if(data != null)
         {
-            this.setState({isLoading:false,address:data.address,bank:data.bank,name:data.name,
+            this.setState({isLoading:false,address:JSON.parse(data.address),bank:JSON.parse(data.bank),name:data.name,
             contact:data.contact_no,post:data.designation,email:data.email_id,gender:data.gender,DOB:data.date_of_birth,
-            uri:Global.API_PIC+data.image,joining_date:data.joining_date
-        })
+            uri:Global.API_PIC+data.image,joining_date:data.joining_date,id:data.id
+            });
+
+            this.render();
         }
         this.setState({isLoading:false});
         
@@ -57,18 +62,22 @@ export default class ProfileViewScreen extends React.Component
         header: null
     }
 
+
+
+
     
-componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
-  }
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
-  }
+        componentWillMount() {
+            BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+        }
+        componentWillUnmount() {
+            BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+        }
     
 
     render()
     {
         const {name,post,contact,email,isLoading,address,uri,bank,DOB,gender,joining_date,id} =this.state;
+        console.log("Address : ",address);
         if(!isLoading)
         return(
             <Container>
@@ -80,8 +89,7 @@ componentWillMount() {
                                 <Thumbnail large source={{uri:uri}}/>
                             </Left>
                             <Body>
-                                <Button transparent onPress={()=>{this.props.navigation.navigate('Profile')}}><Text>Edit</Text></Button>                           
-                                <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
+                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                                 <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{post}</Text>
                             </Body>
                         </CardItem>

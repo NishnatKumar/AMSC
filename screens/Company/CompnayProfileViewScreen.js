@@ -150,7 +150,7 @@ export default class CompanyProfileViewScreen extends React.Component
                             </Left>
                             <Right>
                                
-                                <Subtitle style={{color:'#000000'}}>{contact}</Subtitle>
+                                <Subtitle style={{color:'#000000'}}>{address.contact}</Subtitle>
                             </Right>
                         </CardItem>
                         <CardItem>
@@ -159,7 +159,16 @@ export default class CompanyProfileViewScreen extends React.Component
                             </Left>
                             <Right>
                                
-                                <Subtitle style={{color:'#000000'}}>{email}</Subtitle>
+                                <Subtitle style={{color:'#000000'}}>{address.email}</Subtitle>
+                            </Right>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
+                                <Title style={{color:'#000000'}}>Website </Title>
+                            </Left>
+                            <Right>
+                               
+                                <Subtitle style={{color:'#000000'}}>{address.url}</Subtitle>
                             </Right>
                         </CardItem>
                     </Card>

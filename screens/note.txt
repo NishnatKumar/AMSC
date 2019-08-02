@@ -4,6 +4,9 @@ User Details = 'userDetails',
 user Profile = 'profile'
 emp Profile = profileEmp
 
+color = "#CFD5E3", "#FCEBBF","#F6C2D8","#7BABEB";
+
+
 {/* 
                  <Item  style={[app.formGroup,this.state.isNameErorr? app.errorMsg:app.borderPurpal,{borderWidth:1,borderColor:'#000000' }]} >
                  <Picker
@@ -42,7 +45,7 @@ emp Profile = profileEmp
                     </Item> 
                     */}
 
-                    <View style={[app.btn,app.btnPurpal]}>
+                    <View style={[app.btn,app.btnPurple]}>
                           <Picker
                             mode="dialog"
                             placeholder="Select your Company"

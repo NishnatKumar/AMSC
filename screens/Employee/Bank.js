@@ -341,4 +341,4 @@ async setProfile(data)
     }
 }
 
-const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,}]}
+const styles ={ btn:[app.btn,app.btnPurple,{marginBottom:20,}]}

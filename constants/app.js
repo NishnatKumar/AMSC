@@ -10,27 +10,30 @@ const app = { errorMsg:{
     
   },
   borderPurpal:{
-    borderColor:'#FF00DD', 
+    borderColor:'#7BABEB', 
   },
   borderPink:{
-    borderColor:'#6a37ff', 
+    borderColor:'#f57aae'//'', 
   },
 
+  textPink:{
+    color:'#f57aae'
+  },
   btn:{
         height:49,
-        width:size.window.width-30,        
+        width:size.window.width-60,        
         marginHorizontal:15,
         borderRadius:9,
-        marginVertical:5,
+        marginVertical:5,      
         
   },
-  btnPurpal:{
-    backgroundColor: '#6a37ff',
-    // shadowColor:'#6a37ff',
+  btnPurple:{
+    backgroundColor:'#7BABEB',// '#7BABEB',
+    // shadowColor:'#7BABEB',
     // shadowOpacity:1.0,
     // shadowOffset: {width:size.window.width-35,height:10},
     // shadowRadius:9
-    shadowColor: '#6a37ff',
+    shadowColor: '#7BABEB',
     shadowOffset: {
       width: 1,
       height: 3
@@ -42,8 +45,8 @@ const app = { errorMsg:{
     elevation: 5,
   },
   btnPink:{
-    backgroundColor: '#FF00DD',
-    shadowColor: '#FF00DD',
+    backgroundColor: '#f57aae',
+    shadowColor: '#f57aae',
     shadowOffset: {
       width: 1,
       height: 3
@@ -54,8 +57,8 @@ const app = { errorMsg:{
     elevation: 5,
   },
   btnPink:{
-    backgroundColor: '#FF00DD',
-    shadowColor: '#FF00DD',
+    backgroundColor: '#f57aae',
+    shadowColor: '#f57aae',
     shadowOffset: {
       width: 1,
       height: 3
@@ -66,16 +69,18 @@ const app = { errorMsg:{
     elevation: 5,
   },
   btnGray:{
-    color:'#c9c9c9',
+    color:'#CFD5E3',
     fontSize:20,
     fontWeight:'bold',
 
     elevation:5
   },
   placeholder:{alignSelf:'center',margin:5},
-  formGroup:{margin:5,borderRadius:10},
+
+  formGroup:{margin:5,borderRadius:10,width:size.window.width-60,},
+  
   textPurpal:{
-    color:'#FF00DD'
+    color:'#f57aae'
   },
   title:{color:'#000000',fontSize:25,fontWeight:'900',fontFamily:'ExpoConBol' },
   pickerGroup:{
@@ -84,10 +89,16 @@ const app = { errorMsg:{
   errorBorder:{
     borderColor:'#ed002f'
   },
-  Form:{paddingHorizontal:11},
-  btnTitle:{color:'#ffffff',fontSize:20,fontWeight:'900',fontFamily:'ExpoConBol'}
+  Form:{
+ marginTop:5,padding:20,alignItems:'center'
+  },
+  btnTitle:{color:'#ffffff',fontSize:20,fontWeight:'900',fontFamily:'ExpoConBol'},
 
+  // Text color
 
+  textGray:{
+    color:'#CFD5E3'
+  }
 
   
   

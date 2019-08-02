@@ -222,7 +222,8 @@ export default class EmploySignUpScreen extends Component {
     if(!this.state.isLoding)
     return (
       <Container>
-      <StatusBar backgroundColor="green" barStyle="default" />
+       <StatusBar backgroundColor="green" barStyle="default" />
+      <View style={{height:StatusBar.currentHeight}}></View>
          
       
         <Content>
@@ -232,7 +233,7 @@ export default class EmploySignUpScreen extends Component {
                 <Card transparent style={app.Form} >
                   <Logo></Logo>
 
-                    
+                    <View>
                     <Item regular  style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       
                         <Input placeholder="Name" value={this.state.name} textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
@@ -241,8 +242,9 @@ export default class EmploySignUpScreen extends Component {
                     <Text style={app.errorMsg}>
                       {this.state.isNameErrorMsg}
                     </Text>
+                    </View>
 
-
+                    <View>
                     <Item regular  style={[app.formGroup,this.state.isUserNameError? app.errorBorder:app.borderPurpal]} >
                       
                         <Input placeholder="Email"  value={this.state.userName} textContentType='username' onChangeText={(text)=>{this.setState({userName:text})}}  />
@@ -250,7 +252,9 @@ export default class EmploySignUpScreen extends Component {
                     <Text style={app.errorMsg}>
                       {this.state.isUserNameErrorMsg}
                     </Text>
+                    </View>
 
+                    <View>
                     <Item regular  style={[app.formGroup,this.state.isPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
                         
                         <Input placeholder="Password" value={this.state.password} textContentType='newPassword' secureTextEntry={true} onChangeText={(text)=>{this.setState({password:text})}}  />
@@ -258,7 +262,9 @@ export default class EmploySignUpScreen extends Component {
                     <Text style={app.errorMsg}>
                       {this.state.isPasswordErrorMsg}
                     </Text>
+                    </View>
 
+                    <View>
                      <Item regular  style={[app.formGroup,this.state.isCPasswordErrorMsg? app.errorBorder:app.borderPurpal]}>
                       
                         <Input placeholder="Confirm Password"  value={this.state.cpassword} textContentType='password' secureTextEntry={true} onChangeText={(text)=>{this.setState({cpassword:text})}}  />
@@ -266,6 +272,7 @@ export default class EmploySignUpScreen extends Component {
                     <Text style={app.errorMsg}>
                       {this.state.isCPasswordErrorMsg}
                     </Text> 
+                    </View>
 
                     
                   
@@ -275,16 +282,18 @@ export default class EmploySignUpScreen extends Component {
                     
             </Card>
 
-            <Button block danger style={styles.btn} onPress={()=>{console.log("Next Press");this.checkValidation();}}  ><Text > Sign UP </Text></Button>
-                   
+                  
                     
             </KeyboardAvoidingView>
+            <View style={{ marginLeft:11 }}>
+            <Button block danger style={styles.btn} onPress={()=>{console.log("Next Press");this.checkValidation();}}  ><Text > Sign UP </Text></Button>
+            
             <Button  transparent style={{alignSelf:'center',marginTop:10}} onPress={()=>{console.log("SignUp"); this.props.navigation.navigate('EmployeeSignIn'); }} ><Text style={{color:'#bfc2c7',fontSize:15,fontFamily:'AlegreyaRegularItalic',}} > Already Have An Account ?</Text><Text style={{color:'#FF00DD',fontSize:15,fontFamily:'AlegreyaRegularItalic',textDecorationLine:'underline',textDecorationColor:'#000000' }} > Login </Text></Button> 
-           
-                   
+            </View>      
                    
                
         </Content>
+       
       </Container>
     );
     else 
@@ -294,5 +303,5 @@ export default class EmploySignUpScreen extends Component {
 
 
 const styles = {
-  btn :[app.btn,app.btnPurpal]
+  btn :[app.btn,app.btnPurple]
 }

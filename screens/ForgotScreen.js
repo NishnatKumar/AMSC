@@ -134,7 +134,7 @@ export default class ForgotScreen extends Component {
 }
 
 const styles ={
-  btn:[app.btn,app.btnPurpal]
+  btn:[app.btn,app.btnPurple]
 }
 
 // const styles = StyleSheet.create({

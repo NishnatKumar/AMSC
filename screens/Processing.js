@@ -29,7 +29,7 @@ export default class Processing extends React.Component {
             <Card style={{marginTop:size.window.height/2-30,padding:5,width:240}}>
               <Item style={{borderWidth:0,padding:15,alignContent:'center'}}>
                 <Left><ActivityIndicator size="large" color="#0000ff"/></Left>
-                <Body><Text>Wait Loding.....</Text></Body>                    
+                <Body><Text>Wait Loading.....</Text></Body>                    
               </Item>
             </Card>
         </View>

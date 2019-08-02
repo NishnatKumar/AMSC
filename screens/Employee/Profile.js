@@ -442,7 +442,7 @@ export default class ProfileScreen extends React.Component {
                     {this.state.nameErrorMsg}
                   </Text>
                         
-                  <View style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]}>
+                  <View style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]}>
                          
                          <Picker
                                    selectedValue={this.state.companyname}
@@ -463,7 +463,7 @@ export default class ProfileScreen extends React.Component {
                       {this.state.companyErrorMsg}
                     </Text>
 
-                    <View style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]}>
+                    <View style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]}>
                           <Picker
                             mode="dialog"
                             placeholder="Select Gender"
@@ -494,12 +494,12 @@ export default class ProfileScreen extends React.Component {
                       {this.state.genderErrorMsg}
                     </Text>
 
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
                     <Text style={app.errorMsg}>
                       {this.state.joinErrorMsg}
                     </Text>
 
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button>
                     <Text style={app.errorMsg}>
                       {this.state.DOBErrorMsg}
                     </Text>
@@ -546,12 +546,12 @@ export default class ProfileScreen extends React.Component {
 
                   
                    
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Document    + </Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Document    + </Title></Button>
                     <Text style={app.errorMsg}>
                       {this.state.resumeErrorMsg}
                     </Text>
 
-                    <Button block full style={[app.btn,app.btnPurpal,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._profilePic();console.log("Cylender Click")}}><Title>Select Pic    + </Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._profilePic();console.log("Cylender Click")}}><Title>Select Pic    + </Title></Button>
                     <Text style={app.errorMsg}>
                       {this.state.picErrorMsg}
                     </Text>
@@ -572,4 +572,4 @@ export default class ProfileScreen extends React.Component {
     }
 }
 
-const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,}]}
+const styles ={ btn:[app.btn,app.btnPurple,{marginBottom:20,}]}

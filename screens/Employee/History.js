@@ -26,6 +26,7 @@ import Logo from '../Logo';
 import Timer from './Timer';
 import Time from '../../constants/Time';
 import Global from '../../constants/Global';
+import Headers from '../Headers';
 
 
 
@@ -51,7 +52,7 @@ export default class HistoryScreen extends React.Component {
     }
 
   static navigationOptions = {
-    Title:'History'
+    header:null
 }
 
   componentDidMount()
@@ -70,22 +71,27 @@ _httpGetUserProfile = async () => {
   let token = await Global.TOKEN;
   let user = await Global.USER;
   console.log("User value ",user.id)
-  
-  let body=JSON.stringify({userID:user.id})
+  let url;
+  let body
   if(user != null)
   {
 
     const { navigation } = this.props;
     const value = navigation.getParam('id', null);
     
-    if(value)
+    if(value!=null)
     {
       this.setState({userID:value});
+      console.log("USer ID from other : ",this.state.userID);
+     url = Global.API_URL+'attendance-show';
+     body =JSON.stringify({id:user.id})
     }
     else{
-      console.log("User value ",user)
+      // console.log("User value ",user)
       user = user.id;
       this.setState({userID:user.id});
+      url = Global.API_URL+'attendance-history';
+      body=JSON.stringify({userID:user.id})
     }
     
 
@@ -112,7 +118,7 @@ _httpGetUserProfile = async () => {
       this.setState({
         isLoding:true,
       });
-      fetch(Global.API_URL+'attendance-history', {
+      fetch(url, {
         method:'POST',
         headers: {
             'Accept': 'application/json',   
@@ -206,10 +212,10 @@ filter()
         return (
           
           <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
-                <View style={{marginTop:20}}></View> 
 
-                <Title style={app.title}>History</Title>
+              <Headers title="History"/>
+
+                
 
                 {/* <Button block full style={styles.btn} onPress={()=>{this.filter()}}><Title>Filter</Title><Icon name={'ios-arrow-down' } size={20}></Icon></Button> */}
 
@@ -255,7 +261,7 @@ filter()
     }
 }
 
-const styles ={ btn:[app.btn,app.btnPurpal,{marginBottom:20,justifyContent:'space-between',paddingHorizontal:10,}]}
+const styles ={ btn:[app.btn,app.btnPurple,{marginBottom:20,justifyContent:'space-between',paddingHorizontal:10,}]}
 
 const styles1=StyleSheet.create({table:{margin:10,width:size.window.width-20,borderColor:'#FF00DD',borderWidth:1,borderRadius:5 },
 row:{flexDirection:'row' },cell:{width:(size.window.width-20)/3,borderWidth:1,borderColor:'#FF00DD',justifyContent:'center',padding:5 },
