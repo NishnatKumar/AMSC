@@ -19,9 +19,9 @@ import EmployeeViewScreen from "../screens/Company/EmployeeViewScreen";
 
 
 const AppStack = createStackNavigator({
- 
+                                       CompanyProfile:{screen:CompanyProfileScreen},
                                         Check:{screen: CheckScreen },
-                                        CompanyProfile:{screen:CompanyProfileScreen},
+                                     
                                         CompanyProfileView:{screen:CompanyProfileViewScreen},
                                         CheckProfile:{screen:CheckProfile},
                                         Home:{screen:WelcomeScreen},

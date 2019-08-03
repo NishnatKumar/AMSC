@@ -106,7 +106,10 @@ const app = { errorMsg:{
     bgPink:{
       backgroundColor:'#f57aae',   
       },
-
+  item:{
+    borderRadius:5,
+    padding:5  
+  },
   
   
   

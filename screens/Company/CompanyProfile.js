@@ -44,7 +44,7 @@ export default class CompanyProfileScreen extends React.Component {
     {
         super(props)
         this.state={                      
-                      
+                      data:'',
 
                       companyList:[],
 
@@ -98,7 +98,7 @@ export default class CompanyProfileScreen extends React.Component {
                       islocationError:false,
                         locationErrorMsg:'',
 
-                    isLoding:false,
+                    isLoading:false,
 
                    
                         
@@ -174,17 +174,14 @@ export default class CompanyProfileScreen extends React.Component {
     
 }
 
-  componentWillMount()
-  {
-      
-  }
+ 
 
  
-  //get user DAta 
+  //get Industry Type
   
   _httpGetUserIndustry = async () => {
    
-    let token =await Global.TOKEN;
+  
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
      
@@ -194,14 +191,14 @@ export default class CompanyProfileScreen extends React.Component {
       }else{
         console.log('yes internet ',Global.API_URL+'industry'); 
         this.setState({
-          isLoding:true,
+          isLoading:true,
         });
        fetch(Global.API_URL+'industry', {
           
           headers: {
               'Accept': 'application/json',   
               "Content-Type": "application/json",
-              "Authorization": token,              
+              
             }
           })
           .then((response) =>response.json() )
@@ -210,12 +207,12 @@ export default class CompanyProfileScreen extends React.Component {
              console.log('resp:',responseJson);
              if(responseJson.success)
              {
-               this.setState({companyList:responseJson.data,isLoding:false})
+               this.setState({companyList:responseJson.data,isLoading:false})
              }
              else
              {
                Global.MSG("Somthing Error");
-                this.setState({isLoding:false})
+                this.setState({isLoading:false})
              }
            
          })
@@ -242,17 +239,25 @@ export default class CompanyProfileScreen extends React.Component {
 
   }
 
+
+
     
 componentWillMount() {
-  let picker = [];
-  this.state.companyList.forEach(element=>{
-      picker.push(<Picker.Item label={element} value={element} /> );
-  });
-  this.setState({
-    companyList:picker
-  });
-  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
+      let picker = [];
+      this.state.companyList.forEach(element=>{
+          picker.push(<Picker.Item label={element} value={element} /> );
+      });
+      this.setState({
+        companyList:picker
+      });
+
+      const { navigation } = this.props;
+      let data = navigation.getParam('data', null);
+      this.setState({data:data})
+
+      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
 }
+
 componentWillUnmount() {
   BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
 }
@@ -292,9 +297,7 @@ componentWillUnmount() {
             if(type == 'success')
             {
 
-              console.log("File selected ",size);
-              console.log("File selected ",uri);
-              console.log("File selected ",name);
+              
               this.setState({photo:{ type:'image/png', uri, name, size }});
 
             }
@@ -311,6 +314,11 @@ componentWillUnmount() {
 
   createFormData = () => {
     let body = this.state;
+
+    let temp = this.state.data;
+
+
+    console.log("Temp Data : ",temp);
   let data = new FormData();
   
 
@@ -329,7 +337,7 @@ componentWillUnmount() {
   return data;
 };
 
-  onValueChnageAddress(text,key){
+  onValueChangeAddress(text,key){
    
      let tempAddress = this.state.address;
 
@@ -470,7 +478,7 @@ componentWillUnmount() {
       }else{
         console.log('yes internet '); 
         this.setState({
-          isLoding:true,
+          isLoading:true,
         });
         fetch(Global.API_URL+'company-store', {
           "async": true,
@@ -490,7 +498,7 @@ componentWillUnmount() {
                this.setProfile(responseJson.data)
              }else{
               Global.MSG(responseJson.msg)
-              this.setState({isLoding:false})
+              this.setState({isLoading:false})
                console.log("Error in signUP :",responseJson.msg)
              }
          })
@@ -521,7 +529,7 @@ componentWillUnmount() {
         data['address']= JSON.parse(data.address);
 
         this.setState({
-          isLoding:false
+          isLoading:false
         });
         console.log("Profile Data y ",data);
         await AsyncStorage.setItem('profile',JSON.stringify(data));
@@ -547,13 +555,15 @@ componentWillUnmount() {
 
     
     render(){
-      const {photo,isLoding,userID,companyname, address,company,regNo,owner} = this.state;
+      const {photo,isLoading,userID,companyname, address,company,regNo,owner} = this.state;
 
-      if(!isLoding)
+      if(!isLoading)
         return (
           
           <Container>
               <Headers title="Edit Profile"/>
+              
+              
               <View style={{marginTop:25}}></View>
              
               <Content>
@@ -565,22 +575,27 @@ componentWillUnmount() {
 
 
                        
-                 
+                    <View>
 
-                    <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
-                         
-                          <Picker
-                                    selectedValue={this.state.type}
-                                    textStyle={{ color: "#ffffff" }}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})} >
-                        
-                                    { this.state.companyList.map((item, key)=>(
-                                    <Picker.Item label={item} value={item} key={key} />)
-                                    )}
-                            
-                          </Picker>
+                      <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
+                          
+                            <Picker
+                                      selectedValue={this.state.type}
+                                      textStyle={{ color: "#ffffff" }}
+                                      onValueChange={(itemValue, itemIndex) => this.setState({type: itemValue})} >
+                          
+                                      { this.state.companyList.map((item, key)=>(
+                                      <Picker.Item label={item} value={item} key={key} />)
+                                      )}
+                              
+                            </Picker>
+                      </View>
+                                        
+
+
                     </View>
-                  
+
+
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPurpal]} >
                       <Input
                        value={companyname}

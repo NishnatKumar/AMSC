@@ -120,8 +120,11 @@ export default class ProfileScreen extends React.Component {
     }
 
     componentWillMount() {
+     
       BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
-  }
+
+
+    }
   componentWillUnmount() {
       BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('Home'));
   }

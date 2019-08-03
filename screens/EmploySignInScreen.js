@@ -26,7 +26,7 @@ export default class EmploySignInScreen extends Component {
 
                     loginType:null,
 
-                    isLoding:false,
+                    isLoading:false,
                 }
     }
 
@@ -65,7 +65,7 @@ export default class EmploySignInScreen extends Component {
       }else{
        
         this.setState({
-          isLoding:true,
+          isLoading:true,
         });
         fetch(Global.API_URL+'login', {
           method: 'POST',
@@ -86,7 +86,7 @@ export default class EmploySignInScreen extends Component {
                console.log(responseJson);
               Global.MSG(responseJson.msg);
                this.setState({
-                 isLoding:false,
+                 isLoading:false,
                  isUsernameError:true,
                  isPasswordError:true,
                  usernameErrorMsg:'Username May Be error',
@@ -118,7 +118,7 @@ export default class EmploySignInScreen extends Component {
 
   //To set user data in localhost
  async setValues(data)
-  {
+{
   
    
 
@@ -142,7 +142,7 @@ export default class EmploySignInScreen extends Component {
     }
     else
     {
-      Global.MSG("Somthing get wrong ");
+      Global.MSG("Something get wrong ");
       this.props.navigation.navigate('HomePage');
     }
     
@@ -152,11 +152,11 @@ export default class EmploySignInScreen extends Component {
 
     } catch (error) {
       console.log("Eroor is in EmployeeSignInScreen ",error);
-      this.setState({isLoding:false});
+      this.setState({isLoading:false});
     }
     
 
-    this.setState({isLoding:false});
+    this.setState({isLoading:false});
 
   }
 
@@ -167,7 +167,12 @@ export default class EmploySignInScreen extends Component {
       const {loginType} = this.state;
       if(loginType != null )
       {
-        this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});       
+        console.log(loginType);
+        if(loginType == 'cmp')
+          this.props.navigation.navigate('EmployeeSignUp',{loginType:loginType});  
+        else if(loginType == 'emp')  
+          this.props.navigation.navigate('CompanyList',{loginType:loginType});     
+           
       }
       
     }
@@ -228,8 +233,8 @@ export default class EmploySignInScreen extends Component {
 
   render() {
 
-    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password,isLoding} =this.state;
-    if(!isLoding)
+    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password,isLoading} =this.state;
+    if(!isLoading)
     return (
 
 

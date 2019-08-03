@@ -10,15 +10,13 @@ import Processing from './Processing';
 import Message from '../constants/Tost';
 export default class EmploySignUpScreen extends Component {
 
-  constructor(props) {
+  constructor(props)
+   {
     super(props);
     this.state = {
-      company: "",
-      isCompanyError:false,
-      isCompanyErrorMsg:'',
-
+     
       name:'',
-      isNameErorr:false,
+      isNameError:false,
       isNameErrorMsg:'',
 
       userName:'',
@@ -36,94 +34,28 @@ export default class EmploySignUpScreen extends Component {
       loginType:null,
       cmpID:null,
 
-      isLoding:false
+      company:'',
+
+      isLoading:false
     };
   }
 
-  componentWillMount()
+ 
+
+  componentDidMount()
   {
     const { navigation } = this.props;
     const loginType = navigation.getParam('loginType', null);
 
-    const cmpID = navigation.getParam('cmpID',null)
+    const cmpID = navigation.getParam('companyID',null)
     
-    this.setState({loginType:loginType,cmpID:cmpID});
-      console.log(" Login : "+loginType+" : "+cmpID);
-  }
-
-
-  _httpSignUp = async (data) => {
-    var connectionInfoLocal = '';
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
+    this.setState({loginType:loginType,company:cmpID});
      
-      if(connectionInfo.type == 'none'){
-        console.log('no internet ');
-        ToastAndroid.showWithGravityAndOffset(
-          'Oops! No Internet Connection',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
-        return;
-      }else{
-        console.log('yes internet '); 
-        this.setState({
-          isLoding:true,
-        });
-        fetch(Global.API_URL+'register', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',   
-              'Content-Type':'application/json'   
-            },
-            body: JSON.stringify(data)
-          }).then((response) =>response.json() )
-          .then((responseJson) => {
-           
-            
-
-             this.setState({isLoding:false});
-           
-             if(responseJson.success){
-               Message('Enter Userid And Password to login');
-               Alert.alert('User Registration Successful! Please Login')
-               
-             
-             this.setState({
-               isLoding:false,
-             });
-             this.props.navigation.navigate('EmployeeSignIn');
-             }else{
-              
-              
-               this.setState({
-                 isLoding:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
-               });
- 
-               console.log("Error in signUP :")
-             }
-         })
-         .catch((error) => {
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-          this.setState({isLoding:false});
-          console.log('on error fetching:'+error);
-          //  this._httpSignUp(data);
-        });
-      }
-    });
-    console.log(connectionInfoLocal);
   }
 
  
-
-  onValueChange(value) {
+  onValueChange(value) 
+  {
     this.setState({
       company: value
     });
@@ -158,12 +90,7 @@ export default class EmploySignUpScreen extends Component {
         isUserNameErrorMsg:'Enter the Correct Email ',});
         console.log("Error in user ")
     }
-    else if(company != '')
-    {
-      this.setState({ isCompanyError:true,
-        isCompanyErrorMsg:'Enter the Correct email ',});
-        console.log("Error in company")
-    }
+   
     else if(password.length < 3)
     {
       this.setState({ isPasswordError:true,
@@ -178,11 +105,20 @@ export default class EmploySignUpScreen extends Component {
     }
     else
     {
+      console.log("Login Data : ",this.state.loginType);
       if(this.state.loginType != null )
       {
-        let data = {email: userName,name:name,c_password:cpassword,password:password,user_type:this.state.loginType,}
-        this._httpSignUp(data);
-        console.log("Data Save .....")
+        let data = {email: userName,name:name,password:password,user_type:this.state.loginType,companyID:company}
+        
+         if(this.state.loginType == 'emp'){
+         
+          this.props.navigation.navigate('Profile',{'data':data});
+        }
+         else if(this.state.loginType == 'cmp')
+         {
+
+              this.props.navigation.navigate('CompanyProfile',{'data':data});
+          }
       }
       else{console.log("Error in login ");}
     }
@@ -218,8 +154,10 @@ export default class EmploySignUpScreen extends Component {
                     isCPasswordErrorMsg:''
                   });
   }
-  render() {
-    if(!this.state.isLoding)
+
+  render()
+  {
+    if(!this.state.isLoading)
     return (
       <Container>
        <StatusBar backgroundColor="green" barStyle="default" />
@@ -234,7 +172,7 @@ export default class EmploySignUpScreen extends Component {
                   <Logo></Logo>
 
                     <View>
-                    <Item regular  style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
+                    <Item regular  style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
                       
                         <Input placeholder="Name" value={this.state.name} textContentType='name' onChangeText={(text)=>{this.setState({name:text})}}  />
                     </Item> 
