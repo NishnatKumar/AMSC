@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {StatusBar } from 'react-native'
 import { Header, Left, Body,View,Title } from 'native-base';
+import app from '../constants/app';
 export default class Headers extends React.Component
 {
     constructor(props)
@@ -15,14 +16,14 @@ export default class Headers extends React.Component
         return(
             <View>
                  <StatusBar
-                            backgroundColor="blue"
+                            backgroundColor={app.bgPurple}
                             barStyle="light-content"
                         />
-                <View style={{height:StatusBar.currentHeight,backgroundColor:'#022cfa'}}></View>
+                <View style={[app.bgPurple,{height:StatusBar.currentHeight}]}></View>
                 <View>
 
                 </View>
-                <Header>
+                <Header style={app.bgPurple}>
                 
                     <Left/>
                     <Body>

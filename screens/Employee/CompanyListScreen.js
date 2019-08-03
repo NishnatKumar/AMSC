@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {FlatList,NetInfo } from 'react-native';
 import { Container, Content, Item, Left, Thumbnail, Subtitle } from 'native-base';
-import Global from '../constants/Global'
-import Headers from '../screens/Headers';
-export default class CompanyListScreen extends React.Component
+import Global from '../../constants/Global';
+import Headers from '../Headers';
+class CompanyListScreen extends React.Component
 {
     constructor(props)
     {
@@ -17,10 +17,6 @@ export default class CompanyListScreen extends React.Component
             isLoading:false
         }
     }
-  
-    static navigationOptions = {
-      header: null
-  }
 
     async _httpGetCompanyList()
     {
@@ -50,7 +46,7 @@ export default class CompanyListScreen extends React.Component
                  
                   
       
-                   this.setState({isLoading:false});
+                   this.setState({isLoding:false});
                  
                    if(responseJson.success){
                      Message('Enter Userid And Password to login');
@@ -58,14 +54,14 @@ export default class CompanyListScreen extends React.Component
                      
                    
                    this.setState({
-                     isLoading:false,
+                     isLoding:false,
                    });
                    this.props.navigation.navigate('EmployeeSignIn');
                    }else{
                     
                     
                      this.setState({
-                       isLoading:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
+                       isLoding:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
                      });
        
                      console.log("Error in signUP :")
@@ -79,7 +75,7 @@ export default class CompanyListScreen extends React.Component
                   25,
                   50,
                 );
-                this.setState({isLoading:false});
+                this.setState({isLoding:false});
                 console.log('on error fetching:'+error);
                 //  this._httpSignUp(data);
               });

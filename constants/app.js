@@ -79,7 +79,7 @@ const app = { errorMsg:{
 
   formGroup:{margin:5,borderRadius:10,width:size.window.width-60,},
   
-  textPurpal:{
+  textPink:{
     color:'#f57aae'
   },
   title:{color:'#000000',fontSize:25,fontWeight:'900',fontFamily:'ExpoConBol' },
@@ -98,7 +98,14 @@ const app = { errorMsg:{
 
   textGray:{
     color:'#CFD5E3'
-  }
+  },
+
+  bgPurple:{
+    backgroundColor:'#7BABEB',// '#7BABEB',   
+    },
+    bgPink:{
+      backgroundColor:'#f57aae',   
+      },
 
   
   
