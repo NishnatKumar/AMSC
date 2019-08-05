@@ -115,7 +115,10 @@ export default class BarcodeScannerExample extends React.Component {
       }
 
     } catch (error) {
-      console.log("Eroor ",error)
+
+
+      Global.MSG("This is Not Your Company Code Scan Correct Code ")
+      console.log("Eroor sfdsfdsff ",error)
     }
     
   }
@@ -159,13 +162,21 @@ export default class BarcodeScannerExample extends React.Component {
 
   QurCodeChecker(data)
   {
-    console.log(data);
-    let emp =  data.empReg.split(".")[3].replace('"','');
+    try {
 
-    let time = data.in.split(" ")[0].replace('"','');
+      console.log(data);
+      let emp =  data.empReg.split(".")[3].replace('"','');
   
-    console.log("Emp Timei : "+emp+"  Time : "+time);
-   return emp===time
+      let time = data.in.split(" ")[0].replace('"','');
+    
+      console.log("Emp Timei : "+emp+"  Time : "+time);
+     return emp===time
+      
+    } catch (error) {
+      console.log("Error tyui : ",error)
+      Global.MSG("This is Not Your Company Code Scan Correct Code ")
+    }
+  
 
   }
   componentWillMount() {
@@ -210,7 +221,7 @@ componentWillUnmount() {
                         50,
                       );
 
-                      Alert.alert( 'This is Not Your Company Code Scan Correct Code ');
+                      // Alert.alert( 'This is Not Your Company Code Scan Correct Code ');
                     }
                    // await AsyncStorage.setItem('in',data)
                   }
@@ -257,7 +268,8 @@ componentWillUnmount() {
     
      
    } catch (error) {
-     console.log("Error : ",error);
+     console.log("Error 124 : ",error);
+     Global.MSG(' This is Not Your Company Code Scan Correct Code. ')
    }
 
 

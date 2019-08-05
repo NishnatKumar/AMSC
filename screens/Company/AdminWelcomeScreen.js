@@ -143,7 +143,9 @@ export default class AdminWelcomeScreen extends React.Component {
           
           <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
-                <View style={{height: StatusBar.currentHeight +10, backgroundColor:'#ffffff' }}></View> 
+                <View style={{height: StatusBar.currentHeight +10, backgroundColor:'#ffffff' }}>
+                  
+                </View> 
 
 
                 <Logo></Logo>
