@@ -5,6 +5,9 @@ import { BackHandler,
     Alert,StatusBar} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
+import size from '../../constants/Layout';
+import app from '../../constants/app';
+import { Avatar } from 'react-native-elements';
 
 export default class CompanyProfileViewScreen extends React.Component
 {
@@ -48,6 +51,7 @@ export default class CompanyProfileViewScreen extends React.Component
         const { navigation } = this.props;
         const data = navigation.getParam('data', null);
         console.log("#########################Data Value he ye  : ",data);
+        data['address'] = JSON.parse(data.address);
         if(data != null)
         {
             this.setState({isLoading:false,address:data.address,name:data.company_name,
@@ -77,21 +81,28 @@ export default class CompanyProfileViewScreen extends React.Component
                     </Body>
                 </Header>
                 <Content>
-                    <Card>
-                        <CardItem>
-                            <Left>
-                                <Thumbnail large source={{uri:uri}}/>
-                            </Left>
-                            <Body>
-                            {/* <Button transparent onPress={()=>{this.props.navigation.navigate('CompanyProfile')}}><Text>Edit</Text></Button>
-                            */}
-                                <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
-                                <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
-                               
-                            </Body>
-                           
-                        </CardItem>
-                    </Card>
+                  
+                   
+                    <View style={[{height:120},app.bgPurple]}>
+
+                        </View>
+                        <View style={{justifyContent:'center',marginTop:-70,marginLeft:size.window.width/3.5,paddingBottom:10 }}>
+                            <Avatar
+                                        size="xlarge"
+                                        rounded
+                                        title={this.state.name.length ==0 ? 'P': this.state.name[0]}
+                                        
+                                        activeOpacity={0.7}
+                                    
+                                        source={{
+                                                uri:
+                                                uri!=null?uri:'u',
+                                                }}
+                                        
+                                        />
+                            <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
+                            <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
+                        </View>
 
                     
                     <View style={{padding:5,paddingHorizontal:5,backgroundColor:'#ededed',height:5,justifyContent:'space-between',flexDirection:'row',borderColor:'#000000' }}>

@@ -46,7 +46,7 @@ class CompanyListScreen extends React.Component
                  
                   
       
-                   this.setState({isLoding:false});
+                   this.setState({isLoading:false});
                  
                    if(responseJson.success){
                      Message('Enter Userid And Password to login');
@@ -54,14 +54,14 @@ class CompanyListScreen extends React.Component
                      
                    
                    this.setState({
-                     isLoding:false,
+                     isLoading:false,
                    });
                    this.props.navigation.navigate('EmployeeSignIn');
                    }else{
                     
                     
                      this.setState({
-                       isLoding:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
+                       isLoading:false,isUserNameError:true,isUserNameErrorMsg:responseJson.msg
                      });
        
                      console.log("Error in signUP :")
@@ -75,7 +75,7 @@ class CompanyListScreen extends React.Component
                   25,
                   50,
                 );
-                this.setState({isLoding:false});
+                this.setState({isLoading:false});
                 console.log('on error fetching:'+error);
                 //  this._httpSignUp(data);
               });

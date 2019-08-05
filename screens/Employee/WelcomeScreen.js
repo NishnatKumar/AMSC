@@ -190,9 +190,13 @@ export default class WelcomeScreen extends React.Component {
       
     }
 
-    _profile()
+  async  _profile()
     {
-      this.props.navigation.navigate('CheckProfile');
+        let temp =await Global.EMPPROFILE;
+        if(temp != null)      
+          this.props.navigation.navigate('ProfileView',{data: temp});
+        else
+          Global.MSG('Wait .....')
     }
 
     _history()
@@ -209,7 +213,8 @@ export default class WelcomeScreen extends React.Component {
         await AsyncStorage.removeItem('profileEmp');
         await AsyncStorage.removeItem('userDetails');
         await AsyncStorage.removeItem('in');
-        await AsyncStorage.removeItem('out')
+        await AsyncStorage.removeItem('out');
+        await AsyncStorage.removeItem('cmp');
         this.backHandler.remove();
         this.props.navigation.dismiss();
         this.props.navigation.navigate('HomePage');

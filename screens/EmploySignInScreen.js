@@ -133,14 +133,15 @@ export default class EmploySignInScreen extends Component {
     if(data.user.user_type == 'emp')
     {
       await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
-        Alert.alert(" Successful!  Login")
+      await AsyncStorage.setItem('cmp',JSON.stringify(data.company))
+        Global.MSG(" Successful!  Login")
         this.props.navigation.navigate('Home')
      
     }
     else if(data.user.user_type == 'cmp')
     {
       await AsyncStorage.setItem('profile',JSON.stringify(data.profile))
-      Alert.alert(" Successful!  Login")
+      Global.MSG(" Successful!  Login")
         this.props.navigation.navigate('AdminWelcome')
     }
     else

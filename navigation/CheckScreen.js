@@ -27,7 +27,7 @@ export default class CheckScreen extends React.Component {
       
       const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
      
-   
+        console.log("USer Details : ",userData.user_type)
       if(userData.user_type == 'cmp'){
      
        

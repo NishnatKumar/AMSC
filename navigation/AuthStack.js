@@ -11,7 +11,8 @@ import BankScreen from "../screens/Employee/Bank";
 import CompanyProfileScreen from "../screens/Company/CompanyProfile";
 
 
-const AuthStack = createStackNavigator({      
+const AuthStack = createStackNavigator({    
+                                        CompanyProfile:CompanyProfileScreen,  
                                         CompanyList:CompanyListScreen,
                                         HomePage: HomeScreen ,
                                         EmployeeSignIn: EmploySignInScreen,
@@ -20,7 +21,7 @@ const AuthStack = createStackNavigator({
                                         EmployeeSignUp:EmploySignUpScreen,
                                         Bank:BankScreen , 
                                         Profile:ProfileScreen ,
-                                        CompanyProfile:CompanyProfileScreen,
+                                        
  },{
      initialRouteName:'HomePage'
  });

@@ -30,6 +30,7 @@ import Time from '../../constants/Time';
 import * as DocumentPicker from 'expo-document-picker';
 import Global from '../../constants/Global';
 import Headers from '../Headers';
+import { Avatar } from 'react-native-elements';
 
 
 
@@ -58,7 +59,7 @@ export default class ProfileScreen extends React.Component {
 
                       companyname:'',
 
-                      name:'Empl',
+                      name:'',
                         isnameError:false,
                           nameErrorMsg:'',
                       
@@ -78,22 +79,22 @@ export default class ProfileScreen extends React.Component {
                         ispicError:false,
                           picErrorMsg:'',
 
-                      email:'nishant@gmail.com',
+                      email:'',
                       isemailError:false,
                         emailErrorMsg:'',
 
-                      mobile:'9939224274',
+                      mobile:'',
                         ismobileError:false,
                           mobileErrorMsg:'',
 
                      
                       
                       address:{
-                        address:'emp',
-                        street:'sdf',
-                        city:'city',
-                        state:'state',
-                        pincode:'987680'
+                        address:'',
+                        street:'',
+                        city:'',
+                        state:'',
+                        pincode:''
                         
                        
                   },
@@ -132,17 +133,6 @@ export default class ProfileScreen extends React.Component {
     static navigationOptions = {
         header: null
     }
-   
-
-//  async setProfile(responseJson)
-//   {
-//       console.log("USer Profile :",responseJson);
-//       responseJson.address =JSON.parse(responseJson.address);
-//       responseJson.bank = JSON.parse(responseJson.bank);
-//       await AsyncStorage.setItem('profileEmp',JSON.stringify(responseJson));
-//       this.props.navigation.navigate('ProfileView',{data:responseJson});
-//   }
-
     
   onValueChange(text,key){
  
@@ -221,17 +211,15 @@ export default class ProfileScreen extends React.Component {
 
       try {
 
-          const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'image/*',copyToCacheDirectory:true});
+          const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'*/*',copyToCacheDirectory:true});
 
 
 
             if(type == 'success')
             {
 
-              console.log("File selected ",size);
-              console.log("File selected ",uri);
-              console.log("File selected ",name);
-              this.setState({resume:{ type:'image/*', uri, name, size }});
+              
+              this.setState({resume:{ type:'*/*', uri, name, size }});
 
             }
             else
@@ -322,7 +310,7 @@ export default class ProfileScreen extends React.Component {
       else if(resume == null)
       {
         console.log("Document Selected");
-        this.setState({isresumeError:true,picErrorMsg:'Select the Resume'})
+        this.setState({isresumeError:true,resumeErrorMsg:'Select the Resume'})
       }
       else if(pic == null)
       {
@@ -370,15 +358,36 @@ export default class ProfileScreen extends React.Component {
           
           <Container>
             <Headers title="profile"/>
-              <View style={{marginTop:25}}></View>
+            
               
               <Content>
               <KeyboardAvoidingView behavior="padding" enabled>
-          
+
+              <View style={[{height:120},app.bgPurple]}>
+
+              </View>
+              <View style={{justifyContent:'center',marginTop:-70,marginLeft:size.window.width/3.5}}>
+                  <Avatar
+                                size="xlarge"
+                                rounded
+                                title={this.state.name.length ==0 ? 'P': this.state.name[0]}
+                                onPress={() => {this._profilePic();}}
+                                activeOpacity={0.7}
+                            
+                                source={{
+                                        uri:
+                                        this.state.pic !=null?this.state.pic.uri:'u',
+                                      }}
+                                showEditButton={true}
+                              />
+              </View>
+              <Text style={app.errorMsg}>
+                      {this.state.picErrorMsg}
+                    </Text>
                   <Card style={app.Form} transparent >
                  
                  <View>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input placeholder="Name" value={name} onChangeText={(text)=>{this.onValueChange(text,'Name')}} style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
@@ -386,29 +395,10 @@ export default class ProfileScreen extends React.Component {
                     </Text>
                 </View>
                         
-                  {/* <View style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]}>
-                         
-                         <Picker
-                                   selectedValue={this.state.companyname}
-                                   textStyle={{ color: "#ffffff" }}
-                                   itemTextStyle={{ color: '#788ad2' }}
-                                   onValueChange={(itemValue, itemIndex) => this.setState({companyname: itemValue})} 
-                                   placeholder="Select Company"
-                                   style={{ width: undefined,borderColor:'#16bdf5',color:'#ffffff',borderWidth:0.5 ,marginTop:10}}
-                          >
-                                    <Picker.Item label="Select Company" value="" key="-1" />  
-                                   { this.state.companyList.map((item, key)=>(
-                                   <Picker.Item label={item.company_name} value={item.id} key={key} />)
-                                   )}
-                           
-                         </Picker>
-                  </View>   
-                  <Text style={app.errorMsg}>
-                      {this.state.companyErrorMsg}
-                    </Text> */}
+               
 
                     <View>
-                      <View style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]}>
+                      <View style={[app.btn,app.btnPurple,{marginBottom:15}]}>
                             <Picker
                               mode="dialog"
                               placeholder="Select Gender"
@@ -440,81 +430,97 @@ export default class ProfileScreen extends React.Component {
                       </Text>
                     </View>
 
-                  <View>
-                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}><Title>{this.state.StartDate}</Title></Button>
+                  <View >
+                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}>
+                    <Title style={{fontSize:15,alignSelf:'center',textAlign:'left'}}>{this.state.StartDate}                              </Title>
+                    <Icon name={"ios-calendar"} fontSize={20} ></Icon>
+                    </Button>
                     <Text style={app.errorMsg}>
                       {this.state.joinErrorMsg}
                     </Text>
                   </View>
 
                   <View>
-                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}><Title>{this.state.DateOfBirth}</Title></Button>
+                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}>
+                    <Title style={{fontSize:15,alignSelf:'center',textAlign:'left'}}>{this.state.DateOfBirth}                                     </Title>
+                    <Icon name={"ios-calendar"} fontSize={20} ></Icon>
+                    </Button>
                     <Text style={app.errorMsg}>
                       {this.state.DOBErrorMsg}
                     </Text>
+                    
                   </View>
-                  
+
                   <View>
-                      <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
-                            <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                        <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                               <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChange(text,'Office')}} style={{}} />
                             </Item>
                             <Text style={app.errorMsg}>
                               {this.state.addressErrorMsg}
                             </Text>
 
-                            <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                   </View>
+                  
+                  <View>
+                                
+                      <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
+                            
+                            <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                               <Input value={address.street} onChangeText={(text)=>{this.onValueChange(text,'Street')}} placeholder="Street" style={{}} />
                             </Item>                          
                           
                     </View>
                   </View>
                  
-                  
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.city} onChangeText={(text)=>{this.onValueChange(text,'City')}} placeholder="City" style={{}} />
                     </Item>
+                  </View>
 
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.state} onChangeText={(text)=>{this.onValueChange(text,'State')}} placeholder="State" style={{}} />
                     </Item>
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPink]} >
+                    </View>
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChange(text,'PinCode')}} placeholder="PinCode" style={{}} />
                     </Item>
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isEmailErorr? app.errorBorder:app.borderPink]} >
+                    </View>
+                    <View>
+                    <Item regular style={[app.formGroup,this.state.isEmailErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={email} onChangeText={(text)=>{this.onValueChange(text,'Email')}} placeholder="Email" style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.emailErrorMsg}
                     </Text>
+                    </View>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isMobileErorr? app.errorBorder:app.borderPink]} >
+                    <View>
+                    <Item regular style={[app.formGroup,this.state.isMobileErorr? app.errorBorder:app.borderPurpal]} >
                       <Input value={mobile} onChangeText={(text)=>{this.onValueChange(text,'Mobile')}} placeholder="Mobile" style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.mobileErrorMsg}
                     </Text>
-
+                    </View>
                   
+                    <View style={{alignItems:'center'}}>
+                        {this.state.resume != null ? <Text style={app.textGray}>{this.state.resume.name}</Text>:<Text></Text>}
+                        <Button block full style={[app.btn,app.btnPurple,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}>
+                        <Title style={{fontSize:15,alignSelf:'center'}}>Select Document    +                   </Title>
+                        <Icon name={'ios-albums'} />
+                        </Button>
+                        <Text style={app.errorMsg}>
+                          {this.state.resumeErrorMsg}
+                        </Text>
+                    </View>
+              
                    
-                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Document    + </Title></Button>
-                    <Text style={app.errorMsg}>
-                      {this.state.resumeErrorMsg}
-                    </Text>
-                    
-                    {this.state.pic && (
-                    <Image source={{uri: this.state.pic.uri}} style={{width:100, height:100 }}/>)}
-                    <Button block full style={[app.btn,app.btnPurple,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._profilePic();}}><Title>Select Pic    + </Title></Button>
-                    <Text style={app.errorMsg}>
-                      {this.state.picErrorMsg}
-                    </Text>
-                   
-                   
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkValidation();}}><Title>Next</Title></Button>
-                 
+                   <View>
+                    <Button block full style={[app.btn,app.btnPink,{marginBottom:15}]} onPress={()=>{this.checkValidation();}}><Title>Next</Title></Button>
+                    </View>
                   </Card>
                 </KeyboardAvoidingView>
                   

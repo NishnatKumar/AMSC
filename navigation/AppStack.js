@@ -17,9 +17,10 @@ import EmployeeViewScreen from "../screens/Company/EmployeeViewScreen";
 
 
 const AppStack = createStackNavigator({
-                                        Home:{screen:WelcomeScreen},
+                                       
                                          Check:{screen: CheckScreen },                                     
                                         CompanyProfileView:{screen:CompanyProfileViewScreen},
+                                        Home:{screen:WelcomeScreen},
                                         CheckProfile:{screen:CheckProfile},
                                   
                                         QRCodeScreen:{screen:QRCodeScreen},

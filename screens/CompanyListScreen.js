@@ -118,6 +118,8 @@ export default class CompanyListScreen extends React.Component
       try {
           console.log(text);
           let local = this.state.searchData;
+          
+          this.setState({searchText:text})
           let temp =[];
           local.forEach(element => {
              if(element.company_name.split(',')[0].toUpperCase().search(text.toUpperCase()) != -1 || element.type.split(',')[0].toUpperCase().search(text.toUpperCase()) != -1  ){
@@ -135,8 +137,7 @@ export default class CompanyListScreen extends React.Component
 
   _onClearText=(text) =>{
      try {
-     //    this.setState({data:fullData});
-     //     console.log(text);
+      this.setState({searchText:text})
          
      } catch (error) {
          
@@ -157,7 +158,10 @@ export default class CompanyListScreen extends React.Component
                   round
                   onChangeText={this._onChangeText}
                   onClearText={this._onClearText}
-                  placeholder='Type Here...' />
+                  placeholder='Type Here...' 
+                  value={searchText}
+
+                  />
                 <Content>
                     <FlatList
                        

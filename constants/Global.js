@@ -8,7 +8,8 @@ import { conditionalExpression } from '@babel/types';
     MSG:showErrorMsg,
     USER:user(),
     PROFILE:profile(),
-    PROFILE:profile(),
+    EMPPROFILE:empprofile(),
+    CMP:getCmp(),
     PROFILECHECK:async function(userID,type) {
         // let data = null;
        let token = await Global.TOKEN
@@ -93,6 +94,32 @@ async function getToken()
     }
     
 }
+
+
+        /**GET  The TOKEN */
+        async function getCmp()
+        {
+            try 
+            {
+                // await AsyncStorage.removeItem('userToken');
+                let token =  await AsyncStorage.getItem('cmp');
+                // console.log("In token",token);
+                if(token != null)
+                {
+                    // console.log('Token : ',token);
+                    return  token;
+                }
+                else
+                    return null;
+              
+        
+        
+            } catch (error) {
+                console.log("Error In token get ",error);
+            }
+            
+        }
+        
 
     /**Check Profile if exist or not  */
 
@@ -202,6 +229,28 @@ async function profile()
         
          
         let user =  await AsyncStorage.getItem('profile');
+        console.log("In token GEt user Profile",user);
+        if(user != null)
+        {
+            // console.log('user : ',user);
+           return JSON.parse(user);
+        }
+        else
+            return null;
+
+    } catch (error) {
+        console.log("Error in profile : ",error)
+    }
+}
+
+
+async function empprofile()
+{
+    try 
+    {
+        
+         
+        let user =  await AsyncStorage.getItem('profileEmp');
         console.log("In token GEt user Profile",user);
         if(user != null)
         {

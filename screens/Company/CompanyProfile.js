@@ -34,6 +34,7 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import Processing from '../Processing';
 import Headers from '../Headers';
+import { Avatar } from 'react-native-elements';
 
 
 
@@ -524,19 +525,30 @@ componentWillUnmount() {
           
           <Container>
               <Headers title="Company Profile"/>
-              
-              
-              <View style={{marginTop:25}}></View>
-             
               <Content>
               <KeyboardAvoidingView behavior="padding" enabled>
+              <View style={[{height:120},app.bgPurple]}>
+
+                </View>
+                <View style={{justifyContent:'center',marginTop:-70,marginLeft:size.window.width/3.5}}>
+                    <Avatar
+                                  size="xlarge"
+                                  rounded
+                                  title={this.state.name.length ==0 ? 'P': this.state.name[0]}
+                                  onPress={() => {this._profilePic();}}
+                                  activeOpacity={0.7}
+                              
+                                  source={{
+                                          uri:
+                                          this.state.pic !=null?this.state.pic.uri:'u',
+                                        }}
+                                  showEditButton={true}
+                                />
+                </View>
              
-                 <Card style={app.Form} transparent >
-
-
-
-                       
-                    <View>
+                 
+                 <Card  style={app.Form} transparent >   
+                    <View style={app.formGroup}>
 
                       <View style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]}>
                           
@@ -557,12 +569,13 @@ componentWillUnmount() {
                     </View>
 
                   <View>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPurpal]} >
+                    <Item regular style={[app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPink]} >
                       <Input
                        value={companyname}
                        onChangeText={(text)=>{this.onValueChangeAddress(text,'Title')}}
                         placeholder="Title" style={{}} 
                           textContentType="name"
+
                           
                         />
                     </Item>
@@ -570,67 +583,123 @@ componentWillUnmount() {
                       {this.state.companyErrorMsg}
                     </Text>
                   </View>
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={regNo } onChangeText={(text)=>{this.onValueChangeAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
+                  
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input value={regNo } 
+                      onChangeText={(text)=>{this.onValueChangeAddress(text,'Reg')}}
+                      placeholder="Reg. No." 
+                      style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.regNoErrorMsg}
                     </Text>
-                    
-                    
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.contact} onChangeText={(text)=>{this.onValueChangeAddress(text,'Contact')}} placeholder="Contact" style={{}} />
+                  </View> 
+
+                  <View>  
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input 
+                      value={address.contact} 
+                      onChangeText={(text)=>{this.onValueChangeAddress(text,'Contact')}}
+                       placeholder="Contact"
+                       textContentType="telephoneNumber"
+                         keyboardType="phone-pad"
+                       />
                     </Item>
+                  </View>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.email} onChangeText={(text)=>{this.onValueChangeAddress(text,'Email')}} placeholder="Email" style={{}} />
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input 
+                      value={address.email} 
+                      onChangeText={(text)=>{this.onValueChangeAddress(text,'Email')}} 
+                      placeholder="Email" 
+                      textContentType="emailAddress"
+                      keyboardType="email-address"
+                      style={{}} />
                     </Item>
-
+                  </View>
+                
                     
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isownerError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={owner} onChangeText={(text)=>{this.onValueChangeAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isownerError? app.errorBorder:app.borderPink]} >
+                      <Input 
+                      value={owner}
+                       onChangeText={(text)=>{this.onValueChangeAddress(text,'Owner')}}
+                        placeholder="Owner Name" 
+                        textContentType="name"
+                        style={{}}/>
+                        
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.ownerErrorMsg}
                     </Text>
-
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.url} onChangeText={(text)=>{this.onValueChangeAddress(text,'Url')}} placeholder="Website" style={{}} />
-                    </Item>
-
-
-                   
-
-                    
-
-                    {photo && (
-                    <Image source={{uri: photo.uri}} style={{width:100, height:100 }}/>)}
-                    
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}><Title>Select Logo    + </Title></Button>
-                   
-                    <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address? app.errorBorder:app.borderPurpal]} >
-                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChangeAddress(text,'Office')}} style={{}} />
-                          </Item>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                            <Input value={address.street} onChangeText={(text)=>{this.onValueChangeAddress(text,'Street')}} placeholder="Street" style={{}} />
-                          </Item>
                   </View>
-                  <Text style={app.errorMsg}>
+
+                  <View>
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input value={address.url} 
+                      onChangeText={(text)=>{this.onValueChangeAddress(text,'Url')}} 
+                      placeholder="Website" style={{}}
+                      textContentType="URL" 
+                        keyboardType="url"
+                      />
+                    </Item>
+                  </View>
+
+                   
+
+                    
+                  <View>
+                   
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address.address? app.errorBorder:app.borderPink]} >
+                            <Input 
+                            placeholder="Office" 
+                            value={address.address}
+                             onChangeText={(text)=>{this.onValueChangeAddress(text,'Office')}}
+                             textContentType="streetAddressLine1"
+                              style={{}} />
+                        </Item>
+                        <Text style={app.errorMsg}>
                       {this.state.addressErrorMsg}
                     </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.city} onChangeText={(text)=>{this.onValueChangeAddress(text,'City')}} placeholder="City" style={{}} />
-                    </Item>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.state} onChangeText={(text)=>{this.onValueChangeAddress(text,'State')}} placeholder="State" style={{}} />
+
+
+                          
+                  </View>
+                 
+                    <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                            <Input value={address.street} 
+                            onChangeText={(text)=>{this.onValueChangeAddress(text,'Street')}}
+                             placeholder="Street"
+                             textContentType="fullStreetAddress"
+                              style={{}} />
                     </Item>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChangeAddress(text,'PinCode')}} placeholder="PinCode" style={{}} />
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input
+                       value={address.city} onChangeText={(text)=>{this.onValueChangeAddress(text,'City')}}
+                        placeholder="City" 
+                        textContentType="addressCityAndState"
+                        style={{}} />
+                    </Item>
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input value={address.state}
+                       onChangeText={(text)=>{this.onValueChangeAddress(text,'State')}} 
+                       placeholder="State"
+                       textContentType="addressState"
+                        style={{}} />
+                    </Item>
+
+                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                      <Input value={address.pincode}
+                        onChangeText={(text)=>{this.onValueChangeAddress(text,'PinCode')}} 
+                        placeholder="PinCode"
+                        textContentType="postalCode"
+                        keyboardType="number-pad" 
+                        style={{}} />
                     </Item>
 
 

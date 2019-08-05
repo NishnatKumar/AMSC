@@ -26,6 +26,7 @@ import Logo from '../Logo';
 
 import Time from '../../constants/Time';
 import Processing from '../Processing';
+import Global from '../../constants/Global';
 
 
 
@@ -97,11 +98,15 @@ export default class AdminWelcomeScreen extends React.Component {
       this.props.navigation.navigate('QRCodeScreen');
     }
 
-    _profile()
+   async _profile()
     {
       /**Profile of company */
-      this.props.navigation.navigate('CheckProfile');
-
+      // this.props.navigation.navigate('CompanyProfileView',{data: await Global.PROFILE});
+      let temp =await Global.PROFILE;
+      if(temp != null)      
+        this.props.navigation.navigate('ProfileView',{data: temp});
+      else
+        Global.MSG('Wait .....')
 
 
 
