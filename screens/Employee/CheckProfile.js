@@ -30,7 +30,7 @@ componentWillMount() {
     console.log("Error in CheckProfile.js ",error); this.http();  
   }
  
-}
+} 
 componentWillUnmount() {
   try {
     BackHandler.addEventListener('hardwareBackPress', () =>{this.props.navigation.goBack();});

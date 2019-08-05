@@ -186,7 +186,7 @@ export default class WelcomeScreen extends React.Component {
       if(this.state.isIn)
         this.props.navigation.navigate('QRCode',{'types':'out'});
       else
-        Global.MSG("Invalide Option Press");
+        Global.MSG("you are to funny First make entry");
       
     }
 
@@ -226,10 +226,11 @@ export default class WelcomeScreen extends React.Component {
         return (
           
           <Container>
-           
+            <Container>
             <StatusBar backgroundColor="green" barStyle="default" />
                 
                 <Timer></Timer>
+                <View style={{padding:15}}>
 
                 <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
 
@@ -238,6 +239,9 @@ export default class WelcomeScreen extends React.Component {
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._logOut()}} ><Title>Log Out</Title></Button>
+                </View>
+            
+            </Container>
               
           </Container>
 

@@ -6,6 +6,9 @@ import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import EmploySignUpScreen from "../screens/EmploySignUpScreen";
 import HomeScreen from "../screens/HomeScreen";
 import CompanyListScreen from "../screens/CompanyListScreen";
+import ProfileScreen from "../screens/Employee/Profile";
+import BankScreen from "../screens/Employee/Bank";
+import CompanyProfileScreen from "../screens/Company/CompanyProfile";
 
 
 const AuthStack = createStackNavigator({      
@@ -15,6 +18,9 @@ const AuthStack = createStackNavigator({
                                         ForgotPassword: ForgotScreen,
                                         ResetPassword:ResetPasswordScreen,
                                         EmployeeSignUp:EmploySignUpScreen,
+                                        Bank:BankScreen , 
+                                        Profile:ProfileScreen ,
+                                        CompanyProfile:CompanyProfileScreen,
  },{
      initialRouteName:'HomePage'
  });

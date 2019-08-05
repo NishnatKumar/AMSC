@@ -185,7 +185,7 @@ async function showErrorMsg(msg)
         ToastAndroid.showWithGravityAndOffset(
             msg,
             ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
+            ToastAndroid.TOP,
             25,
             50,
           );

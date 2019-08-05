@@ -90,7 +90,7 @@ export default class EmploySignInScreen extends Component {
                  isUsernameError:true,
                  isPasswordError:true,
                  usernameErrorMsg:'Username May Be error',
-                passwordErrorMsg:'Password may be error'
+                passwordErrorMsg:'Password May be error'
 
                });
  
@@ -124,19 +124,22 @@ export default class EmploySignInScreen extends Component {
 
     try {
 
-     console.log("DAta vlaue : ",data);
+     console.log("DAta value : ",data);
 
      await AsyncStorage.setItem('userToken',data.token+"");
     await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
+    
 
     if(data.user.user_type == 'emp')
     {
+      await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
         Alert.alert(" Successful!  Login")
         this.props.navigation.navigate('Home')
      
     }
     else if(data.user.user_type == 'cmp')
     {
+      await AsyncStorage.setItem('profile',JSON.stringify(data.profile))
       Alert.alert(" Successful!  Login")
         this.props.navigation.navigate('AdminWelcome')
     }
@@ -151,7 +154,7 @@ export default class EmploySignInScreen extends Component {
 
 
     } catch (error) {
-      console.log("Eroor is in EmployeeSignInScreen ",error);
+      console.log("Error is in EmployeeSignInScreen ",error);
       this.setState({isLoading:false});
     }
     

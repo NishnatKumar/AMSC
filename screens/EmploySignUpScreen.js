@@ -15,19 +15,19 @@ export default class EmploySignUpScreen extends Component {
     super(props);
     this.state = {
      
-      name:'',
+      name:'Empl',
       isNameError:false,
       isNameErrorMsg:'',
 
-      userName:'',
+      userName:'emp@gmail.com',
       isUserNameError:false,
       isUserNameErrorMsg:'',
 
-      password:'',
+      password:'12345',
       isPasswordError:false,
       isPasswordErrorMsg:'',
 
-      cpassword:'',
+      cpassword:'12345',
       isCPasswordError:false,
       isCPasswordErrorMsg:'',
 
@@ -113,6 +113,7 @@ export default class EmploySignUpScreen extends Component {
          if(this.state.loginType == 'emp'){
          
           this.props.navigation.navigate('Profile',{'data':data});
+          console.log("Data not found sir g : ",data);
         }
          else if(this.state.loginType == 'cmp')
          {

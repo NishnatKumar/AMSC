@@ -43,21 +43,21 @@ export default class BankScreen extends React.Component {
     {
         super(props)
         this.state={
-                      AC:'',
+                      AC:'8880890',
                     isACError:false,
                     errorACMsg:'',
 
 
 
-                      IFSCCODE:'',
+                      IFSCCODE:'SBIF787',
                       isIFCError:false,
                         errorIFSCMsg:'',
 
-                    Name:'',
+                    Name:'EMPL',
                     isNameError:false,
                         errorNameCMsg:'',
 
-                    Bank:'',
+                    Bank:'EPR',
                     isBankError:false,
                         errorBankCMsg:'',
 
@@ -65,7 +65,7 @@ export default class BankScreen extends React.Component {
 
                     BankData:{},
 
-                  isLoding:false
+                  isLoading:false
                         
                     }
 
@@ -93,6 +93,7 @@ componentWillUnmount() {
       console.log("DATA of navigation r error");
     }
     else{
+      console.log('DATA of navigation r error',value)
         this.setState({data:value});
     }
   }
@@ -117,19 +118,11 @@ componentWillUnmount() {
     /**Form dta  */
       let fv = new FormData();
       let temp = this.state.data;
+      console.log("Datacome form navigation  : ",data);
+      
       fv.append("pic",temp.pic );
-      let user = await Global.USER;
-      if(user != null)
-      {
-        user = user.id;
-        fv.append('user_id',user+"")
-        console.log('yes internet '+Global.API_URL+'company-details/'+user); 
-      }
-      else{
-        console.log("Error ");
-        Global.MSG('Not Login');
-        this.prop.navigation.navigate('HomePage');
-      }
+      fv.append("resume",temp.resume );
+     
 
        fv.append('joining_date',temp.join+"")
         fv.append('address',JSON.stringify(temp.address))
@@ -139,13 +132,17 @@ componentWillUnmount() {
         fv.append('bank',JSON.stringify(this.state.BankData))
         fv.append('email_id',temp.email+"")     
        fv.append('gender',temp.gender);
-      fv.append('company_id',temp.compnay_id+"");
+      fv.append('company_id',temp.company_id+"");
       fv.append('contact_no',temp.mobile);
+      fv.append('email',temp.email+"")
+      fv.append('name',temp.name+"")
+      fv.append('password',temp.password)
+      fv.append('user_type',temp.user_type)
 
     /**End */
 
 
-    console.log("Data Type ", typeof data);
+    console.log("Data Type ", fv);
   var connectionInfoLocal = '';
   NetInfo.getConnectionInfo().then((connectionInfo) => {
     console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
@@ -158,57 +155,38 @@ componentWillUnmount() {
     }else{
       console.log('yes internet '); 
       this.setState({
-        isLoding:true,
+        isLoading:true,
       });
-      fetch(Global.API_URL+'employee-store', {
+      fetch(Global.API_URL+'register', {
         "async": true,
         method: 'POST',
         headers: {
             'Accept': 'application/json',   
             "Content-Type": "multipart/form-data",
             "Cache-Control": "no-cache",
-            "Authorization": token, 
+           
           },
           body: fv 
         }).then((response) =>response.json() )
         .then(async(responseJson) => {
-          // var itemsToSet = responseJson.data;
-           console.log('resp:',responseJson);
-           if(responseJson.success){
-                if(responseJson.data != 1)
-                {
-                  console.log(responseJson.data);
-                  responseJson.data['address']= JSON.parse(responseJson.data.address);
-
-                    responseJson.data['bank']= JSON.parse(responseJson.data.bank);
-              
-                    this.setState({
-                      isLoding:false
-                    });
-                    console.log("Profile Data y ",responseJson.data);
-                    await AsyncStorage.setItem('profile',JSON.stringify(responseJson.data));
-                    Global.MSG("Profile Save !")
-                    this.props.navigation.navigate('Home');
-                }
-                else
-                {
-                  Global.MSG('Profile Update!')
-                  this.props.navigation.navigate('Home');
-                }
-           }else{
-            Global.MSG(responseJson.msg)
-            this.setState({isLoding:false})
-             console.log("Error in signUP :",responseJson.msg)
-           }
+          
+            console.log('resp:',responseJson);
+            if(responseJson.success){
+                 Alert.alert('Sign Up Complete','You have successfully created account Please Login. ')
+                 this.props.navigation.navigate('EmployeeSignIn')
+            }else{
+              if(responseJson.msg === 'The email has already been taken.')
+              {
+                this.props.navigation.navigate('EmployeeSignUp');
+              }
+             Global.MSG(responseJson.msg)
+             this.setState({isLoading:false})
+              console.log("Error in signUP :",responseJson.msg)
+            }
+         
        })
        .catch((error) => {
-        ToastAndroid.showWithGravityAndOffset(
-          'Network Failed!!! Retrying...',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
+       Global.MSG('Server Error');
         console.log('on error fetching:'+error);
         //  this._httpSaveUp(data);
       });
@@ -229,7 +207,7 @@ async setProfile(data)
       data['address']= JSON.parse(data.address);
 
       this.setState({
-        isLoding:false
+        isLoading:false
       });
       console.log("Profile Data y ",data);
       await AsyncStorage.setItem('profile',JSON.stringify(data));
@@ -242,7 +220,7 @@ async setProfile(data)
   }
 } catch (error) {
 
-  console.log("Error In Conpony Prfile",error);
+  console.log("Error In Company Profile",error);
   this.props.navigation.navigate('Welcome');
     
 }

@@ -78,7 +78,7 @@ export default class CompanyListScreen extends React.Component {
 
       console.log("Token : ", token );
       let profile = await Global.PROFILE;
-      console.log("Profile is error : ".profile)
+      console.log("Profile is error : ",profile)
       if(profile == null)
       {
         this.props.navigation.goBack();
@@ -156,6 +156,7 @@ export default class CompanyListScreen extends React.Component {
 componentWillMount() {
   BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
 }
+
 componentWillUnmount() {
   BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
 }

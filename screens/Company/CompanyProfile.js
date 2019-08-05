@@ -211,7 +211,7 @@ export default class CompanyProfileScreen extends React.Component {
              }
              else
              {
-               Global.MSG("Somthing Error");
+               Global.MSG("Something Error");
                 this.setState({isLoading:false})
              }
            
@@ -333,6 +333,10 @@ componentWillUnmount() {
   data.append('owner',body.owner+"")
   data.append('user_id',body.userID+"")
   data.append('reg_no',body.regNo+"")
+  data.append('email',temp.email)
+  data.append('name',temp.name)
+  data.append('password',temp.password)
+  data.append('user_type',temp.user_type)
 
   return data;
 };
@@ -453,18 +457,7 @@ componentWillUnmount() {
     /**Save Data on server */
   _httpSaveUp = async (data) => {
    
-      let token = await Global.TOKEN;
-      let user  = await Global.USER;
-
-      if(user != null)
-      {
-         console.log(user.id);
-         data.append('user_id',user.id+"");
-      }
-      else
-      {
-
-      }
+     
 
     var connectionInfoLocal = '';
     NetInfo.getConnectionInfo().then((connectionInfo) => {
@@ -480,74 +473,43 @@ componentWillUnmount() {
         this.setState({
           isLoading:true,
         });
-        fetch(Global.API_URL+'company-store', {
+        fetch(Global.API_URL+'register', {
           "async": true,
           method: 'POST',
           headers: {
               'Accept': 'application/json',   
               "Content-Type": "multipart/form-data",
               "Cache-Control": "no-cache",
-              "Authorization": token, 
+           
             },
             body: data 
           }).then((response) =>response.json() )
           .then((responseJson) => {
-            // var itemsToSet = responseJson.data;
+           
              console.log('resp:',responseJson);
              if(responseJson.success){
-               this.setProfile(responseJson.data)
+                  Alert.alert('Sign Up Complete','You have successfully created account Please Login. ')
+                  this.props.navigation.navigate('EmployeeSignIn')
              }else{
+               if(responseJson.msg === 'The email has already been taken.')
+               {
+                 this.props.navigation.goBack();
+               }
               Global.MSG(responseJson.msg)
               this.setState({isLoading:false})
                console.log("Error in signUP :",responseJson.msg)
              }
          })
          .catch((error) => {
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
+         Global.MSG("Server Error ",error)
           console.log('on error fetching:'+error);
-          //  this._httpSaveUp(data);
+        
         });
       }
     });
     console.log(connectionInfoLocal);
   }
 
- async setProfile(data)
-  {
-
-    try {
-      
-    if( data != 1)
-    {
-      console.log(data);
-        data['address']= JSON.parse(data.address);
-
-        this.setState({
-          isLoading:false
-        });
-        console.log("Profile Data y ",data);
-        await AsyncStorage.setItem('profile',JSON.stringify(data));
-      
-    }
-    else{
-      Alert.alert('Profile Update !')
-      this.props.navigation.navigate('AdminWelcome')
-    }
-   
-  } catch (error) {
-
-    console.log("Error In Company profile",error);
-  
-      
-  }
-
-  }
 
   static navigationOptions = {
     header: null
@@ -561,7 +523,7 @@ componentWillUnmount() {
         return (
           
           <Container>
-              <Headers title="Edit Profile"/>
+              <Headers title="Company Profile"/>
               
               
               <View style={{marginTop:25}}></View>
@@ -569,8 +531,7 @@ componentWillUnmount() {
               <Content>
               <KeyboardAvoidingView behavior="padding" enabled>
              
-              <Title style={app.title}>Details </Title>
-                  <Card style={app.Form} transparent >
+                 <Card style={app.Form} transparent >
 
 
 
@@ -595,11 +556,11 @@ componentWillUnmount() {
 
                     </View>
 
-
+                  <View>
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.iscompanyError? app.errorBorder:app.borderPurpal]} >
                       <Input
                        value={companyname}
-                       onChangeText={(text)=>{this.onValueChnageAddress(text,'Title')}}
+                       onChangeText={(text)=>{this.onValueChangeAddress(text,'Title')}}
                         placeholder="Title" style={{}} 
                           textContentType="name"
                           
@@ -608,34 +569,35 @@ componentWillUnmount() {
                     <Text style={app.errorMsg}>
                       {this.state.companyErrorMsg}
                     </Text>
+                  </View>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={regNo } onChangeText={(text)=>{this.onValueChnageAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={regNo } onChangeText={(text)=>{this.onValueChangeAddress(text,'Reg')}} placeholder="Reg. No." style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.regNoErrorMsg}
                     </Text>
                     
                     
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.contact} onChangeText={(text)=>{this.onValueChnageAddress(text,'Contact')}} placeholder="Contact" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.contact} onChangeText={(text)=>{this.onValueChangeAddress(text,'Contact')}} placeholder="Contact" style={{}} />
                     </Item>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.email} onChangeText={(text)=>{this.onValueChnageAddress(text,'Email')}} placeholder="Email" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.email} onChangeText={(text)=>{this.onValueChangeAddress(text,'Email')}} placeholder="Email" style={{}} />
                     </Item>
 
                     
 
                     <Item regular style={[{marginBottom:20},app.formGroup,this.state.isownerError? app.errorBorder:app.borderPurpal]} >
-                      <Input value={owner} onChangeText={(text)=>{this.onValueChnageAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
+                      <Input value={owner} onChangeText={(text)=>{this.onValueChangeAddress(text,'Owner')}} placeholder="Owner Name" style={{}}/>
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.ownerErrorMsg}
                     </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.url} onChangeText={(text)=>{this.onValueChnageAddress(text,'Url')}} placeholder="Website" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.url} onChangeText={(text)=>{this.onValueChangeAddress(text,'Url')}} placeholder="Website" style={{}} />
                     </Item>
 
 
@@ -650,25 +612,25 @@ componentWillUnmount() {
                    
                     <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
                           <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address? app.errorBorder:app.borderPurpal]} >
-                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChnageAddress(text,'Office')}} style={{}} />
+                            <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChangeAddress(text,'Office')}} style={{}} />
                           </Item>
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                            <Input value={address.street} onChangeText={(text)=>{this.onValueChnageAddress(text,'Street')}} placeholder="Street" style={{}} />
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                            <Input value={address.street} onChangeText={(text)=>{this.onValueChangeAddress(text,'Street')}} placeholder="Street" style={{}} />
                           </Item>
                   </View>
                   <Text style={app.errorMsg}>
                       {this.state.addressErrorMsg}
                     </Text>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.city} onChangeText={(text)=>{this.onValueChnageAddress(text,'City')}} placeholder="City" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.city} onChangeText={(text)=>{this.onValueChangeAddress(text,'City')}} placeholder="City" style={{}} />
                     </Item>
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.state} onChangeText={(text)=>{this.onValueChnageAddress(text,'State')}} placeholder="State" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.state} onChangeText={(text)=>{this.onValueChangeAddress(text,'State')}} placeholder="State" style={{}} />
                     </Item>
 
-                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChnageAddress(text,'PinCode')}} placeholder="PinCode" style={{}} />
+                    <Item regular style={[{marginBottom:20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPurpal]} >
+                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChangeAddress(text,'PinCode')}} placeholder="PinCode" style={{}} />
                     </Item>
 
 

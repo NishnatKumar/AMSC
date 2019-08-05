@@ -80,8 +80,7 @@ componentWillMount() {
                                 <Thumbnail large source={{uri:uri}}/>
                             </Left>
                             <Body>
-                                <Button transparent onPress={()=>{this.props.navigation.navigate('Profile')}}><Text>Edit</Text></Button>                           
-                                <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
+                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                                 <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{post}</Text>
                             </Body>
                         </CardItem>

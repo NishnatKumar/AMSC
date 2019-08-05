@@ -16,15 +16,15 @@ export default class CompanyProfileViewScreen extends React.Component
 
             uri:"",
 
-            name:'Nishant Kumar',
+            name:'',
             status:'0',
             resume:'',
-            address:{address:'atdr',street:'hds',Pincode:'813209'},
+            address:{address:'',street:'hs',Pincode:''},
             contact:'9939224274',
             post:'Developer',
 
             bank:{},
-            email:'nishnatraj656@gmail.com',
+            email:'',
             Owner:'Other',
             DOB:'',
             type:''
@@ -83,8 +83,8 @@ export default class CompanyProfileViewScreen extends React.Component
                                 <Thumbnail large source={{uri:uri}}/>
                             </Left>
                             <Body>
-                            <Button transparent onPress={()=>{this.props.navigation.navigate('CompanyProfile')}}><Text>Edit</Text></Button>
-                           
+                            {/* <Button transparent onPress={()=>{this.props.navigation.navigate('CompanyProfile')}}><Text>Edit</Text></Button>
+                            */}
                                 <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                                 <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
                                
