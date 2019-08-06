@@ -8,6 +8,7 @@ import Logo from './Logo';
 import Global from '../constants/Global';
 import Processing from './Processing';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { parse } from 'qs';
 export default class EmploySignInScreen extends Component {
 
     constructor(props)
@@ -113,58 +114,95 @@ export default class EmploySignInScreen extends Component {
       }
     });
    
-  }
+    }
 
 
   //To set user data in localhost
- async setValues(data)
-{
-  
-   
-
-    try {
-
-     console.log("DAta value : ",data);
-
-     await AsyncStorage.setItem('userToken',data.token+"");
-    await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
+  async setValues(data)
+  {
+    
     
 
-    if(data.user.user_type == 'emp')
-    {
-      await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
-      await AsyncStorage.setItem('cmp',JSON.stringify(data.company))
-        Global.MSG(" Successful!  Login")
-        this.props.navigation.navigate('Home')
-     
-    }
-    else if(data.user.user_type == 'cmp')
-    {
-      await AsyncStorage.setItem('profile',JSON.stringify(data.profile))
-      Global.MSG(" Successful!  Login")
-        this.props.navigation.navigate('AdminWelcome')
-    }
-    else
-    {
-      Global.MSG("Something get wrong ");
-      this.props.navigation.navigate('HomePage');
-    }
-    
+      try {
+
+      console.log("DAta value : ",data);
+
+      await AsyncStorage.setItem('userToken',data.token+"");
+      await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
       
-    //  this.props.navigation.navigate('AuthLoading');
 
+      if(data.user.user_type == 'emp')
+      {
+        await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
+        await AsyncStorage.setItem('cmp',JSON.stringify(data.company))
+          Global.MSG(" Successful!  Login")
 
-    } catch (error) {
-      console.log("Error is in EmployeeSignInScreen ",error);
-      this.setState({isLoading:false});
-    }
+          let that = this;
+          setTimeout(function(){
+          
+          
+              that.props.navigation.navigate('Home') 
+              that.setState({
+                isLoading:false,
+              });
+             
+          },3000,that);
+           
+      }
+      else if(data.user.user_type == 'cmp')
+      {
+
+        data.profile['address'] = JSON.parse(data.profile.address);
+        await AsyncStorage.setItem('profile',JSON.stringify(data.profile))
+        Global.MSG(" Successful!  Login")
+
+        
+          
+          // this.props.navigation.navigate('AdminWelcome') 
+          let that = this;
+          setTimeout(function(){
+          
+           
+           
+              that.props.navigation.navigate('AdminWelcome') 
+              that.setState({
+                isLoading:false,
+              });
+          },3000,that);
+        
+      }
+      else
+      {
+        Global.MSG("Something get wrong ");
+        this.props.navigation.navigate('HomePage');
+      }
+      
+
     
-
-    this.setState({isLoading:false});
-
-  }
+        
+      //  this.props.navigation.navigate('AuthLoading');
 
 
+      } catch (error) {
+        console.log("Error is in EmployeeSignInScreen ",error);
+        this.setState({isLoading:false});
+      }
+      
+
+      // this.setState({isLoading:false});
+
+    }
+
+  admin(){  try {
+                this.setState({
+                  isLoading:false,
+                });
+                console.log("calll")
+              this.props.navigation.navigate('AdminWelcome') 
+            } catch (error) {
+              
+            } 
+        }
 
     _signUP()
     {
@@ -237,7 +275,7 @@ export default class EmploySignInScreen extends Component {
 
   render() {
 
-    const {usernameErrorMsg,passwordErrorMsg,isUsernameError,isPasswordError,errorMsg,username,password,isLoading} =this.state;
+    const {isPasswordError,username,password,isLoading} =this.state;
     if(!isLoading)
     return (
 

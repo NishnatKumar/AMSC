@@ -84,8 +84,29 @@ export default class CompanyProfileScreen extends React.Component {
                                     url:'',
                                  
                               },
-                        isaddressError:false,
-                          addressErrorMsg:'',
+                      isaddressError:false,
+                        addressErrorMsg:'',
+
+                        isstreetError:false,
+                        streetErrorMsg:'',
+                      
+                        iscityError:false,
+                        cityErrorMsg:'',
+
+                        isstateError:false,
+                        stateErrorMsg:'',
+
+                        ispincodeError:false,
+                        pincodeErrorMsg:'',
+
+                        iscontactError:false,
+                        contactErrorMsg:'',
+
+                        isemailError:false,
+                        emailErrorMsg:'',
+
+                        isurlError:false,
+                        urlErrorMsg:'',
 
                       photo:null,
                         isphotoError:false,
@@ -120,17 +141,44 @@ export default class CompanyProfileScreen extends React.Component {
 
          
 
-        owner:'',
+        
           isownerError:false,
             ownerErrorMsg:'',
 
-        company:'',
+    
           iscompanyError:false,
             companyErrorMsg:'',
 
     
           isaddressError:false,
-            addressErrorMsg:'',     
+            addressErrorMsg:'',   
+            
+            
+            isaddressError:false,
+            addressErrorMsg:'',
+
+            isstreetError:false,
+            streetErrorMsg:'',
+          
+            iscityError:false,
+            cityErrorMsg:'',
+
+            isstateError:false,
+            stateErrorMsg:'',
+
+            ispincodeError:false,
+            pincodeErrorMsg:'',
+
+            iscontactError:false,
+            contactErrorMsg:'',
+
+            isemailError:false,
+            emailErrorMsg:'',
+
+            isurlError:false,
+            urlErrorMsg:'',
+
+
       });
 
 
@@ -158,9 +206,38 @@ export default class CompanyProfileScreen extends React.Component {
       else if(address.address <3)
       {
         console.log('Error in address')
-        this.setState({isaddressError:true,addressErrorMsg:'Plese Enter Correct Address'})
+        this.setState({isaddressError:true,addressErrorMsg:'Please Enter Correct Address'})
       }
-      
+      else if(address.email.length <3)
+      {
+        console.log('Error in email');
+        this.setState({isemailError:true,emailErrorMsg:'Please Enter Correct Email '})
+      }
+      else if(address.url.length <3)
+      {
+        console.log('Error in email');
+        this.setState({isurlError:true,urlErrorMsg:'Please Enter Correct URL '})
+      }    
+      else if(address.street.length <3 )
+      {
+        console.log('Error in street');
+        this.setState({isemailError:true,streetErrorMsg:'Please Enter Correct Street '})
+      }    
+      else if(address.city.length <3 )
+      {
+        console.log('Error in City');
+        this.setState({iscityError:true,cityErrorMsg:'Please Enter Correct City '})
+      }    
+      else if(address.state.length <3 )
+      {
+        console.log('Error in state');
+        this.setState({isstateError:true,stateErrorMsg:'Please Enter Correct State '})
+      }   
+      else if(address.pincode.length <3 )
+      {
+        console.log('Error in state');
+        this.setState({ispincodeError:true,pincodeErrorMsg:'Please Enter Correct Pincode'})
+      }      
       else
       {
           await this._httpSaveUp(await this.createFormData());
@@ -256,7 +333,7 @@ componentWillMount() {
       let data = navigation.getParam('data', null);
       this.setState({data:data})
 
-      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
+      BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
 }
 
 componentWillUnmount() {
@@ -404,51 +481,28 @@ componentWillUnmount() {
       }
       else if(key == 'PinCode')
       {
+        try {
+          if( parseInt(text,10)<999999 && parseInt(text)>=0){
+
+            tempAddress.pincode = text;
+            this.setState({address:tempAddress});
+          }
+          else{
+            console.log("Text : ",text);
+          }
+          
+        } catch (error) {
+          
+        }
       
-        tempAddress.pincode = text;
-        this.setState({address:tempAddress});
+        
       }
       
       
   }
 
 
-
-   async cylender()
-    {
-      try 
-        {
-          const {action, year, month, day} = await DatePickerAndroid.open({           
-          date: new Date()
-        });
-
-        if (action !== DatePickerAndroid.dismissedAction) {
-            // console.log(day+' - '+month+' - '+year)
-           return day+'-'+month+'-'+year
-            
-        }
-      } catch ({code, message}) {
-        console.warn('Cannot open date picker', message);
-      }
-      
-    }
-
-    async onDOBDate()
-    {
-      let date = await this.cylender();
-     await this.setState({DateOfBirth :'DOB : '+date});
-     console.log("DOB Date : ",date);
-    }
-
-   async onJoinDate()
-    {
-      let date = await this.cylender();
-     await this.setState({StartDate:'Join Date : '+date});
-     console.log("Join Date : ",date);
-    }
-
   
-
 
     onValueChange()
     {
@@ -534,8 +588,8 @@ componentWillUnmount() {
                     <Avatar
                                   size="xlarge"
                                   rounded
-                                  title={this.state.name.length ==0 ? 'P': this.state.name[0]}
-                                  onPress={() => {this._profilePic();}}
+                                  title={this.state.companyname.length ==0 ? 'P': this.state.companyname[0]}
+                                  onPress={() => {this._onDocument();}}
                                   activeOpacity={0.7}
                               
                                   source={{
@@ -609,7 +663,7 @@ componentWillUnmount() {
                   </View>
 
                   <View>
-                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[app.formGroup,this.state.isemailError? app.errorBorder:app.borderPink]} >
                       <Input 
                       value={address.email} 
                       onChangeText={(text)=>{this.onValueChangeAddress(text,'Email')}} 
@@ -618,6 +672,9 @@ componentWillUnmount() {
                       keyboardType="email-address"
                       style={{}} />
                     </Item>
+                    <Text style={app.emailErrorMsg}>
+                      {this.state.emailErrorMsg}
+                    </Text>
                   </View>
                 
                     
@@ -638,7 +695,7 @@ componentWillUnmount() {
                   </View>
 
                   <View>
-                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                    <Item regular style={[app.formGroup,this.state.isurlError? app.errorBorder:app.borderPink]} >
                       <Input value={address.url} 
                       onChangeText={(text)=>{this.onValueChangeAddress(text,'Url')}} 
                       placeholder="Website" style={{}}
@@ -646,6 +703,9 @@ componentWillUnmount() {
                         keyboardType="url"
                       />
                     </Item>
+                    <Text style={app.errorMsg}>
+                      {this.state.urlErrorMsg}
+                    </Text>
                   </View>
 
                    
@@ -653,7 +713,7 @@ componentWillUnmount() {
                     
                   <View>
                    
-                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.address.address? app.errorBorder:app.borderPink]} >
+                          <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isaddressError? app.errorBorder:app.borderPink]} >
                             <Input 
                             placeholder="Office" 
                             value={address.address}
@@ -670,37 +730,63 @@ componentWillUnmount() {
                           
                   </View>
                  
-                    <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
-                            <Input value={address.street} 
-                            onChangeText={(text)=>{this.onValueChangeAddress(text,'Street')}}
-                             placeholder="Street"
-                             textContentType="fullStreetAddress"
-                              style={{}} />
-                    </Item>
+                                  
+                  <View>
+                        <Item regular style={[{width:(size.window.width/2)-20},app.formGroup,this.state.isstreetError? app.errorBorder:app.borderPink]} >
+                                <Input value={address.street} 
+                                onChangeText={(text)=>{this.onValueChangeAddress(text,'Street')}}
+                                placeholder="Street"
+                                textContentType="fullStreetAddress"
+                                  style={{}} />
+                        </Item>
+                        <Text style={app.errorMsg}>
+                      {this.state.streetErrorMsg}
+                    </Text>
 
-                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
-                      <Input
-                       value={address.city} onChangeText={(text)=>{this.onValueChangeAddress(text,'City')}}
-                        placeholder="City" 
-                        textContentType="addressCityAndState"
-                        style={{}} />
-                    </Item>
-                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
-                      <Input value={address.state}
-                       onChangeText={(text)=>{this.onValueChangeAddress(text,'State')}} 
-                       placeholder="State"
-                       textContentType="addressState"
-                        style={{}} />
-                    </Item>
+                  </View>                   
+                  
+                  <View>
+                      <Item regular style={[app.formGroup,this.state.iscityError? app.errorBorder:app.borderPink]} >
+                          <Input
+                          value={address.city} onChangeText={(text)=>{this.onValueChangeAddress(text,'City')}}
+                            placeholder="City" 
+                            textContentType="addressCityAndState"
+                            style={{}} />
+                        </Item>
+                      <Text style={app.errorMsg}>
+                          {this.state.cityErrorMsg}
+                        </Text>
+                  </View>
+                   
+                   <View>
+                      <Item regular style={[app.formGroup,this.state.isstateError? app.errorBorder:app.borderPink]} >
+                        <Input value={address.state}
+                        onChangeText={(text)=>{this.onValueChangeAddress(text,'State')}} 
+                        placeholder="State"
+                        textContentType="addressState"
+                          style={{}} />
+                      </Item>
+                      <Text style={app.errorMsg}>
+                          {this.state.stateErrorMsg}
+                        </Text>
+                    </View>
 
-                    <Item regular style={[app.formGroup,this.state.isNameError? app.errorBorder:app.borderPink]} >
+                  <View>
+                  <Item regular style={[app.formGroup,this.state.ispincodeError? app.errorBorder:app.borderPink]} >
                       <Input value={address.pincode}
                         onChangeText={(text)=>{this.onValueChangeAddress(text,'PinCode')}} 
                         placeholder="PinCode"
                         textContentType="postalCode"
                         keyboardType="number-pad" 
-                        style={{}} />
+                        style={{}}
+
+                         />
                     </Item>
+                  <Text style={app.errorMsg}>
+                          {this.state.pincodeErrorMsg}
+                        </Text>
+                  </View>
+                   
 
 
                     {/* <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this.checkPermission();console.log("Cylender Click")}}><Title>Current Location </Title></Button>

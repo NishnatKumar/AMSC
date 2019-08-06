@@ -27,6 +27,7 @@ import Logo from '../Logo';
 import Time from '../../constants/Time';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
+import CmpLogo from '../CompanyLogo';
 
 
 
@@ -41,28 +42,59 @@ export default class AdminWelcomeScreen extends React.Component {
                       inTime:'Office In',
                       outTime:'Office Out',
                       isOut:false,
-                      isLoding:false,
+                      isLoading:true,
+                      profile:null,
+                      logo:' u',
+                      title:'C'
                         
                     }
 
                    
     }
 
-    componentDidMount()
+    componentWillMount()
+    {
+      try {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+      } catch (error) {
+        
+      }
+    
+
+    }
+
+  async  componentDidMount()
     {
       this.props.navigation.dismiss();
-      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    }
+      try {
+
+          let user =  JSON.parse(await AsyncStorage.getItem('profile'));
+          console.log("User : ",user);
+          if(user != null)
+          this.setState({'logo':user.pic,"title":user.company_name});
+
+          this.setState({isLoading:false})
+      
+        
+      } catch (error) {
+        
+      }
+        }
 
   static navigationOptions = {
     header: null
-}
+  }
 
     
 
       componentWillUnmount() {
+        try {
+          this.backHandler.remove();
+        } catch (error) {
+          
+        }
       
-        this.backHandler.remove()
+        
       }
 
       handleBackPress = () => {
@@ -100,13 +132,24 @@ export default class AdminWelcomeScreen extends React.Component {
 
    async _profile()
     {
-      /**Profile of company */
-      // this.props.navigation.navigate('CompanyProfileView',{data: await Global.PROFILE});
-      let temp =await Global.PROFILE;
-      if(temp != null)      
-        this.props.navigation.navigate('ProfileView',{data: temp});
-      else
-        Global.MSG('Wait .....')
+      try {
+
+         /**Profile of company */
+      if(this.state.profile == null){
+        let user =  JSON.parse(await AsyncStorage.getItem('profile'));
+        if(user != null)      
+          this.props.navigation.navigate('CompanyProfileView',{data: user});
+        else
+          Global.MSG('Wait .....')
+        }
+        else{
+          this.props.navigation.navigate('CompanyProfileView',{data: this.state.profile});
+        }
+        
+      } catch (error) {
+        
+      }
+     
 
 
 
@@ -137,8 +180,8 @@ export default class AdminWelcomeScreen extends React.Component {
 
     
     render(){
-      const {isLoding} = this.state;
-      if(!isLoding)
+      const {isLoading} = this.state;
+      if(!isLoading)
         return (
           
           <Container>
@@ -146,9 +189,9 @@ export default class AdminWelcomeScreen extends React.Component {
                 <View style={{height: StatusBar.currentHeight +10, backgroundColor:'#ffffff' }}>
                   
                 </View> 
+              <Card transparent style={{marginLeft:16 }}>
 
-
-                <Logo></Logo>
+                <CmpLogo logoPath= {this.state.logo} logoTitle={this.state.title}  />
              
 
                 <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,marginTop:20}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
@@ -158,8 +201,8 @@ export default class AdminWelcomeScreen extends React.Component {
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._profile()}}><Title>Profile</Title></Button>
                
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._logOut()}}><Title>LogOut</Title></Button>
-
-            <Image source={require('../../assets/images/12.png')} style={{width:size.window.width,height:size.window.height/2,marginTop:5,opacity:0.5}} />
+                </Card>
+            <Image source={require('../../assets/images/12.png')} style={{width:size.window.width,height:size.window.height/3,marginTop:5,opacity:0.5}} />
 
               
      

@@ -16,7 +16,8 @@ import {
   NetInfo,
   ToastAndroid,
   BackHandler,
-  Alert
+  Alert,
+  AsyncStorage
 
 } from 'react-native';
 
@@ -35,7 +36,7 @@ export default class CompanyListScreen extends React.Component {
         this.state={
                      companyList:[],
                      categoryList:[],
-                     
+                     isLoading:true
                     }
                   
     }
@@ -56,7 +57,7 @@ export default class CompanyListScreen extends React.Component {
 
       try {
         console.log("In employee List");
-        this._httpList();
+      
       } catch (error) {
         console.log("Error in ComponnetList : ");
       }
@@ -72,13 +73,14 @@ export default class CompanyListScreen extends React.Component {
 
     /**Get the list of employee */
     _httpList= async ()=>{
-   console.log("Going to fetch server data");
-  var connectionInfoLocal = '';
-      let token = await Global.TOKEN;
+ 
+    
+      var connectionInfoLocal = '';
+      let token =  await AsyncStorage.getItem('userToken');
 
-      console.log("Token : ", token );
-      let profile = await Global.PROFILE;
-      console.log("Profile is error : ",profile)
+   
+      let profile = JSON.parse(await AsyncStorage.getItem('profile'));
+      console.log("Profile : ", profile );
       if(profile == null)
       {
         this.props.navigation.goBack();
@@ -88,11 +90,10 @@ export default class CompanyListScreen extends React.Component {
       
       
 
-      console.log("Profile : ",profile);
+  
 
   NetInfo.getConnectionInfo().then((connectionInfo) => {
-    console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-    // connectionInfo.type = 'none';//force local loding
+   
     if(connectionInfo.type == 'none'){
    
 
@@ -101,23 +102,28 @@ export default class CompanyListScreen extends React.Component {
     }else{
       console.log('yes internet '); 
       this.setState({
-        isLoding:true,
-      });/**TODO : profile.id */
+        isLoading:true,
+      });
       fetch(Global.API_URL+'employee-list/'+profile.id, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',   
             'Content-Type':'application/json',
-            "Authorization": token,     
+            "Authorization":'Bearer '+ token,     
           },
         
         }).then((response) =>response.json() )
         .then((responseJson) => {
-          
+              if(responseJson.message ==="Unauthenticated.")
+              {
+                Global.MSG('Your Session Expired');
+                this.props.navigation.navigate('HomePage');
+                return;
+              }
           console.log("Response : ",responseJson);
            if(responseJson.success){
                 console.log(responseJson.data);
-           this.setState({companyList:responseJson.data.data});
+          //  this.setState({companyList:responseJson.data.data});
             
            }
           
@@ -130,10 +136,10 @@ export default class CompanyListScreen extends React.Component {
                50,
              );
              this.setState({
-               isLoding:false,
+               isLoading:false,
              });
 
-             console.log("Error in signUP :",responseJson)
+             
            }
        })
        .catch((error) => {
@@ -145,7 +151,7 @@ export default class CompanyListScreen extends React.Component {
           50,
         );
         console.log('on error fetching:'+error);
-        //  this._httpList();
+      
       });
     }
   });
@@ -209,6 +215,19 @@ _rendercompanyListItem = ({item}) => {
         </Card>
         </TouchableHighlight>);
 };
+
+    _loading = ()=>{
+      if(!this.state.isLoading)
+      return(
+        <View  style={{alignItems:'center'}}>>
+          <Text>Wait List is Loading....</Text>
+        </View>
+      )
+      else
+        return(<View style={{alignItems:'center'}}>
+            <Text>List is Empty......</Text>
+             </View>)
+    }
   
 
     
@@ -224,15 +243,10 @@ _rendercompanyListItem = ({item}) => {
                           extraData={this.state}
                           keyExtractor={this._keyExtractor}
                           renderItem={this._rendercompanyListItem}
+                          ListEmptyComponent={this._loading}
                         />    
 
-                      {/* <FlatList
-                          data={this.state.categoryList}
-                          extraData={this.state}
-                          keyExtractor={this._keyExtractor}
-                          renderItem={this._rendercompanyListItem},
-                          
-                        />                */}
+                     
 
                  
                   

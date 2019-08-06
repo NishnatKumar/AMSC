@@ -18,23 +18,23 @@ import EmployeeViewScreen from "../screens/Company/EmployeeViewScreen";
 
 const AppStack = createStackNavigator({
                                        
-                                         Check:{screen: CheckScreen },                                     
-                                        CompanyProfileView:{screen:CompanyProfileViewScreen},
-                                        Home:{screen:WelcomeScreen},
-                                        CheckProfile:{screen:CheckProfile},
+                                         Check: CheckScreen ,                                     
+                                        CompanyProfileView:CompanyProfileViewScreen,
+                                        Home:WelcomeScreen,
+                                        CheckProfile:CheckProfile,
                                   
-                                        QRCodeScreen:{screen:QRCodeScreen},
-                                        EmployeeView:{screen:EmployeeViewScreen},
+                                        QRCodeScreen:QRCodeScreen,
+                                        EmployeeView:EmployeeViewScreen,
                                    
-                                        AdminWelcome:{screen:AdminWelcomeScreen},
-                                        History:{screen:HistoryScreen},
+                                        AdminWelcome:AdminWelcomeScreen,
+                                        History:HistoryScreen,
                                       
-                                        EmpList:{screen:EmpListScreen },
-                                       QRCode:{screen:QRScanner },
-                                       ProfileView:{screen:ProfileViewScreen },
+                                        EmpList:EmpListScreen ,
+                                       QRCode:QRScanner ,
+                                       ProfileView:ProfileViewScreen ,
                                                                             
                                       
-                                         },config);
+},config);
 const config = {
     headerMode: 'none',
     navigationOptions: {

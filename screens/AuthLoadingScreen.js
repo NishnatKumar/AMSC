@@ -12,8 +12,8 @@ import {
 import Global from '../constants/Global';
 
 export default class AuthLoadScreen extends React.Component {
-    constructor() {
-      super();
+    constructor(props) {
+      super(props);
       this._bootstrapAsync();
     }
   
@@ -38,7 +38,7 @@ export default class AuthLoadScreen extends React.Component {
     }
   
     handleBackPress = () => {
-      this.goBack(); // works best when the goBack is async
+     
       this._bootstrapAsync();
       return true;
     }  

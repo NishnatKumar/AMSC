@@ -8,6 +8,7 @@ import Global from '../../constants/Global';
 import size from '../../constants/Layout';
 import app from '../../constants/app';
 import { Avatar } from 'react-native-elements';
+import Headers from '../Headers';
 
 export default class CompanyProfileViewScreen extends React.Component
 {
@@ -43,15 +44,22 @@ export default class CompanyProfileViewScreen extends React.Component
     }
  
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
+        BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
   }
     
     componentWillMount()
     {
+      
+        BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
+
+    }
+
+    componentDidMount()
+    {
         const { navigation } = this.props;
         const data = navigation.getParam('data', null);
         console.log("#########################Data Value he ye  : ",data);
-        data['address'] = JSON.parse(data.address);
+        
         if(data != null)
         {
             this.setState({isLoading:false,address:data.address,name:data.company_name,
@@ -59,8 +67,6 @@ export default class CompanyProfileViewScreen extends React.Component
             uri:Global.API_PIC+data.pic
         })
         }
-        BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.navigate('AdminWelcome'));
-
     }
 
     render()
@@ -69,17 +75,7 @@ export default class CompanyProfileViewScreen extends React.Component
         if(!isLoading)
         return(
             <Container>
-                <StatusBar
-                            backgroundColor="blue"
-                            barStyle="light-content"
-                        />
-                <View style={{height:StatusBar.currentHeight,backgroundColor:'#022cfa'}}></View>
-                <Header>
-                    <Left/>
-                    <Body>
-                        <Title>Profile</Title>
-                    </Body>
-                </Header>
+                <Headers title="Profile"/>
                 <Content>
                   
                    

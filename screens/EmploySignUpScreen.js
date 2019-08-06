@@ -7,7 +7,6 @@ import app from '../constants/app';
 import Logo from '../screens/Logo';
 import Global from '../constants/Global';
 import Processing from './Processing';
-import Message from '../constants/Tost';
 export default class EmploySignUpScreen extends Component {
 
   constructor(props)
@@ -65,6 +64,79 @@ export default class EmploySignUpScreen extends Component {
         header: null
     }
 
+
+      
+    _httpCheckUser = async (data) => {
+  
+    
+      NetInfo.getConnectionInfo().then((connectionInfo) => {
+      
+        if(connectionInfo.type == 'none'){
+          console.log('no internet ');
+         
+          Global.MSG("No Internet ! ");
+          return;
+        }else{
+         
+          this.setState({
+            isLoading:true,
+          });
+          fetch(Global.API_URL+'user-exist', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',   
+                'Content-Type':'application/json'   
+              },
+              body: JSON.stringify({email:this.state.userName})
+            }).then((response) =>response.json() )
+            .then((responseJson) => {
+              
+              
+               if(responseJson.success){                
+                console.log(responseJson)
+                  
+                        this.setState({isUserNameError:true,isUserNameErrorMsg:'Sorry, that username already exists!',isLoading:false});
+                   
+               }
+               else
+               {
+
+                 console.log(responseJson)
+                 this.setState({isUserNameError:false,isUserNameErrorMsg:'',isLoading:false})
+                if(responseJson.user == "User Not found")
+                 if(this.state.loginType == 'emp')
+                    {
+          
+                      this.props.navigation.navigate('Profile',{'data':data});
+                      console.log("Data not found sir g : ",data);
+                    }
+                 else if(this.state.loginType == 'cmp')
+                    {
+            
+                          this.props.navigation.navigate('CompanyProfile',{'data':data});
+                    }
+
+               }
+           })
+           .catch((error) => {
+  
+  
+            ToastAndroid.showWithGravityAndOffset(
+              'Network Failed!!! Retrying...',
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM,
+              25,
+              50,
+            );
+            console.log('on error fetching:'+error);
+            
+          });
+        }
+      });
+     
+    }
+  
+
   // This function will check all the validation rule
   checkValidation()
   {
@@ -109,8 +181,10 @@ export default class EmploySignUpScreen extends Component {
       if(this.state.loginType != null )
       {
         let data = {email: userName,name:name,password:password,user_type:this.state.loginType,companyID:company}
+
+        this._httpCheckUser(data);
         
-         if(this.state.loginType == 'emp'){
+        /**if(this.state.loginType == 'emp'){
          
           this.props.navigation.navigate('Profile',{'data':data});
           console.log("Data not found sir g : ",data);
@@ -119,7 +193,7 @@ export default class EmploySignUpScreen extends Component {
          {
 
               this.props.navigation.navigate('CompanyProfile',{'data':data});
-          }
+          } */ 
       }
       else{console.log("Error in login ");}
     }
