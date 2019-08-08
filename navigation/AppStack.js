@@ -19,7 +19,7 @@ import DocumentViewScreen from "../screens/Company/DocumentViewScreen";
 
 const AppStack = createStackNavigator({
                                        
-                                         Check: CheckScreen ,                                     
+                                        Check: CheckScreen ,                                     
                                         CompanyProfileView:CompanyProfileViewScreen,
                                         Home:WelcomeScreen,
                                         CheckProfile:CheckProfile,
@@ -33,7 +33,8 @@ const AppStack = createStackNavigator({
                                         EmpList:EmpListScreen ,
                                        QRCode:QRScanner ,
                                        ProfileView:ProfileViewScreen ,
-                                       DocumentView:DocumentViewScreen,
+                                      //  DocumentView:DocumentViewScreen,
+                                      
                                                                             
                                       
 },config);

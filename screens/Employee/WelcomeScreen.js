@@ -69,15 +69,17 @@ export default class WelcomeScreen extends React.Component {
                 if(inTime)
                 {
 
-                  if(inTime.in.split(" ")[1] != date+"/"+month+"/"+year )
+                  if(inTime.in.split(" ")[1] != '0'+date+"/"+month+"/"+year )
                   {
-                      console.log(inTime.in.split(" ")[1]);
+                      console.log("Time Remove "+inTime.in.split(" ")[1]+"    "+date+"/"+month+"/"+year );
                       await AsyncStorage.removeItem('in');
                       await AsyncStorage.removeItem('out');
                   }
                   
                 }
           }
+          else;
+            // console.log("Note in date ");
 
         } catch (error) {
         console.log("Check is store check : ",error);
@@ -93,12 +95,12 @@ export default class WelcomeScreen extends React.Component {
         // await AsyncStorage.removeItem('in');
         let inTime = JSON.parse(await AsyncStorage.getItem('in'));
         let outTime = JSON.parse(await AsyncStorage.getItem('out'));
-      //  console.log(inTime);
+    //  console.log("In time",inTime);
 
       
           if(inTime)
           {
-        //  console.log("Date in : ",inTime);
+            //  console.log("Date in : ",inTime);
             let formatted_date = "IN : "+inTime.in;
 
            // console.log("In Office in ",formatted_date);
@@ -106,7 +108,7 @@ export default class WelcomeScreen extends React.Component {
 
 
             
-          }
+          } 
            if(outTime)
           {
         //  console.log("Date out : ",outTime);

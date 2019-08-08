@@ -227,9 +227,9 @@ componentWillUnmount() {
                    // await AsyncStorage.setItem('in',data)
                   }
                   if(value == 'out')
-                  {
+                  { 
                  //await AsyncStorage.setItem('out',data)
-               
+                 console.log("Date out : ");
                   let inTime = JSON.parse(await AsyncStorage.getItem('in'));
                         console.log("Date out : ",inTime);
                       if(inTime!= null)
@@ -262,6 +262,10 @@ componentWillUnmount() {
                             // );
                           }
 
+                      }
+                      else
+                      {
+                        console.log("In else ",await AsyncStorage.getItem('in'))
                       }
                      
                       

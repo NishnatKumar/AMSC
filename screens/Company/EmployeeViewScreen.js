@@ -11,6 +11,10 @@ import size from '../../constants/Layout';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import app from '../../constants/app';
 
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+// import OpenFile from 'react-native-doc-viewer';
+
 export default class EmployeeViewScreen extends React.Component
 {
     constructor(props)
@@ -159,6 +163,44 @@ export default class EmployeeViewScreen extends React.Component
       }
     });
    
+  }
+
+//    To view the file details
+  resumeView(URL)
+  {
+      try {
+          console.log("Uri For file : ",URL);
+            FileSystem.downloadAsync(
+                URL,
+                FileSystem.documentDirectory + 'small.pdf'
+                )
+                .then(({ uri,status  }) => {
+                    console.log('Finished downloading to ', uri);
+                    console.log('Finished downloading Status ', status);
+                    if(status == 200)
+                    {
+                        // this.props.navigation.navigate('DocumentView',{uri:uri})
+                        // OpenFile.openDoc([{
+                        //     url:URL,
+                        //     fileName:"small",
+                        //     cache:true /*Use Cache Folder Android*/
+                        //   }], (error, url) => {
+                        //       if (error) {
+                        //         console.error(error);
+                        //       } else {
+                        //         console.log(url)
+                        //       }
+                        //     })
+                    }
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+      } catch (error) {
+          console.log("Error : ",error);
+      }
+       
   }
   
     
@@ -338,7 +380,7 @@ export default class EmployeeViewScreen extends React.Component
                             </Left>
                             <Right>
                                 {/* TODO : this.props.navigation.navigate('DocumentView',{uri:Global.API_PIC+data.resume})  */}
-                               <TouchableOpacity onPress={()=>{}}>
+                               <TouchableOpacity onPress={()=>{ this.resumeView(Global.API_PIC+data.resume)}}>
                                 <Title style={{color:'#000000'}}>{Global.API_PIC+data.resume}</Title></TouchableOpacity>
                             </Right>
                         </CardItem>
