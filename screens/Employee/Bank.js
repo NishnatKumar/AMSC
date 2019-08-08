@@ -170,7 +170,12 @@ componentWillUnmount() {
         }).then((response) =>response.json() )
         .then(async(responseJson) => {
           
-            console.log('resp:',responseJson);
+          if(responseJson.message ==="Unauthenticated.")
+          {
+            Global.MSG('Your Session Expired');
+            this.props.navigation.navigate('HomePage');
+            return;
+          }
             if(responseJson.success){
                  Alert.alert('Sign Up Complete','You have successfully created account Please Login. ')
                  this.props.navigation.navigate('EmployeeSignIn')

@@ -26,6 +26,7 @@ import Timer from './Timer';
 import Time from '../../constants/Time';
 import { checkForUpdateAsync } from 'expo/build/Updates/Updates';
 import Global from '../../constants/Global';
+import Processing from '../Processing';
 
 
 
@@ -39,7 +40,10 @@ export default class WelcomeScreen extends React.Component {
                       isIn:false,
                       inTime:'Office In',
                       outTime:'Office Out',
-                      isOut:false
+                      isOut:false,
+
+                      status:false,
+                      isLoading:true,
                         
                     }
 
@@ -251,29 +255,35 @@ export default class WelcomeScreen extends React.Component {
 
     
     render(){
+
+      const {status,isLoading } = this.state;
+      if(isLoading)
         return (
           
           <Container>
-            <Container>
-            <StatusBar backgroundColor="green" barStyle="default" />
-                
+            <Content>
+            
                 <Timer></Timer>
                 <View style={{padding:15}}>
 
-                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn}><Title>{this.state.inTime} </Title></Button>
+                <Button  block full style={this.state.isIn||status?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeIn()}} disabled={this.state.isIn || status}><Title>{this.state.inTime} </Title></Button>
 
-                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut }><Title>{this.state.outTime}</Title></Button>
+                <Button  block full style={this.state.isOut||status?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPurple,{marginBottom:20,}]} onPress={()=>{this._officeOut()}} disabled={this.state.isOut||status }><Title>{this.state.outTime}</Title></Button>
 
                 <Button block full style={styles.btn} onPress={()=>{this._profile()}} ><Title>Profile</Title></Button>
-                <Button block full style={styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
+                <Button disabled={status}  block full style={status?[app.btn,app.btnGray,{marginBottom:20,}]: styles.btn} onPress={()=>{this._history()}} ><Title>History</Title></Button>
                 <Button block full style={styles.btn} onPress={()=>{this._logOut()}} ><Title>Log Out</Title></Button>
                 </View>
             
-            </Container>
+            </Content>
               
           </Container>
 
         );
+        else
+        {
+          return <Processing/>
+        }
     }
 }
 

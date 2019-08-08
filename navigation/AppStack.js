@@ -14,6 +14,7 @@ import CompanyProfileViewScreen from "../screens/Company/CompnayProfileViewScree
 import CheckProfile from "../screens/Employee/CheckProfile";
 import EmployeeViewScreen from "../screens/Company/EmployeeViewScreen";
 import DocumentViewScreen from "../screens/Company/DocumentViewScreen";
+import CalendarScreen from "../screens/Calendars";
 
 
 
@@ -34,6 +35,7 @@ const AppStack = createStackNavigator({
                                        QRCode:QRScanner ,
                                        ProfileView:ProfileViewScreen ,
                                       //  DocumentView:DocumentViewScreen,
+                                      Calendar:CalendarScreen,
                                       
                                                                             
                                       

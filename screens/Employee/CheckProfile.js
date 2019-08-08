@@ -101,11 +101,16 @@ componentWillUnmount() {
               }).then((response) =>response.json() )
               .then(async (responseJson) => {
               
-                
+                if(responseJson.message ==="Unauthenticated.")
+                {
+                  Global.MSG('Your Session Expired');
+                  this.props.navigation.navigate('HomePage');
+                  return;
+                }
                if(responseJson.success)
                {
 
-                console.log("Responase IN GLobal Profile Check : ",responseJson);
+               
                 responseJson.data['address']= JSON.parse(responseJson.data.address);
 
                 if(store == 'profileEmp')

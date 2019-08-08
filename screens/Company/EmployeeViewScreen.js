@@ -388,7 +388,7 @@ export default class EmployeeViewScreen extends React.Component
                     </Card>
 
 
-                    <Button block full onPress={()=>{this.props.navigation.navigate('History',{'id':id})}}><Title>View History</Title></Button>
+                    <Button block full onPress={()=>{this.props.navigation.navigate('Calendar',{'id':id})}}><Title>View History</Title></Button>
 
                     
                 </Content>

@@ -66,8 +66,13 @@ export default class BarcodeScannerExample extends React.Component {
              body:JSON.stringify(data) 
            }).then((response) =>response.json() )
            .then((responseJson) => {
-             // var itemsToSet = responseJson.data;
-              console.log('resp:',responseJson);
+            if(responseJson.message ==="Unauthenticated.")
+            {
+              Global.MSG('Your Session Expired');
+              this.props.navigation.navigate('HomePage');
+              return;
+            }
+              
               if(responseJson.success){
                 
                  this.setData(responseJson.data,data);
