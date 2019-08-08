@@ -13,6 +13,7 @@ import ProfileViewScreen from "../screens/Company/ProfileViewScreen";
 import CompanyProfileViewScreen from "../screens/Company/CompnayProfileViewScreen";
 import CheckProfile from "../screens/Employee/CheckProfile";
 import EmployeeViewScreen from "../screens/Company/EmployeeViewScreen";
+import DocumentViewScreen from "../screens/Company/DocumentViewScreen";
 
 
 
@@ -24,7 +25,7 @@ const AppStack = createStackNavigator({
                                         CheckProfile:CheckProfile,
                                   
                                         QRCodeScreen:QRCodeScreen,
-                                        EmployeeView:EmployeeViewScreen,
+                                        EmployeeView:EmployeeViewScreen, 
                                    
                                         AdminWelcome:AdminWelcomeScreen,
                                         History:HistoryScreen,
@@ -32,6 +33,7 @@ const AppStack = createStackNavigator({
                                         EmpList:EmpListScreen ,
                                        QRCode:QRScanner ,
                                        ProfileView:ProfileViewScreen ,
+                                       DocumentView:DocumentViewScreen,
                                                                             
                                       
 },config);

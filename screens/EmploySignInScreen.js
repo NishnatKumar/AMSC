@@ -27,7 +27,7 @@ export default class EmploySignInScreen extends Component {
 
                     loginType:null,
 
-                    isLoading:false,
+                    isLoading:true,
                 }
     }
 
@@ -41,11 +41,22 @@ export default class EmploySignInScreen extends Component {
     
     componentWillMount()
     {
-      const { navigation } = this.props;
-      const value = navigation.getParam('loginType', null);
-      if(value != null)
-        this.setState({loginType:value});
+    
         BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+    }
+
+    componentDidMount()
+    {
+      try {
+        const { navigation } = this.props;
+        const value = navigation.getParam('loginType', null);
+        if(value != null)
+          this.setState({loginType:value});
+      } catch (error) {
+        
+      }
+     
+      this.setState({isLoading:false});
     }
 
     static navigationOptions = {
@@ -133,6 +144,9 @@ export default class EmploySignInScreen extends Component {
 
       if(data.user.user_type == 'emp')
       {
+        data.profile['address'] = JSON.parse(data.profile.address);
+        data.profile['bank'] = JSON.parse(data.profile.bank);
+        data.company['address'] = JSON.parse(data.company.address);
         await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
         await AsyncStorage.setItem('cmp',JSON.stringify(data.company))
           Global.MSG(" Successful!  Login")
@@ -266,12 +280,12 @@ export default class EmploySignInScreen extends Component {
     }
 
 
-    async _setValue(data)
-    {
-      //AsyncStorage
-     await AsyncStorage.setItem('userToken',data);
-      this.props.navigation.navigate('AuthLoading');
-    }
+    // async _setValue(data)
+    // {
+    //   //AsyncStorage
+    //  await AsyncStorage.setItem('userToken',data);
+    //   this.props.navigation.navigate('AuthLoading');
+    // }
 
   render() {
 

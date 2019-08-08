@@ -41,7 +41,7 @@ export default class BarcodeScannerExample extends React.Component {
   _http = async (data) => {
     console.log("In http",data);
      var connectionInfoLocal = '';
-     let token = await Global.TOKEN;
+     let token = await AsyncStorage.getItem('userToken');
      NetInfo.getConnectionInfo().then((connectionInfo) => {
        console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
        // connectionInfo.type = 'none';//force local loding
@@ -60,7 +60,7 @@ export default class BarcodeScannerExample extends React.Component {
            headers: {
                'Accept': 'application/json',   
                "Content-Type": "application/json",
-               "Authorization": token, 
+               "Authorization":'Bearer '+ token, 
               
              },
              body:JSON.stringify(data) 
@@ -206,8 +206,9 @@ componentWillUnmount() {
                   if(value == 'in')
                   {
                     // console.log("Emp REg ID : ",user.emp_reg_id);
+                    data.replace('"',"");
                     let dataToSave = {'empReg':user.emp_reg_id,'in':data};
-                   if(!this.QurCodeChecker(dataToSave))
+                   if(this.QurCodeChecker(dataToSave))
                    {
                       this._http(dataToSave);
                    }                    
@@ -233,6 +234,8 @@ componentWillUnmount() {
                         console.log("Date out : ",inTime);
                       if(inTime!= null)
                       {
+                        console.log(data)
+                        data.replace('"',"");
                         let dataToSave = {'empReg':user.emp_reg_id,'out':data,id:inTime.id};
                         console.log("Data toi save : ",dataToSave);
 
@@ -242,20 +245,21 @@ componentWillUnmount() {
                       
                         console.log("Emp Timei : "+emp+"  Time : "+time);
                       
-                        if( emp!=time)
+                        if( emp==time)
                         {
                           
                             this._http(dataToSave);
                         }                    
                         else
                         {
-                            ToastAndroid.showWithGravityAndOffset(
-                              'This is Not Your Company Code Scan Correct Code ',
-                              ToastAndroid.LONG,
-                              ToastAndroid.BOTTOM,
-                              25,
-                              50,
-                            );
+                            Global.MSG('This is Not Your Company Code Scan Correct Code ');
+                            // ToastAndroid.showWithGravityAndOffset(
+                            //   'This is Not Your Company Code Scan Correct Code ',
+                            //   ToastAndroid.LONG,
+                            //   ToastAndroid.BOTTOM,
+                            //   25,
+                            //   50,
+                            // );
                           }
 
                       }

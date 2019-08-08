@@ -14,7 +14,8 @@ import {
   NetInfo,
   ToastAndroid,
   BackHandler,
-  Alert
+  Alert,
+  AsyncStorage
 } from 'react-native';
 
 import { MonoText } from '../../components/StyledText';
@@ -45,7 +46,7 @@ export default class HistoryScreen extends React.Component {
                       data:[],
                       borderColor:'',
                       userID:'',
-
+                      isLoading:true,
 
                         
                     }
@@ -68,30 +69,34 @@ componentWillUnmount() {
 
 _httpGetUserProfile = async () => {
    
-  let token = await Global.TOKEN;
-  let user = await Global.USER;
-  console.log("User value ",user.id)
+  let token =  await AsyncStorage.getItem('userToken');
+  let user = await AsyncStorage.getItem('userDetails');
+  const { navigation } = this.props;
+  const value = navigation.getParam('id', null);
+  
   let url;
   let body
-  if(user != null)
-  {
-
-    const { navigation } = this.props;
-    const value = navigation.getParam('id', null);
+     
     
     if(value!=null)
     {
       this.setState({userID:value});
       console.log("USer ID from other : ",this.state.userID);
      url = Global.API_URL+'attendance-show';
-     body =JSON.stringify({id:user.id})
+     body =JSON.stringify({id:this.state.userID})
+    }
+    else if(user != null){
+      user = JSON.parse(user);
+     
+      console.log("User value ",typeof user)
+      user = user.id;
+      this.setState({userID:user});
+      url = Global.API_URL+'attendance-history';
+      body=JSON.stringify({userID:user})
     }
     else{
-      // console.log("User value ",user)
-      user = user.id;
-      this.setState({userID:user.id});
-      url = Global.API_URL+'attendance-history';
-      body=JSON.stringify({userID:user.id})
+      console.log("Nothing to use");
+      return;
     }
     
 
@@ -99,12 +104,7 @@ _httpGetUserProfile = async () => {
     
 
     console.log('yes internet '+Global.API_URL+'attendance-history Data : ',{userID:this.state.userID}); 
-  }
-  else{
-    console.log("Error ");
-    Global.MSG('Not Login');
-    this.prop.navigation.navigate('HomePage');
-  }
+ 
 
   var connectionInfoLocal = '';
   NetInfo.getConnectionInfo().then((connectionInfo) => {
@@ -123,7 +123,7 @@ _httpGetUserProfile = async () => {
         headers: {
             'Accept': 'application/json',   
             "Content-Type": "application/json",
-            "Authorization": token,              
+            "Authorization":'Bearer '+ token,             
           },
         body:body
 
@@ -136,13 +136,13 @@ _httpGetUserProfile = async () => {
            if(responseJson.success)
            {
               // console.log(responseJson.data);
-              this.setState({isLoding:false,data:responseJson.data.data});
+              this.setState({isLoading:false,data:responseJson.data.data});
               // this.setProfile(responseJson.data);
            }
            else
            {
               console.log('User Not found ');
-              this.setState({isLoding:false});
+              this.setState({isLoading:false});
            }
           
        })
@@ -201,7 +201,20 @@ filter()
           )
         };
           
-           
+          
+        _loading = ()=>{
+          if(this.state.isLoading)
+          return(
+            <View  style={{alignItems:'center'}}>
+              <Text>Wait List is Loading....</Text>
+            </View>
+          )
+          else
+            return(<View style={{alignItems:'center'}}>
+                <Text>List is Empty......</Text>
+                 </View>)
+        }
+      
          
        
 
@@ -247,6 +260,7 @@ filter()
                               extraData={this.state}
                               keyExtractor={this._keyExtractor}
                               renderItem={this._renderItem}
+                              ListEmptyComponent={this._loading}
                             />
 
 

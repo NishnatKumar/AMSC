@@ -38,7 +38,7 @@ export default class QRCodeScreen extends React.Component
 
 
  async componentDidMount() {
-    const userData =JSON.parse(await AsyncStorage.getItem('userDetails'));
+    const userData =JSON.parse(await AsyncStorage.getItem('profile'));
     this.setState({userData:userData});
    
      this.timeUpdate();
@@ -102,7 +102,7 @@ componentWillMount() {
 
    async logo()
    {
-       let profile =JSON.parse(await AsyncStorage.getItem('Profile'));
+       let profile =JSON.parse(await AsyncStorage.getItem('profile'));
 
        console.log('Profile : ',profile);
 

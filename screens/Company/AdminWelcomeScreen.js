@@ -45,7 +45,9 @@ export default class AdminWelcomeScreen extends React.Component {
                       isLoading:true,
                       profile:null,
                       logo:' u',
-                      title:'C'
+                      title:'C',
+                      status:true,
+                      statusMSG:'',
                         
                     }
 
@@ -63,23 +65,43 @@ export default class AdminWelcomeScreen extends React.Component {
 
     }
 
-  async  componentDidMount()
+  componentDidMount()
     {
       this.props.navigation.dismiss();
+      this.loadData();
+    }
+
+    async  loadData()
+    {
       try {
 
-          let user =  JSON.parse(await AsyncStorage.getItem('profile'));
-          console.log("User : ",user);
-          if(user != null)
-          this.setState({'logo':user.pic,"title":user.company_name});
+        let user =  JSON.parse(await AsyncStorage.getItem('profile'));
+        console.log("User : ",user);
+        if(user != null)
+        this.setState({'logo':user.pic,"title":user.company_name});
 
-          this.setState({isLoading:false})
-      
-        
-      } catch (error) {
-        
-      }
+        if(user.status=='0')
+        {
+          this.setState({userMsg:'Wait for Verification',"status":true})
         }
+        else   if(user.status=='1')
+        {
+          // Active Status
+          this.setState({userMsg:'',"status":false})
+        }
+        else   if(user.status=='2')
+        {
+          this.setState({userMsg:'Blocked ',"status":true})
+        }
+
+
+        this.setState({isLoading:false})
+    
+      
+    } catch (error) {
+      
+    }
+    }
 
   static navigationOptions = {
     header: null
@@ -180,7 +202,7 @@ export default class AdminWelcomeScreen extends React.Component {
 
     
     render(){
-      const {isLoading} = this.state;
+      const {isLoading,status,statusMSG} = this.state;
       if(!isLoading)
         return (
           
@@ -189,19 +211,25 @@ export default class AdminWelcomeScreen extends React.Component {
                 <View style={{height: StatusBar.currentHeight +10, backgroundColor:'#ffffff' }}>
                   
                 </View> 
+
+                
               <Card transparent style={{marginLeft:16 }}>
 
                 <CmpLogo logoPath= {this.state.logo} logoTitle={this.state.title}  />
              
 
-                <Button block full style={this.state.isIn?[app.btn,app.btnGray,{marginBottom:20,marginTop:20}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
+                <Button disabled={status} block full style={ status?[app.btn,app.btnGray,{marginBottom:20,marginTop:20}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._employeeList()}} ><Title>Employee List</Title></Button>
 
-                <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} ><Title>Today Key</Title></Button>
+                <Button disabled={status} block full style={status?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._qrcode()}} ><Title>Today Key</Title></Button>
 
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._profile()}}><Title>Profile</Title></Button>
                
                 <Button block full style={this.state.isOut?[app.btn,app.btnGray,{marginBottom:20,}]:[app.btn,app.btnPink,{marginBottom:20,}]} onPress={()=>{this._logOut()}}><Title>LogOut</Title></Button>
                 </Card>
+
+                <Text>
+                  {statusMSG}
+                </Text>
             <Image source={require('../../assets/images/12.png')} style={{width:size.window.width,height:size.window.height/3,marginTop:5,opacity:0.5}} />
 
               

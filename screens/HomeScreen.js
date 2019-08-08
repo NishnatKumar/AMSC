@@ -47,10 +47,11 @@ header: null
   async rest()
   {
     try {
-      await AsyncStorage.removeItem('userToken');
-      await AsyncStorage.removeItem('profile');
-      await AsyncStorage.removeItem('userDetails');
-      await AsyncStorage.removeItem('userDetails');
+      // await AsyncStorage.removeItem('userToken');
+      // await AsyncStorage.removeItem('profile');
+      // await AsyncStorage.removeItem('userDetails');
+      // await AsyncStorage.removeItem('cmp');
+      // await AsyncStorage.removeItem('profileEmp');
       
     } catch (error) {
       
@@ -59,8 +60,14 @@ header: null
   }
 
   componentWillUnmount() {
+    try {
+   
+      this.backHandler.remove()
+    } catch (error) {
+      
+    }
     this.rest();
-    this.backHandler.remove()
+ 
   }
 
   handleBackPress = () => {

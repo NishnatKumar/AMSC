@@ -56,25 +56,31 @@ export default class WelcomeScreen extends React.Component {
     {
         try {
 
-          
-          let inTime = JSON.parse(await AsyncStorage.getItem('in'));
-          
-          var date = new Date().getDate(); //Current Date
-          var month = new Date().getMonth() + 1; //Current Month
-          var year = new Date().getFullYear(); //Current Year
-
-          if(inTime)
+          let inTime = await AsyncStorage.getItem('in');
+          if(inTime != null)
           {
-            if(date.split(" ")[1] != date+"/"+month+"/"+year )
-            {
-                await AsyncStorage.removeItem('in');
-                await AsyncStorage.removeItem('out');
-            }
+            
+                inTime = JSON.parse(inTime);
+                             
+                var date = new Date().getDate(); //Current Date
+                var month = new Date().getMonth() + 1; //Current Month
+                var year = new Date().getFullYear(); //Current Year
+
+                if(inTime)
+                {
+
+                  if(inTime.in.split(" ")[1] != date+"/"+month+"/"+year )
+                  {
+                      console.log(inTime.in.split(" ")[1]);
+                      await AsyncStorage.removeItem('in');
+                      await AsyncStorage.removeItem('out');
+                  }
+                  
+                }
           }
 
-
         } catch (error) {
-          console.log("Check is store check : ",error);
+        console.log("Check is store check : ",error);
         }
       
     } 
@@ -83,6 +89,7 @@ export default class WelcomeScreen extends React.Component {
     {
       try {
 
+        this.checkStoreDate();
         // await AsyncStorage.removeItem('in');
         let inTime = JSON.parse(await AsyncStorage.getItem('in'));
         let outTime = JSON.parse(await AsyncStorage.getItem('out'));
@@ -139,10 +146,15 @@ export default class WelcomeScreen extends React.Component {
     }
 
     
-    componentDidMount()
+    componentWillMount()
     {
-      this.props.navigation.dismiss();
-      this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+      try {
+        this.props.navigation.dismiss();
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+      } catch (error) {
+        
+      }
+     
     }
 
   static navigationOptions = {
@@ -152,8 +164,12 @@ export default class WelcomeScreen extends React.Component {
     
 
       componentWillUnmount() {
-      
-        this.backHandler.remove()
+        try {
+          this.backHandler.remove()
+        } catch (error) {
+          
+        }
+       
       }
 
       handleBackPress = () => {
@@ -178,7 +194,7 @@ export default class WelcomeScreen extends React.Component {
         return true;
       }  
 
-
+ 
     
 
     _officeOut()
@@ -192,10 +208,15 @@ export default class WelcomeScreen extends React.Component {
 
   async  _profile()
     {
-        let temp =await Global.EMPPROFILE;
-        if(temp != null)      
-          this.props.navigation.navigate('ProfileView',{data: temp});
-        else
+        let user = JSON.parse(await AsyncStorage.getItem('profileEmp'));
+        let cmp =  JSON.parse(await AsyncStorage.getItem('cmp'));
+        console.log("In token GEt user Profile",user);
+        if(user != null && cmp != null)
+        {
+            // console.log('user : ',user);
+            this.props.navigation.navigate('ProfileView',{data: user,cmp:cmp});
+        }
+       else
           Global.MSG('Wait .....')
     }
 
@@ -220,7 +241,7 @@ export default class WelcomeScreen extends React.Component {
         this.props.navigation.navigate('HomePage');
         console.log("Log Out ")
       } catch (error) {
-        this.backHandler.remove();
+       
         console.log("Error he : ",error);
       }
      

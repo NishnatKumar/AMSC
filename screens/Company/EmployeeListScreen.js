@@ -107,7 +107,7 @@ export default class CompanyListScreen extends React.Component {
       fetch(Global.API_URL+'employee-list/'+profile.id, {
         method: 'GET',
         headers: {
-            'Accept': 'application/json',   
+            'Accept': 'application/json',    
             'Content-Type':'application/json',
             "Authorization":'Bearer '+ token,     
           },
@@ -123,7 +123,7 @@ export default class CompanyListScreen extends React.Component {
           console.log("Response : ",responseJson);
            if(responseJson.success){
                 console.log(responseJson.data);
-          //  this.setState({companyList:responseJson.data.data});
+          this.setState({companyList:responseJson.data.data});
             
            }
           
@@ -177,7 +177,7 @@ _keyExtractor = (item, index) => item.id+'';
 
 _onPressItem = (value) => {
   
-  console.log("Key press Key Type : ",value);
+ 
 
 
   this.props.navigation.navigate('EmployeeView',{data:value});
@@ -186,7 +186,7 @@ _onPressItem = (value) => {
 };
 
 _rendercompanyListItem = ({item}) => {
- console.log("ITem ",item)
+
   return(
     <TouchableHighlight onPress={()=>{this._onPressItem(item)}}>
          <Card style={{elevation :20}}> 
@@ -217,9 +217,9 @@ _rendercompanyListItem = ({item}) => {
 };
 
     _loading = ()=>{
-      if(!this.state.isLoading)
+      if(this.state.isLoading)
       return(
-        <View  style={{alignItems:'center'}}>>
+        <View  style={{alignItems:'center'}}>
           <Text>Wait List is Loading....</Text>
         </View>
       )

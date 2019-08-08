@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Container, Content, Card, CardItem,Text, Left, Thumbnail, Body,View, Right, Title, Subtitle, Button, Header } from "native-base";
 
 import { BackHandler,
-    Alert,AsyncStorage} from 'react-native';
+    Alert,AsyncStorage,TouchableHighlight,Modal} from 'react-native';
 import Processing from '../Processing';
 import Global from '../../constants/Global';
 import Headers from '../Headers';
@@ -43,17 +43,27 @@ export default class ProfileViewScreen extends React.Component
 
   componentDidMount()
     {
-        const { navigation } = this.props;
-        const data = navigation.getParam('data', null);
-        
-        console.log("#########################Data Value he ye  : ",data.address);
-        if(data != null)
-        {
-            this.setState({isLoading:false,address:JSON.parse(data.address),bank:JSON.parse(data.bank),name:data.name,
-            contact:data.contact_no,post:data.designation,email:data.email_id,gender:data.gender,DOB:data.date_of_birth,
-            uri:Global.API_PIC+data.image,joining_date:data.joining_date,
-        })
 
+        try {
+            const { navigation } = this.props;
+            const data = navigation.getParam('data', null);
+            const cmp = navigation.getParam('cmp',null);
+            
+            console.log("#########################Data Value he ye  : ",data);
+            if(data != null)
+            {
+                this.setState({isLoading:false,address:data.address,bank:data.bank,name:data.name,
+                contact:data.contact_no,post:data.designation,email:data.email_id,gender:data.gender,DOB:data.date_of_birth,
+                uri:Global.API_PIC+data.image,joining_date:data.joining_date,cmp:cmp
+                })
+            }
+    
+            
+        } catch(error) {
+            console.log("Error : ",error)
+        }
+
+       
         // TODO: 
         // let temp =  await AsyncStorage.getItem('cmp');
         // console.log("Cmp : ",temp);
@@ -68,7 +78,7 @@ export default class ProfileViewScreen extends React.Component
         // else
         //     this.setState({cmp:null})
         
-        }
+        // }
         this.setState({isLoading:false});
         
 
@@ -260,7 +270,7 @@ componentWillMount() {
                     <View style={{padding:5,paddingHorizontal:5,alignItems:'center',backgroundColor:'#ededed',justifyContent:'space-between',flexDirection:'row',borderColor:'#000000' }}>
                     <View>
                   
-                        <Text style={{alignSelf:'center'}}>Company </Text>
+                        <Text style={{alignSelf:'center'}}>Company  Details </Text>
                     </View>
                     <View>
                         
