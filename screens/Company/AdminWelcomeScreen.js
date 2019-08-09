@@ -76,7 +76,7 @@ export default class AdminWelcomeScreen extends React.Component {
       try {
 
         let user =  JSON.parse(await AsyncStorage.getItem('profile'));
-        console.log("User : ",user);
+        console.log("User : ",user.pic);
         if(user != null)
         this.setState({'logo':user.pic,"title":user.company_name});
 

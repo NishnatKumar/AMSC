@@ -376,7 +376,7 @@ componentWillUnmount() {
             {
 
               
-              this.setState({photo:{ type:'image/png', uri, name, size }});
+              this.setState({photo:{ type:'image/*', uri, name, size }});
 
             }
             else
@@ -400,8 +400,8 @@ componentWillUnmount() {
   let data = new FormData();
   
 
-    if(body.photo != null)
-      data.append("pic",body.photo );
+    if(body.photo != null);
+      // data.append("pic",body.photo );
 
  
    console.log(body);
@@ -594,7 +594,7 @@ componentWillUnmount() {
                               
                                   source={{
                                           uri:
-                                          this.state.pic !=null?this.state.pic.uri:'u',
+                                          this.state.photo!=null?this.state.photo.uri:'u',
                                         }}
                                   showEditButton={true}
                                 />

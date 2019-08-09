@@ -18,6 +18,7 @@ import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Fo
 import size, {window} from '../constants/Layout'
 import { SizeClassIOS } from 'expo/build/ScreenOrientation/ScreenOrientation';
 import app from '../constants/app';
+import Global from '../constants/Global';
 
 
 export default class CmpLogo extends React.Component {
@@ -35,12 +36,13 @@ export default class CmpLogo extends React.Component {
       header: null
   }
       render(){
+        console.log(Global.API_PIC+this.state.logoPath);
           return (
             
   
                <View style={{marginBottom:20}} > 
                   <View style={{marginTop:StatusBar.currentHeight,alignSelf:'center'}}>
-                        <Thumbnail large source={require('../assets/images/appLogo.png')} size={100} /> 
+                        <Thumbnail large source={{uri:Global.API_PIC+this.state.logoPath}} size={100} /> 
                             
                     </View> 
                     <View style={{alignSelf:'center'}}>

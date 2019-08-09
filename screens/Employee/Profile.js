@@ -56,7 +56,7 @@ export default class ProfileScreen extends React.Component {
                     
                      
 
-
+ 
                       companyname:'',
 
                       name:'',
@@ -218,8 +218,10 @@ export default class ProfileScreen extends React.Component {
             if(type == 'success')
             {
 
+              let type = name.split(".");
+              type = type[type.length-1]
               
-              this.setState({resume:{ type:'*/*', uri, name, size }});
+              this.setState({resume:{ type:type, uri, name, size }});
 
             }
             else
@@ -248,7 +250,11 @@ export default class ProfileScreen extends React.Component {
           console.log("File selected ",size);
           console.log("File selected ",uri);
           console.log("File selected ",name);
-          this.setState({pic:{ type:'image/*', uri, name, size }});
+
+          let type = name.split(".");
+                type = type[type.length-1]
+
+          this.setState({pic:{ type:type, uri, name, size }});
 
         }
         else
@@ -264,7 +270,7 @@ export default class ProfileScreen extends React.Component {
           // May 25 2020. Month 0 is January.
           // Selected year, month (0-11), day
           //const {action, year, month, day} 
-   async cylender()
+   async calender()
     {
         try {
           const {action, year, month, day} = await DatePickerAndroid.open({           
@@ -276,6 +282,8 @@ export default class ProfileScreen extends React.Component {
            return  year+'-'+month+'-'+day
             
         }
+        else
+          return null;
       } catch ({code, message}) {
         console.warn('Cannot open date picker', message);
       }
@@ -284,14 +292,19 @@ export default class ProfileScreen extends React.Component {
 
     async onDOBDate()
     {
-      let date = await this.cylender();
+      let date = await this.calender();
+
+
+      if(date != null)
      await this.setState({DateOfBirth :'DOB : '+date, DOB:date });
      console.log("DOB Date : ",date);
     }
 
    async onJoinDate()
     {
-      let date = await this.cylender();
+      let date = await this.calender();
+
+      if(date != null)
      await this.setState({StartDate:'Join Date : '+date, join:date });
      console.log("Join Date : ",date);
     }
@@ -299,7 +312,7 @@ export default class ProfileScreen extends React.Component {
     checkValidation()
     {
       console.log("In Check validation");
-      const {gender,join,DOB,resume,pic,mobile,email,address,name,companyname} = this.state;
+      const {gender,join,DOB,resume,pic,mobile,address,name,companyname} = this.state;
       let data = null;
       
       if(gender =='')
@@ -317,11 +330,7 @@ export default class ProfileScreen extends React.Component {
         console.log("Pic not selected");
         this.setState({ispicError:true,picErrorMsg:'Select the Pic'})
       }
-      else if(email.length<5 )
-      {
-          console.log("Enter the Correct email");
-          this.setState({isEmailErorr:true,emailErrorMsg:'Enter the correct email'});
-      }
+    
       else if(name.length < 3)
       {
         console.log("Enter Correct name",name);
@@ -388,7 +397,12 @@ export default class ProfileScreen extends React.Component {
                  
                  <View>
                     <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input placeholder="Name" value={name} onChangeText={(text)=>{this.onValueChange(text,'Name')}} style={{}} />
+                      <Input placeholder="Name" value={name} 
+                      onChangeText={(text)=>{this.onValueChange(text,'Name')}} 
+                      style={{}}
+                      textContentType = "name"
+                      
+                      enablesReturnKeyAutomatically={true} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.nameErrorMsg}
@@ -431,7 +445,7 @@ export default class ProfileScreen extends React.Component {
                     </View>
 
                   <View >
-                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("Cylender Click")}}>
+                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onJoinDate();console.log("calender Click")}}>
                     <Title style={{fontSize:15,alignSelf:'center',textAlign:'left'}}>{this.state.StartDate}                              </Title>
                     <Icon name={"ios-calendar"} fontSize={20} ></Icon>
                     </Button>
@@ -441,7 +455,7 @@ export default class ProfileScreen extends React.Component {
                   </View>
 
                   <View>
-                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("Cylender Click")}}>
+                    <Button block full style={[app.btn,app.btnPurple,{marginBottom:15}]} onPress={()=>{this.onDOBDate();console.log("calender Click")}}>
                     <Title style={{fontSize:15,alignSelf:'center',textAlign:'left'}}>{this.state.DateOfBirth}                                     </Title>
                     <Icon name={"ios-calendar"} fontSize={20} ></Icon>
                     </Button>
@@ -453,7 +467,12 @@ export default class ProfileScreen extends React.Component {
 
                   <View>
                         <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                              <Input placeholder="Office" value={address.address} onChangeText={(text)=>{this.onValueChange(text,'Office')}} style={{}} />
+                              <Input 
+                              placeholder="Office"
+                               value={address.address} 
+                               onChangeText={(text)=>{this.onValueChange(text,'Office')}}
+                               enablesReturnKeyAutomatically={true}
+                                style={{}} />
                             </Item>
                             <Text style={app.errorMsg}>
                               {this.state.addressErrorMsg}
@@ -466,7 +485,11 @@ export default class ProfileScreen extends React.Component {
                       <View style={{justifyContent: 'space-between' , flexDirection: 'row',  }}>
                             
                             <Item regular style={[{marginBottom:20,width:(size.window.width/2)-20},app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                              <Input value={address.street} onChangeText={(text)=>{this.onValueChange(text,'Street')}} placeholder="Street" style={{}} />
+                              <Input 
+                              value={address.street} 
+                              onChangeText={(text)=>{this.onValueChange(text,'Street')}}
+                              enablesReturnKeyAutomatically={true}
+                               placeholder="Street" style={{}} />
                             </Item>                          
                           
                     </View>
@@ -474,32 +497,46 @@ export default class ProfileScreen extends React.Component {
                  
                   <View>
                     <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.city} onChangeText={(text)=>{this.onValueChange(text,'City')}} placeholder="City" style={{}} />
+                      <Input 
+                      value={address.city} 
+                      onChangeText={(text)=>{this.onValueChange(text,'City')}} 
+                      enablesReturnKeyAutomatically={true}
+                      placeholder="City" style={{}} />
                     </Item>
                   </View>
 
                   <View>
                     <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.state} onChangeText={(text)=>{this.onValueChange(text,'State')}} placeholder="State" style={{}} />
+                      <Input 
+                      value={address.state}
+                       onChangeText={(text)=>{this.onValueChange(text,'State')}}
+                        placeholder="State" 
+                        enablesReturnKeyAutomatically={true}
+                        style={{}} />
                     </Item>
                     </View>
                   <View>
                     <Item regular style={[app.formGroup,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={address.pincode}  onChangeText={(text)=>{this.onValueChange(text,'PinCode')}} placeholder="PinCode" style={{}} />
+                      <Input
+                       value={address.pincode}  
+                      onChangeText={(text)=>{this.onValueChange(text,'PinCode')}} 
+                      placeholder="PinCode"
+                      keyboardType="number-pad"
+                      enablesReturnKeyAutomatically={true}
+                       style={{}} />
                     </Item>
                     </View>
-                    <View>
-                    <Item regular style={[app.formGroup,this.state.isEmailErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={email} onChangeText={(text)=>{this.onValueChange(text,'Email')}} placeholder="Email" style={{}} />
-                    </Item>
-                    <Text style={app.errorMsg}>
-                      {this.state.emailErrorMsg}
-                    </Text>
-                    </View>
+                    
 
                     <View>
                     <Item regular style={[app.formGroup,this.state.isMobileErorr? app.errorBorder:app.borderPurpal]} >
-                      <Input value={mobile} onChangeText={(text)=>{this.onValueChange(text,'Mobile')}} placeholder="Mobile" style={{}} />
+                      <Input
+                      value={mobile}
+                       onChangeText={(text)=>{this.onValueChange(text,'Mobile')}}
+                        placeholder="Mobile"
+                        enablesReturnKeyAutomatically={true}
+                        keyboardType="phone-pad"
+                         style={{}} />
                     </Item>
                     <Text style={app.errorMsg}>
                       {this.state.mobileErrorMsg}
@@ -508,7 +545,7 @@ export default class ProfileScreen extends React.Component {
                   
                     <View style={{alignItems:'center'}}>
                         {this.state.resume != null ? <Text style={app.textGray}>{this.state.resume.name}</Text>:<Text></Text>}
-                        <Button block full style={[app.btn,app.btnPurple,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} onPress={()=>{this._onDocument();console.log("Cylender Click")}}>
+                        <Button block full style={[app.btn,app.btnPurple,this.state.isNameErorr? app.errorBorder:app.borderPurpal]} onPress={()=>{this._onDocument();console.log("calender Click")}}>
                         <Title style={{fontSize:15,alignSelf:'center'}}>Select Document    +                   </Title>
                         <Icon name={'ios-albums'} />
                         </Button>

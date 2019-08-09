@@ -43,21 +43,21 @@ export default class BankScreen extends React.Component {
     {
         super(props)
         this.state={
-                      AC:'8880890',
+                      AC:'',
                     isACError:false,
                     errorACMsg:'',
 
 
 
-                      IFSCCODE:'SBIF787',
+                      IFSCCODE:'',
                       isIFCError:false,
                         errorIFSCMsg:'',
 
-                    Name:'EMPL',
+                    Name:'',
                     isNameError:false,
                         errorNameCMsg:'',
 
-                    Bank:'EPR',
+                    Bank:'',
                     isBankError:false,
                         errorBankCMsg:'',
 
@@ -112,16 +112,15 @@ componentWillUnmount() {
   
 
   _httpSaveUp = async (data) => {
-   
-    let token = await Global.TOKEN;
+ 
 
     /**Form dta  */
       let fv = new FormData();
       let temp = this.state.data;
-      console.log("Datacome form navigation  : ",data);
+    
       
-      fv.append("pic",temp.pic );
-      fv.append("resume",temp.resume );
+      // fv.append("pic",temp.pic );
+      // fv.append("resume",temp.resume );
      
 
        fv.append('joining_date',temp.join+"")
@@ -169,6 +168,8 @@ componentWillUnmount() {
           body: fv 
         }).then((response) =>response.json() )
         .then(async(responseJson) => {
+
+          console.log("Error in signUP :",responseJson)
           
           if(responseJson.message ==="Unauthenticated.")
           {
@@ -304,12 +305,13 @@ async setProfile(data)
 
                     </Item>
                  
+                 <View style={{padding:15}}>
 
                     <Button block full style={[app.btn,app.borderPurpal,{marginLeft:-2.7,marginBottom:25}]} onPress={()=>{ this.checkValidation()}}><Title>Submit</Title></Button>
                  
-                 
-                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onBack();}}><Title>Back</Title></Button>
                     
+                    <Button block full style={[app.btn,app.btnPink,{marginLeft:-2.7,marginBottom:15}]} onPress={()=>{this._onBack();}}><Title>Back</Title></Button>
+                    </View>
                   </Card>
                 </KeyboardAvoidingView>
 

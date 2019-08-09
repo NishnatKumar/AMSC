@@ -219,7 +219,7 @@ _rendercompanyListItem = ({item}) => {
     _loading = ()=>{
       if(this.state.isLoading)
       return(
-        <View  style={{alignItems:'center'}}>
+        <View  style={{alignItems:'center'}}> 
           <Text>Wait List is Loading....</Text>
         </View>
       )

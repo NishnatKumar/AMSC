@@ -268,14 +268,13 @@ componentWillMount() {
                     </Card>
                     {cmp != null ?    
                     <View style={{padding:5,paddingHorizontal:5,alignItems:'center',backgroundColor:'#ededed',justifyContent:'space-between',flexDirection:'row',borderColor:'#000000' }}>
-                    <View>
-                  
-                        <Text style={{alignSelf:'center'}}>Company  Details </Text>
-                    </View>
-                    <View>
-                        
-                    </View>
-
+                        <View>
+                    
+                            <Text style={{alignSelf:'center'}}>Company  Details </Text>
+                        </View>
+                        <View>
+                            
+                        </View>
                     </View>:<View></View>}
 
                     {cmp != null ?                   <Card>

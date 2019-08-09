@@ -99,6 +99,16 @@ class CompanyListScreen extends React.Component
         )
     }
 
+    
+    _loading = ()=>{
+      if(this.state.isLoading)
+      return <Processing/>
+      else
+        return(<View style={{alignItems:'center'}}>
+            <Text>List is Empty......</Text>
+             </View>)
+    }
+
     render()
     {
         const {companyList,categoryList,searchText,searchData} = this.state;
@@ -110,6 +120,9 @@ class CompanyListScreen extends React.Component
                         data={categoryList}
                         extraData = {this.state}
                         renderItem={this._renderItem}
+                        ListEmptyComponent={this._loading}
+
+
                         />
                 </Content>
 

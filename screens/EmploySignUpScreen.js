@@ -14,19 +14,19 @@ export default class EmploySignUpScreen extends Component {
     super(props);
     this.state = {
      
-      name:'Empl',
+      name:'',
       isNameError:false,
       isNameErrorMsg:'',
 
-      userName:'emp@gmail.com',
+      userName:'',
       isUserNameError:false,
       isUserNameErrorMsg:'',
 
-      password:'12345',
+      password:'',
       isPasswordError:false,
       isPasswordErrorMsg:'',
 
-      cpassword:'12345',
+      cpassword:'',
       isCPasswordError:false,
       isCPasswordErrorMsg:'',
 

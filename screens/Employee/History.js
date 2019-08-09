@@ -181,9 +181,9 @@ filter()
 
         _renderItem = ({item}) => {
           console.log("ITem ",item)
-          let intime = JSON.parse(item.in)
-          let out =JSON.parse(item.out)
-          let date = JSON.parse(item.in)
+          let intime = item.in
+          let out =item.out
+          let date = item.in
           return(  
 
           <View style={styles1.row}>

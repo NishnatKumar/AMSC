@@ -110,12 +110,13 @@ export default class BarcodeScannerExample extends React.Component {
     try {
       if(data.in)
       {
-        await AsyncStorage.setItem('in',JSON.stringify({'in':JSON.parse(data.in),id:data.id}));
         console.log("In in time")
+        await AsyncStorage.setItem('in',JSON.stringify({'in':data.in,id:data.id}));
+        
       }
       if(data == 1)
       {
-       await AsyncStorage.setItem('out',JSON.stringify({'out':JSON.parse(value.out)}));
+       await AsyncStorage.setItem('out',JSON.stringify({'out':value.out}));
         console.log("In out time",value);
       }
 
