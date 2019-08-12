@@ -119,7 +119,7 @@ componentWillUnmount() {
       let temp = this.state.data;
     
       
-      // fv.append("pic",temp.pic );
+      fv.append("pic",temp.pic );
       // fv.append("resume",temp.resume );
      
 

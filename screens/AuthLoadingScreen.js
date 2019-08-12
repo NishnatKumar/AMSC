@@ -1,15 +1,10 @@
 import React from 'react'; 
-import {Logs} from 'expo';
 import {
-    ActivityIndicator,
     AsyncStorage,
-    Button,
-    StatusBar,
     StyleSheet,
     View,
-    BackHandler
+    BackHandler,Text
   } from 'react-native';
-import Global from '../constants/Global';
 
 export default class AuthLoadScreen extends React.Component {
     constructor(props) {
@@ -22,13 +17,15 @@ export default class AuthLoadScreen extends React.Component {
     //  await AsyncStorage.removeItem('userToken');
     //  await AsyncStorage.removeItem('profile');
     //  await AsyncStorage.removeItem('userDetails');
-      const userToken =await Global.TOKEN; 
-     
-    
+      const userToken =await AsyncStorage.getItem('userToken'); 
+
+      console.log("Token Get : ",userToken)
      this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+     
     };
 
     componentDidMount() {
+    
       this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
   
@@ -47,8 +44,7 @@ export default class AuthLoadScreen extends React.Component {
     render() {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
+          <Text/>
         </View>
       );
     }

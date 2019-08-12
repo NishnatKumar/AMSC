@@ -75,11 +75,13 @@ export default class ForgotScreen extends Component {
       <Container>
       <StatusBar backgroundColor="green" barStyle="default" />
          
-        
+        <View style={{marginVertical:20}}></View>
+              <Logo uri={{}}/>
         <Content>
         
             
          <KeyboardAvoidingView  behavior="padding" enabled>
+                
                 <Logo></Logo>
                 <Card transparent style={[,app.Form]}>
               
@@ -88,17 +90,17 @@ export default class ForgotScreen extends Component {
                   <Subtitle style={styles.subtitle}>
                   Enter Your Registered Phone No. for OTP.
                   </Subtitle>
-                    <Item  regular floatingLabel style={[app.formGroup,{marginHorizontal:10},this.state.isphoneerror?app.errorMsg:app.borderPurpal]}>
+                    <Item  regular floatingLabel style={[app.formGroup,{marginHorizontal:15},this.state.isphoneerror?app.errorMsg:app.borderPurpal]}>
                           {/* <Label style={app.placeholder}>Phone</Label> */}
                           <Input  keyboardType="phone-pad" returnKeyType="go" placeholder="PHONE" placeholderTextColor="#dcdcde" onChangeText={(text)=>{console.log(this.state.phone);this.setState({phone:text});}} textContentType="telephoneNumber" onSubmitEditing={()=>{console.log('Go Press')}}/>
 
                     </Item>
                     <Text  style={{fontSize:12,color:'red',fontStyle:'italic' }}>{this.state.errorMsgPhone}</Text>  
                 </Card>
-                    <Button style={styles.btn} block full primary onPress={()=>{console.log("Send OTP");this.checkValidation();}} disabled={this.state.isOTPsend} ><Text>Send OTP</Text></Button>
+                    <Button style={[styles.btn,{marginLeft:15}]} block full primary onPress={()=>{console.log("Send OTP");this.checkValidation();}} disabled={this.state.isOTPsend} ><Text>Send OTP</Text></Button>
                 
                   { this.state.isOTPsend?
-                    <View style={{marginTop:10}}>
+                    <View style={{marginTop:15}}>
                     <Card transparent style={app.Form}>
                     <Text style={{color:'#bdbfbe', fontSize:18,fontStyle:'normal' }}>OTP Sent on {this.state.phone} Check for OTP </Text>
 

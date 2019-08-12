@@ -31,7 +31,8 @@ export default class CompanyProfileViewScreen extends React.Component
             email:'',
             Owner:'Other',
             DOB:'',
-            type:''
+            type:'',
+            data:null
 
             
         }
@@ -58,13 +59,12 @@ export default class CompanyProfileViewScreen extends React.Component
     {
         const { navigation } = this.props;
         const data = navigation.getParam('data', null);
-        console.log("#########################Data Value he ye  : ",data);
         
         if(data != null)
         {
             this.setState({isLoading:false,address:data.address,name:data.company_name,
             contact:data.address.contact_no,email:data.address.email_id,Owner:data.owner,type:data.type,
-            uri:Global.API_PIC+data.pic
+            uri:Global.API_PIC+data.pic,data:data
         })
         }
     }
@@ -98,6 +98,7 @@ export default class CompanyProfileViewScreen extends React.Component
                                         />
                             <Text style={{fontSize:20,fontWeight:'900'}}>{name}</Text>
                             <Text style={{fontSize:15,fontWeight:'300',fontStyle:'italic',color:'#bdbfbe'}}>{type}</Text>
+                            <Button onPress={()=>{this.props.navigation.navigate('CompanyProfile',{'company':this.state.data});}}><Text>Edit</Text></Button>
                         </View>
 
                     

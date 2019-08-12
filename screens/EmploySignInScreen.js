@@ -9,12 +9,15 @@ import Global from '../constants/Global';
 import Processing from './Processing';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { parse } from 'qs';
+import { login } from '../Service/Login';
+import { Auth } from '../constants/Auth';
 export default class EmploySignInScreen extends Component {
 
     constructor(props)
     {
       super(props)
       this.state={
+                   
                     username:'',
                     isUsernameError:false,
                     usernameErrorMsg:'',
@@ -41,7 +44,6 @@ export default class EmploySignInScreen extends Component {
     
     componentWillMount()
     {
-    
         BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
     }
 
@@ -52,6 +54,7 @@ export default class EmploySignInScreen extends Component {
         const value = navigation.getParam('loginType', null);
         if(value != null)
           this.setState({loginType:value});
+        BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
       } catch (error) {
         
       }
@@ -64,67 +67,62 @@ export default class EmploySignInScreen extends Component {
     }
 
     
-    _httpLogin = async (data) => {
+    _handelSubmit = async (data) => {
   
-    var connectionInfoLocal = '';
-    NetInfo.getConnectionInfo().then((connectionInfo) => {
-    
-      if(connectionInfo.type == 'none'){
-        console.log('no internet ');
-       
-        Global.MSG("No Internet ! ");
-        return;
-      }else{
-       
-        this.setState({
-          isLoading:true,
-        });
-        fetch(Global.API_URL+'login', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',   
-              'Content-Type':'application/json'   
-            },
-            body: JSON.stringify(data)
-          }).then((response) =>response.json() )
-          .then((responseJson) => {
+      NetInfo.getConnectionInfo().then((connectionInfo) => {
+        this.setState({isLoading:true})
+        if(connectionInfo.type == 'none'){
+          console.log('no internet ');
+         
+          Global.MSG("No Internet ! ");
+          this.setState({isLoading:false})
+          return null;
+        }else{       
+        
+         return fetch(Global.API_URL+'login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',   
+                'Content-Type':'application/json'   
+              },
+              body: JSON.stringify(data)
+            })
+            .then((response) =>response.json() )   
+            .then((responseJson) => {
             
             
-             if(responseJson.success){
-            
-              this.setValues(responseJson.data)
-             }
-             else{
-               console.log(responseJson);
-              Global.MSG(responseJson.msg);
-               this.setState({
-                 isLoading:false,
-                 isUsernameError:true,
-                 isPasswordError:true,
-                 usernameErrorMsg:'Username May Be error',
-                passwordErrorMsg:'Password May be error'
-
-               });
+              if(responseJson.success){
+             
+               this.setValues(responseJson.data)
+              }
+              else{
+                console.log(responseJson);
+               Global.MSG(responseJson.msg);
+                this.setState({
+                  isLoading:false,
+                  isUsernameError:true,
+                  isPasswordError:true,
+                  usernameErrorMsg:'Username May Be error',
+                 passwordErrorMsg:'Password May be error'
  
-              
-             }
-         })
-         .catch((error) => {
-
-
-          ToastAndroid.showWithGravityAndOffset(
-            'Network Failed!!! Retrying...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-          console.log('on error fetching:'+error);
-          
-        });
-      }
-    });
-   
+                });
+  
+               
+              }
+          })
+          .catch((error) => {
+ 
+           Global.MSG("Server Error")
+           this.setState({isLoading:false})
+           console.log('on error fetching:'+error);
+           
+         });
+        
+         
+        }
+      });
+     
+     
     }
 
 
@@ -135,12 +133,8 @@ export default class EmploySignInScreen extends Component {
     
 
       try {
-
-      console.log("DAta value : ",data);
-
-      await AsyncStorage.setItem('userToken',data.token+"");
-      await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
-      
+        await AsyncStorage.setItem('userToken',data.token+"");
+        await  AsyncStorage.setItem('userDetails',JSON.stringify(data.user))
 
       if(data.user.user_type == 'emp')
       {
@@ -149,6 +143,8 @@ export default class EmploySignInScreen extends Component {
         data.company['address'] = JSON.parse(data.company.address);
         await AsyncStorage.setItem('profileEmp',JSON.stringify(data.profile))
         await AsyncStorage.setItem('cmp',JSON.stringify(data.company))
+
+        console.log("Login data : ",data.token);
           Global.MSG(" Successful!  Login")
 
           let that = this;
@@ -161,6 +157,8 @@ export default class EmploySignInScreen extends Component {
               });
              
           },3000,that);
+
+
            
       }
       else if(data.user.user_type == 'cmp')
@@ -191,32 +189,13 @@ export default class EmploySignInScreen extends Component {
         this.props.navigation.navigate('HomePage');
       }
       
-
-    
-        
-      //  this.props.navigation.navigate('AuthLoading');
-
-
       } catch (error) {
         console.log("Error is in EmployeeSignInScreen ",error);
         this.setState({isLoading:false});
       }
       
 
-      // this.setState({isLoading:false});
-
     }
-
-  admin(){  try {
-                this.setState({
-                  isLoading:false,
-                });
-                console.log("calll")
-              this.props.navigation.navigate('AdminWelcome') 
-            } catch (error) {
-              
-            } 
-        }
 
     _signUP()
     {
@@ -273,19 +252,13 @@ export default class EmploySignInScreen extends Component {
       {
       
           let data={email:username,password:password};
-          this._httpLogin(data);
+          this._handelSubmit(data);
       }   
 
 
     }
 
 
-    // async _setValue(data)
-    // {
-    //   //AsyncStorage
-    //  await AsyncStorage.setItem('userToken',data);
-    //   this.props.navigation.navigate('AuthLoading');
-    // }
 
   render() {
 

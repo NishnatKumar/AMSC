@@ -12,9 +12,10 @@ import CompanyProfileScreen from "../screens/Company/CompanyProfile";
 
 
 const AuthStack = createStackNavigator({    
+                                        HomePage: HomeScreen ,
                                         CompanyProfile:CompanyProfileScreen,  
                                         CompanyList:CompanyListScreen,
-                                        HomePage: HomeScreen ,
+                                       
                                         EmployeeSignIn: EmploySignInScreen,
                                         ForgotPassword: ForgotScreen,
                                         ResetPassword:ResetPasswordScreen,

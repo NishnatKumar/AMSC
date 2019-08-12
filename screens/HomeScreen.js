@@ -1,24 +1,15 @@
-import * as WebBrowser from 'expo-web-browser';
-import {Logs } from 'expo';
 import React from 'react';
 import {
   Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,  
   StatusBar,
-  ImageBackground,
-  TouchableHighlight,
   Alert,
   BackHandler,
 } from 'react-native';
 
-import { MonoText } from '../components/StyledText';
-import { Container, Header,Thumbnail, Left, Body, Right, Button, Icon, Title, Footer, Content } from 'native-base';
-import size, {window} from '../constants/Layout'
+import { Container, Button } from 'native-base';
+import size from '../constants/Layout'
 import app from '../constants/app';
 import Logo from './Logo';
 
@@ -31,6 +22,7 @@ export default class HomeScreen extends React.Component {
 
 componentDidMount()
 {
+  this.rest();
   this.props.navigation.dismiss();
   this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
 }
@@ -38,11 +30,7 @@ componentDidMount()
 static navigationOptions = {
 header: null
 }
-  componentWillMount()
-  {
-    this.rest();
-     
-  }
+ 
 
   async rest()
   {
@@ -62,10 +50,11 @@ header: null
   componentWillUnmount() {
     try {
    
-      this.backHandler.remove()
-    } catch (error) {
-      
-    }
+           this.backHandler.remove()
+      } 
+      catch (error) {
+        
+      }
     this.rest();
  
   }
@@ -102,17 +91,16 @@ header: null
              
             
               <View style={{ alignSelf:'center',marginTop:size.window.height/9+20,  }}>
-
-              
-                  <Button style={styles.btn1} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn',{
-              loginType:'emp',
-             
-            });}}  ><Text style={app.btnTitle}> Employee Login </Text></Button>
+                  <Button style={styles.btn1} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn',{loginType:'emp',});}}>
+                      <Text style={app.btnTitle}> Employee Login </Text>
+                  </Button>
                  
                   <Button style={styles.btn2} block danger onPress={()=>{this.props.navigation.navigate('EmployeeSignIn',{
               loginType: 'cmp',
              
-            });console.log("Login Press")}}  ><Text style={app.btnTitle}> Login As Admin </Text></Button>
+            });console.log("Login Press")}} >
+                <Text style={app.btnTitle}> Login As Admin </Text>
+            </Button>
                 
 
               </View>

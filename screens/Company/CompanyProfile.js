@@ -374,7 +374,7 @@ componentWillUnmount() {
 
             if(type == 'success')
             {
-
+              
               
               this.setState({photo:{ type:'image/*', uri, name, size }});
 
@@ -400,8 +400,8 @@ componentWillUnmount() {
   let data = new FormData();
   
 
-    if(body.photo != null);
-      // data.append("pic",body.photo );
+    if(body.photo != null)
+     data.append("pic",body.photo );
 
  
    console.log(body);

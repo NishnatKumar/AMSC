@@ -211,7 +211,7 @@ export default class ProfileScreen extends React.Component {
 
       try {
 
-          const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'*/*',copyToCacheDirectory:true});
+          const { type, uri, name, size } =await DocumentPicker.getDocumentAsync({type:'application/*',copyToCacheDirectory:true});
 
 
 
@@ -221,7 +221,7 @@ export default class ProfileScreen extends React.Component {
               let type = name.split(".");
               type = type[type.length-1]
               
-              this.setState({resume:{ type:type, uri, name, size }});
+              this.setState({resume:{ type:'application/*', uri, name, size }});
 
             }
             else
@@ -251,10 +251,9 @@ export default class ProfileScreen extends React.Component {
           console.log("File selected ",uri);
           console.log("File selected ",name);
 
-          let type = name.split(".");
-                type = type[type.length-1]
+         
 
-          this.setState({pic:{ type:type, uri, name, size }});
+          this.setState({pic:{ type:'image/*', uri, name, size }});
 
         }
         else

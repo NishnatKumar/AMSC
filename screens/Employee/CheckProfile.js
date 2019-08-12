@@ -46,7 +46,7 @@ componentWillUnmount() {
 
         this.setState({isLoading:true})
 
-       let token = await Global.TOKEN
+       let token =  await AsyncStorage.getItem('userToken');
         let url;
         let nav;
         let nNav;

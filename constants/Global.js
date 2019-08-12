@@ -7,9 +7,9 @@ import { conditionalExpression } from '@babel/types';
     TOKEN:getToken(),
     MSG:showErrorMsg,
     USER:user(),
-    PROFILE:profile(),
-    EMPPROFILE:empprofile(),
-    CMP:getCmp(),
+    // PROFILE:profile(),
+    // EMPPROFILE:empprofile(),
+    // CMP:getCmp(),
     PROFILECHECK:async function(userID,type) {
         // let data = null;
        let token = await Global.TOKEN
