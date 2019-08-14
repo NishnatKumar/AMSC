@@ -1,9 +1,9 @@
 {
   "expoServerNgrokUrl": "https://m7-ju3.nishantrah656.amsc.exp.direct",
   "packagerNgrokUrl": "https://packager.m7-ju3.nishantrah656.amsc.exp.direct",
-  "ngrokPid": 5716,
+  "ngrokPid": 4464,
   "expoServerPort": 19000,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 12536
+  "packagerPid": 3172
 }

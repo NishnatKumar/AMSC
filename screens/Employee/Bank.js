@@ -32,6 +32,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { switchCase } from '@babel/types';
 import Global from '../../constants/Global';
 import Headers from '../Headers';
+import Processing from '../Processing';
 
 
 
@@ -63,7 +64,7 @@ export default class BankScreen extends React.Component {
 
                     data:null,
 
-                    BankData:{},
+                    BankData:null,
 
                   isLoading:false
                         
@@ -77,10 +78,20 @@ export default class BankScreen extends React.Component {
 }
 
 componentWillMount() {
-  BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  try {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  } catch (error) {
+    
+  }
+  
 }
 componentWillUnmount() {
-  BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  try {
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  } catch (error) {
+    console.log("Error ")
+  }
+ 
 }
 
   
@@ -113,22 +124,22 @@ componentWillUnmount() {
 
   _httpSaveUp = async (data) => {
  
-
+    const {AC,IFSCCODE,Name,Bank} = this.state;
     /**Form dta  */
       let fv = new FormData();
       let temp = this.state.data;
     
       
       fv.append("pic",temp.pic );
-      // fv.append("resume",temp.resume );
+      fv.append("resume",temp.resume );
      
-
+        console.log("Ok Bank data : ",this.state.BankData);
        fv.append('joining_date',temp.join+"")
         fv.append('address',JSON.stringify(temp.address))
         fv.append('date_of_birth',temp.DOB+"")
         fv.append('designation','developer')
         fv.append('name',temp.name+"")
-        fv.append('bank',JSON.stringify(this.state.BankData))
+        fv.append('bank',JSON.stringify({IFSCCODE:IFSCCODE,name:Name,AC:AC,Bank:Bank}))
         fv.append('email_id',temp.email+"")     
        fv.append('gender',temp.gender);
       fv.append('company_id',temp.company_id+"");
@@ -259,7 +270,9 @@ async setProfile(data)
       {
         data = {IFSCCODE:IFSCCODE,name:Name,AC:AC,Bank:Bank};  
         this.setState({BankData:data})
+       
         this._httpSaveUp()
+      
       }
       } catch (error) {
         console.log("Error : ",error);
@@ -270,7 +283,9 @@ async setProfile(data)
 
 
     render(){
-      const {Name,Bank,AC,IFSCCODE} = this.state;
+      const {Name,Bank,AC,IFSCCODE,isLoading} = this.state;
+
+      if(!isLoading)
         return (
           
           <Container>
@@ -323,6 +338,8 @@ async setProfile(data)
           </Container>
 
         );
+        else
+        return <Processing/>
     }
 }
 

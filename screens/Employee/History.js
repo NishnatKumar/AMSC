@@ -202,7 +202,7 @@ filter()
         };
           
           
-        _loading = ()=>{
+        _loading = ()=>{ 
           if(this.state.isLoading)
           return(
             <View  style={{alignItems:'center'}}>
