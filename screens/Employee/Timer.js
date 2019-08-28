@@ -49,19 +49,16 @@ export default class Timer extends React.Component {
     
     }
 
-    componentWillMount() {
-        try {
-            this.timeUpdate();
-        } catch (error) {
+    // componentDidMount() {
+    //     try {
+    //         this.timeUpdate();
+    //     } catch (error) {
             
-        }
+    //     }
        
-      }
+    //   }
 
-      componentWillUnmount()
-      {
-          
-      }
+    
 
 
       timeUpdate()

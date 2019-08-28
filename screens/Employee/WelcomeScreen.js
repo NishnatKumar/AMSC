@@ -73,7 +73,7 @@ export default class WelcomeScreen extends React.Component {
                 if(inTime)
                 {
 
-                  if(inTime.in.split(" ")[1] != '0'+date+"/"+month+"/"+year )
+                  if(inTime.in.split(" ")[1] !== date+"/"+month+"/"+year )
                   {
                       console.log("Time Remove "+inTime.in.split(" ")[1]+"    "+date+"/"+month+"/"+year );
                       await AsyncStorage.removeItem('in');
@@ -134,7 +134,7 @@ export default class WelcomeScreen extends React.Component {
     
   static navigationOptions = {
     header: null
-}
+  }
 
     _officeIn()
     {
@@ -156,6 +156,7 @@ export default class WelcomeScreen extends React.Component {
     {
       try {
         this.props.navigation.dismiss();
+        if(!this.backHandler)
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
       } catch (error) {
         
@@ -164,19 +165,20 @@ export default class WelcomeScreen extends React.Component {
     }
 
   static navigationOptions = {
-    header: null
-}
+      header: null
+  }
 
     
 
-      componentWillUnmount() {
-        try {
+    componentWillUnmount() {
+      try {
+        if(this.backHandler)
           this.backHandler.remove()
-        } catch (error) {
-          
-        }
-       
+      } catch (error) {
+        
       }
+      
+    }
 
       handleBackPress = () => {
 

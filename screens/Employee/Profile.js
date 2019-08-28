@@ -277,13 +277,17 @@ export default class ProfileScreen extends React.Component {
         });
 
         if (action !== DatePickerAndroid.dismissedAction) {
-            // console.log(day+' - '+month+' - '+year)
-           return  year+'-'+month+'-'+day
+          //  console.log(day+' - '+month+' - '+year)
+
+          //  console.log("Date : ",typeof month)
+
+           return  year+'-'+(month+1)+'-'+day
             
         }
         else
           return null;
-      } catch ({code, message}) {
+      } catch ({code, message}) 
+      {
         console.warn('Cannot open date picker', message);
       }
       
@@ -295,16 +299,23 @@ export default class ProfileScreen extends React.Component {
 
 
       if(date != null)
-     await this.setState({DateOfBirth :'DOB : '+date, DOB:date });
-     console.log("DOB Date : ",date);
+      {
+        let v = date.split('-')[2]+'-'+date.split('-')[1]+'-'+date.split('-')[0];
+        await this.setState({DateOfBirth :'DOB : '+date, DOB:date });
+        console.log("DOB Date : ",date);
+      }
     }
 
    async onJoinDate()
     {
       let date = await this.calender();
+      
+      if(date != null){
 
-      if(date != null)
-     await this.setState({StartDate:'Join Date : '+date, join:date });
+          let v = date.split('-')[2]+'-'+date.split('-')[1]+'-'+date.split('-')[0];
+        
+           await this.setState({StartDate:'Join Date : '+v, join:date });
+      }
      console.log("Join Date : ",date);
     }
 
